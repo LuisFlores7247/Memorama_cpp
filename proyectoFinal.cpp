@@ -19,6 +19,7 @@ int main(int argc, char const *argv[])
 
     portada(consoleWidth);
     presentacion(consoleWidth);
+    cout << "Hola Mundo";
     return 0;
 }
 
