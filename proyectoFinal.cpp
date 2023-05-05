@@ -5,6 +5,7 @@
 
 using namespace std;
 
+int **pedirMemoria(int ren, int col);
 void portada(int consoleWidth);
 int menu(int consoleWidth);
 void presentacion(int consoleWidth);
@@ -16,9 +17,18 @@ int main(int argc, char const *argv[])
     CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
     GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
     int consoleWidth = consoleInfo.dwSize.X;
-
+    int opc;
     portada(consoleWidth);
     presentacion(consoleWidth);
+    do
+    {
+        opc = menu(consoleWidth);
+        if (opc == 5)
+        {
+            break;
+        }
+    } while (opc < 1 || opc > 5);
+
     return 0;
 }
 
@@ -90,6 +100,48 @@ void presentacion(int consoleWidth)
 
 int menu(int consoleWidth)
 {
+    int opc;
+    system("cls");
+    string line = "MENU";
+    int leftPadding = (consoleWidth - line.length()) / 2;
+    gotoxy(leftPadding, 1);
+    cout << line;
+    line = "1.- Jugar";
+    leftPadding = (consoleWidth - line.length()) / 2;
+    gotoxy(leftPadding, 3);
+    cout << line;
+    line = "2.- Simulacion";
+    leftPadding = (consoleWidth - line.length()) / 2;
+    gotoxy(leftPadding, 5);
+    cout << line;
+    line = "3.- Reporte";
+    leftPadding = (consoleWidth - line.length()) / 2;
+    gotoxy(leftPadding, 7);
+    cout << line;
+    line = "4.- Mantenimiento";
+    leftPadding = (consoleWidth - line.length()) / 2;
+    gotoxy(leftPadding, 9);
+    cout << line;
+    line = "5.- Salir";
+    leftPadding = (consoleWidth - line.length()) / 2;
+    gotoxy(leftPadding, 11);
+    cout << line;
+
+    line = "Opcion: ";
+    leftPadding = (consoleWidth - line.length()) / 2;
+    gotoxy(leftPadding, 13);
+    cout << line;
+    cin >> opc;
+    return opc;
+}
+int **pedirMemoria(int ren, int col)
+{
+    int **aux = new int *[ren];
+    for (int i = 0; i < ren; i++)
+    {
+        aux[i] = new int[col];
+    }
+    return aux;
 }
 
 void gotoxy(int x, int y)
