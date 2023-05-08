@@ -2,14 +2,24 @@
 #include <conio.h>
 #include <Windows.h>
 #include <stdio.h>
+#include <fstream>
+#define CAT1 "categoria1.txt"
+#define CAT2 "categoria2.txt"
+#define CAT3 "categoria3.txt"
 
 using namespace std;
 
-int **pedirMemoria(int ren, int col);
-void portada(int consoleWidth);
-int menu(int consoleWidth);
-void presentacion(int consoleWidth);
-void gotoxy(int x, int y);
+// Portada
+void portada(int consoleWidth);      /* Caso 2 */
+void presentacion(int consoleWidth); /* Caso 2 */
+
+// Menus
+int menu(int consoleWidth); /* Caso 4 */
+void mantenimiento();       /* Caso 1 */
+
+// Fundamentañes
+int **pedirMemoria(int ren, int col); /* Caso 4 */
+void gotoxy(int x, int y);            /* Caso 2 */
 
 int main(int argc, char const *argv[])
 {
@@ -23,14 +33,32 @@ int main(int argc, char const *argv[])
     do
     {
         opc = menu(consoleWidth);
-        if (opc == 5)
+        switch (opc)
         {
+        case 1:
+            /* code */
+            break;
+        case 2:
+            /* code */
+            break;
+        case 3:
+            /* code */
+            break;
+        case 4:
+            mantenimiento();
+            break;
+        case 5:
+            break;
+
+        default:
             break;
         }
     } while (opc < 1 || opc > 5);
 
     return 0;
 }
+
+// Portada
 
 void portada(int consoleWidth)
 {
@@ -98,6 +126,8 @@ void presentacion(int consoleWidth)
     system("Pause");
 }
 
+// Menus
+
 int menu(int consoleWidth)
 {
     int opc;
@@ -134,6 +164,41 @@ int menu(int consoleWidth)
     cin >> opc;
     return opc;
 }
+
+void mantenimiento()
+{
+    system("cls");
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
+    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
+    int consoleWidth = consoleInfo.dwSize.X;
+    int opc;
+    string line = "Categoria a modificar";
+    int leftPadding = (consoleWidth - line.length()) / 2;
+    gotoxy(leftPadding, 1);
+    cout << line;
+    line = "1.- Dispositivos electronicos";
+    leftPadding = (consoleWidth - line.length()) / 2;
+    gotoxy(leftPadding, 3);
+    cout << line;
+    line = "2.- Lenguajes de programacion";
+    leftPadding = (consoleWidth - line.length()) / 2;
+    gotoxy(leftPadding, 5);
+    cout << line;
+    line = "3.- Categoria 3";
+    leftPadding = (consoleWidth - line.length()) / 2;
+    gotoxy(leftPadding, 7);
+    cout << line;
+
+    line = "Opcion: ";
+    leftPadding = (consoleWidth - line.length()) / 2;
+    gotoxy(leftPadding, 13);
+    cout << line;
+    cin >> opc;
+}
+
+// Fundamentales
+
 int **pedirMemoria(int ren, int col)
 {
     int **aux = new int *[ren];
