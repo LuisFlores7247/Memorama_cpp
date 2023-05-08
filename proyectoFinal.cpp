@@ -1,7 +1,9 @@
+//Categorias del Memorama: Lenguajes de Programacion, Dispositivos electronicos, paises
 #include <iostream>
 #include <conio.h>
 #include <Windows.h>
 #include <stdio.h>
+#include <fstream>
 
 using namespace std;
 
