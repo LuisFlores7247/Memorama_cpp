@@ -1,0 +1,12 @@
+Telefono
+Computadora
+Laptop
+Mouse
+Teclado
+Audino
+Radio
+Acelerador_de_particulas
+Audifonos
+Bobina_de_tesla
+Pistola_de_protones
+Tamagochi
