@@ -2,10 +2,10 @@
 #include <iostream>
 #include <conio.h>
 #include <Windows.h>
-#include <cstring>
 #include <stdio.h>
 #include <fstream>
 #include <string>
+#include <ctype.h>
 
 #define CAT1 "categoria1.txt"
 #define CAT2 "categoria2.txt"
@@ -230,11 +230,11 @@ void menuJuego(int consoleWidth)
         leftPadding = (consoleWidth - line.length()) / 2;
         gotoxy(leftPadding, 5);
         cout << line;
-        line = "Dispositivos Electronicos";
+        line = "Dispositivos electronicos";
         leftPadding = (consoleWidth - line.length()) / 2;
         gotoxy(leftPadding, 7);
         cout << line;
-        line = "Lenguajes de Programacion";
+        line = "Lenguajes de programacion";
         leftPadding = (consoleWidth - line.length()) / 2;
         gotoxy(leftPadding, 8);
         cout << line;
@@ -289,34 +289,79 @@ void gotoxy(int x, int y)
 
 bool validarAlias(string alias)
 {
-    bool aux;
+    bool aux=true;
     //condiciones de validacion
+    if (alias.length()<4 || alias.length()>12)
+    {
+        aux=false;
+        cout<<"La longitud del Alias no es permitida, por favor inserte un alias con mas de 4 caracteres y menos de 12"<<endl;
+    }
+    if (!isalpha(alias[0]))
+    {
+        aux=false;
+        cout<<"El primer caracter del alias debe de ser una letra, intentelo de nuevo"<<endl;
+
+    }
+    for (int i = 1; i < alias.size(); i++)  //desde i=1 pk i=0 ya se valido
+    {
+        if (isspace(alias[i]))
+        {
+            aux=false;
+            cout<<"Caracter invalido en el alias, solo se permiten letras, numeros y guiones bajos"<<endl;
+        }
+        
+    }    
     if (!aux)
     {
         cout<<"El alias Ingresado no es correcto, por favor intente de nuevo"<<endl;
+        system("pause");
     }
-    system("pause");
     return aux;
 }
 bool validarCategoria(string cat)
 {
-    bool aux;
+    bool aux=false;
     //condiciones de validacion
+    if (cat=="Dispositivos electronicos")
+    {
+        aux=true;
+    }
+    if (cat=="Lenguajes de programacion")
+    {
+        aux=true;
+    }
+    if (cat=="Paises")
+    {
+        aux=true;
+    }    
     if (!aux)
     {
         cout<<"La categoria ingresada no es correcta, por favor intente de nuevo"<<endl;
+        system("pause");
     }
-    system("pause");
     return aux;
 }
 bool validarPalabras(int words)
 {
-    bool aux;
+    bool aux=false;
     //condiciones de validacion
+    if (words==3)
+    {
+        aux=true;
+    }
+    if (words==6)
+    {
+        aux=true;
+    }
+    if (words==8)
+    {
+        aux=true;
+    }
+    
     if (!aux)
     {
         cout<<"La opcion de palabras ingresada no es correcta, por favor intente de nuevo"<<endl;
+        system("pause");
     }
-    system("pause");
     return aux;
 }
