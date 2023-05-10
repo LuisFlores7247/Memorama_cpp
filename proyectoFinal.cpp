@@ -1,10 +1,11 @@
-//Categorias del Memorama: Lenguajes de Programacion, Dispositivos electronicos, paises
+// Categorias del Memorama: Lenguajes de Programacion, Dispositivos electronicos, paises
 #include <iostream>
 #include <conio.h>
 #include <Windows.h>
 #include <stdio.h>
 #include <fstream>
 #include <string>
+
 #define CAT1 "categoria1.txt"
 #define CAT2 "categoria2.txt"
 #define CAT3 "categoria3.txt"
