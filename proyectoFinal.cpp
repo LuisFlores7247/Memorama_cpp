@@ -2,6 +2,7 @@
 #include <iostream>
 #include <conio.h>
 #include <Windows.h>
+#include <cstring>
 #include <stdio.h>
 #include <fstream>
 #include <string>
@@ -17,12 +18,17 @@ void portada(int consoleWidth);      /* Caso 2 */
 void presentacion(int consoleWidth); /* Caso 2 */
 
 // Menus
-int menu(int consoleWidth); /* Caso 4 */
-void mantenimiento();       /* Caso 1 */
+int menu(int consoleWidth);       /* Caso 4 */
+void menuJuego(int consoleWidth); /* Caso 2 */
+void mantenimiento();             /* Caso 1 */
 
-// Fundamentañes
+// Fundamentales
 int **pedirMemoria(int ren, int col); /* Caso 4 */
 void gotoxy(int x, int y);            /* Caso 2 */
+void quitarYponerDiag(char[], bool);  /* Caso 2 */
+bool validarAlias(string alias);      /* Caso 2 */
+bool validarCategoria(string cat);    /* Caso 2 */
+bool validarPalabras(int words);      /* Caso 2 */
 
 int main(int argc, char const *argv[])
 {
@@ -39,7 +45,7 @@ int main(int argc, char const *argv[])
         switch (opc)
         {
         case 1:
-            /* code */
+            menuJuego(consoleWidth);
             break;
         case 2:
             /* code */
@@ -54,6 +60,8 @@ int main(int argc, char const *argv[])
             break;
 
         default:
+            cout << "Opcion no valida, por favor intente de nuevo. " << endl;
+            system("pause");
             break;
         }
     } while (opc < 1 || opc > 5);
@@ -200,6 +208,60 @@ void mantenimiento()
     cin >> opc;
 }
 
+void menuJuego(int consoleWidth)
+{
+    int palAUsar;
+    string alias, catAJugar, line;
+    do
+    {
+        system("cls");
+        line = "JUGAR";
+        int leftPadding = (consoleWidth - line.length()) / 2;
+        gotoxy(leftPadding, 1);
+        cout << line;
+        line = "Dame tu Alias para jugar: ";
+        leftPadding = (consoleWidth - line.length()) / 2;
+        gotoxy(leftPadding, 3);
+        cout << line;
+        fflush(stdin);
+        getline(cin, alias);
+        // Validar Alias
+        line = "Dime cual de las 3 categorias quieres jugar: ";
+        leftPadding = (consoleWidth - line.length()) / 2;
+        gotoxy(leftPadding, 5);
+        cout << line;
+        line = "Dispositivos Electronicos";
+        leftPadding = (consoleWidth - line.length()) / 2;
+        gotoxy(leftPadding, 7);
+        cout << line;
+        line = "Lenguajes de Programacion";
+        leftPadding = (consoleWidth - line.length()) / 2;
+        gotoxy(leftPadding, 8);
+        cout << line;
+        line = "Paises";
+        leftPadding = (consoleWidth - line.length()) / 2;
+        gotoxy(leftPadding, 9);
+        cout << line;
+        line = "Opcion: ";
+        leftPadding = (consoleWidth - line.length()) / 2;
+        gotoxy(leftPadding, 10);
+        cout << line;
+        fflush(stdin);
+        getline(cin, catAJugar);
+        //Validar cat
+        line = "Con cuantas Palabras deseas Jugar (3,6 u 8 palabras): ";
+        leftPadding = (consoleWidth - line.length()) / 2;
+        gotoxy(leftPadding, 12);
+        cout << line;
+        line = "Opcion: ";
+        leftPadding = (consoleWidth - line.length()) / 2;
+        gotoxy(leftPadding, 13);
+        cout << line;
+        cin >> palAUsar;
+        //validar palabras
+    } while (!validarAlias(alias) || !validarCategoria(catAJugar) || !validarPalabras(palAUsar));
+}
+
 // Fundamentales
 
 int **pedirMemoria(int ren, int col)
@@ -220,4 +282,41 @@ void gotoxy(int x, int y)
     dwPos.X = x;
     dwPos.Y = y;
     SetConsoleCursorPosition(hcon, dwPos);
+}
+
+
+//Assets 
+
+bool validarAlias(string alias)
+{
+    bool aux;
+    //condiciones de validacion
+    if (!aux)
+    {
+        cout<<"El alias Ingresado no es correcto, por favor intente de nuevo"<<endl;
+    }
+    system("pause");
+    return aux;
+}
+bool validarCategoria(string cat)
+{
+    bool aux;
+    //condiciones de validacion
+    if (!aux)
+    {
+        cout<<"La categoria ingresada no es correcta, por favor intente de nuevo"<<endl;
+    }
+    system("pause");
+    return aux;
+}
+bool validarPalabras(int words)
+{
+    bool aux;
+    //condiciones de validacion
+    if (!aux)
+    {
+        cout<<"La opcion de palabras ingresada no es correcta, por favor intente de nuevo"<<endl;
+    }
+    system("pause");
+    return aux;
 }
