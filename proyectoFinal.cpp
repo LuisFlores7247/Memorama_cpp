@@ -17,8 +17,9 @@ void portada(int consoleWidth);      /* Caso 2 */
 void presentacion(int consoleWidth); /* Caso 2 */
 
 // Menus
-int menu(int consoleWidth); /* Caso 4 */
-void mantenimiento();       /* Caso 1 */
+int menu(int consoleWidth);                             /* Caso 4 */
+void mantenimiento();                                   /* Caso 1 */
+void opcionesMantenimiento(int arch, int consoleWidth); /* Caso 2 */
 
 // Fundamentañes
 int **pedirMemoria(int ren, int col); /* Caso 4 */
@@ -189,6 +190,48 @@ void mantenimiento()
     gotoxy(leftPadding, 5);
     cout << line;
     line = "3.- Categoria 3";
+    leftPadding = (consoleWidth - line.length()) / 2;
+    gotoxy(leftPadding, 7);
+    cout << line;
+
+    line = "Opcion: ";
+    leftPadding = (consoleWidth - line.length()) / 2;
+    gotoxy(leftPadding, 13);
+    cout << line;
+    cin >> opc;
+    switch (opc)
+    {
+    case 1:
+        opcionesMantenimiento(1, consoleWidth);
+        break;
+    case 2:
+        opcionesMantenimiento(2, consoleWidth);
+        break;
+    case 3:
+        opcionesMantenimiento(3, consoleWidth);
+        break;
+
+    default:
+        break;
+    }
+}
+void opcionesMantenimiento(int arch, int consoleWidth)
+{
+    system("cls");
+    int opc;
+    string line = "¿Que deseas hacer?";
+    int leftPadding = (consoleWidth - line.length()) / 2;
+    gotoxy(leftPadding, 1);
+    cout << line;
+    line = "1.- Listar";
+    leftPadding = (consoleWidth - line.length()) / 2;
+    gotoxy(leftPadding, 3);
+    cout << line;
+    line = "2.- Modificar";
+    leftPadding = (consoleWidth - line.length()) / 2;
+    gotoxy(leftPadding, 5);
+    cout << line;
+    line = "3.- Salir";
     leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 7);
     cout << line;
