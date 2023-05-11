@@ -395,8 +395,6 @@ bool validarAlias(string alias, int consoleWidth)
             return aux;
         }
     }
-    cout<<"Alias Validado"<<endl;
-    Sleep(2000);
     return aux;
 }
 bool validarCategoria(string cat, int consoleWidth)
@@ -426,11 +424,6 @@ bool validarCategoria(string cat, int consoleWidth)
         leftPadding = (consoleWidth - 32) / 2;
         gotoxy(leftPadding, 20);
         system("pause");
-    }
-    else
-    {
-        cout<<"Categoria Validada"<<endl;
-        Sleep(2000);
     }
     return aux;
 }
@@ -462,10 +455,6 @@ bool validarPalabras(int words, int consoleWidth)
         leftPadding = (consoleWidth - 32) / 2;
         gotoxy(leftPadding, 21);
         system("pause");
-    }
-    else{
-        cout<<"Palabras Validadas"<<endl;
-        Sleep(2000);
     }
     return aux;
 }
