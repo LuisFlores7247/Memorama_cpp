@@ -2,10 +2,8 @@
 #include <iostream>
 #include <conio.h>
 #include <Windows.h>
-#include <stdio.h>
 #include <fstream>
 #include <string>
-#include <ctype.h>
 
 #define CAT1 "categoria1.txt"
 #define CAT2 "categoria2.txt"
@@ -29,9 +27,9 @@ void gotoxy(int x, int y);            /* Caso 2 */
 void quitarYponerDiag(char[], bool);  /* Caso 2 */
 
 // Assets
-bool validarAlias(string alias);   /* Caso 2 */
-bool validarCategoria(string cat); /* Caso 2 */
-bool validarPalabras(int words);   /* Caso 2 */
+bool validarAlias(string alias, int consoleWidth);   /* Caso 2 */
+bool validarCategoria(string cat, int consoleWidth); /* Caso 2 */
+bool validarPalabras(int words, int consoleWidth);   /* Caso 2 */
 
 // Archivos
 void leerArch(int arch, int consoleWidth);
@@ -233,6 +231,7 @@ void mantenimiento()
         break;
     }
 }
+
 void opcionesMantenimiento(int arch, int consoleWidth)
 {
     system("cls");
@@ -286,42 +285,44 @@ void menuJuego(int consoleWidth)
         gotoxy(leftPadding, 3);
         cout << line;
         fflush(stdin);
+        leftPadding = (consoleWidth - 15) / 2;
+        gotoxy(leftPadding, 4);
         getline(cin, alias);
         // Validar Alias
         line = "Dime cual de las 3 categorias quieres jugar: ";
         leftPadding = (consoleWidth - line.length()) / 2;
-        gotoxy(leftPadding, 5);
+        gotoxy(leftPadding, 6);
         cout << line;
         line = "1.- Dispositivos electronicos";
         leftPadding = (consoleWidth - line.length()) / 2;
-        gotoxy(leftPadding, 7);
+        gotoxy(leftPadding, 8);
         cout << line;
         line = "2.- Lenguajes de programacion";
         leftPadding = (consoleWidth - line.length()) / 2;
-        gotoxy(leftPadding, 8);
+        gotoxy(leftPadding, 9);
         cout << line;
         line = "3.- Paises";
         leftPadding = (consoleWidth - line.length()) / 2;
-        gotoxy(leftPadding, 9);
+        gotoxy(leftPadding, 10);
         cout << line;
         line = "Opcion: ";
         leftPadding = (consoleWidth - line.length()) / 2;
-        gotoxy(leftPadding, 10);
+        gotoxy(leftPadding, 12);
         cout << line;
         fflush(stdin);
         getline(cin, catAJugar);
         // Validar cat
         line = "Con cuantas Palabras deseas Jugar (3,6 u 8 palabras): ";
         leftPadding = (consoleWidth - line.length()) / 2;
-        gotoxy(leftPadding, 12);
+        gotoxy(leftPadding, 14);
         cout << line;
         line = "Opcion: ";
         leftPadding = (consoleWidth - line.length()) / 2;
-        gotoxy(leftPadding, 13);
+        gotoxy(leftPadding, 15);
         cout << line;
         cin >> palAUsar;
         // validar palabras
-    } while (!validarAlias(alias) || !validarCategoria(catAJugar) || !validarPalabras(palAUsar));
+    } while (!validarAlias(alias, consoleWidth) | !validarCategoria(catAJugar, consoleWidth) | !validarPalabras(palAUsar, consoleWidth));
 }
 
 // Fundamentales
@@ -348,37 +349,56 @@ void gotoxy(int x, int y)
 
 // Assets
 
-bool validarAlias(string alias)
+bool validarAlias(string alias, int consoleWidth)
 {
+    int leftPadding;
     bool aux = true;
+    string line;
     // condiciones de validacion
     if (alias.length() < 4 || alias.length() > 12)
     {
         aux = false;
-        cout << "La longitud del Alias no es permitida, por favor inserte un alias con mas de 4 caracteres y menos de 12" << endl;
+        line = "La longitud del Alias no es permitida, por favor inserte un alias con mas de 4 caracteres y menos de 12";
+        leftPadding = (consoleWidth - line.length()) / 2;
+        gotoxy(leftPadding, 17);
+        cout << line;
+        leftPadding = (consoleWidth - 32) / 2;
+        gotoxy(leftPadding, 18);
+        system("pause");
+        return aux;
     }
     if (!isalpha(alias[0]))
     {
         aux = false;
-        cout << "El primer caracter del alias debe de ser una letra, intentelo de nuevo" << endl;
+        line = "El primer caracter del alias debe de ser una letra, intentelo de nuevo";
+        leftPadding = (consoleWidth - line.length()) / 2;
+        gotoxy(leftPadding, 17);
+        cout << line;
+        leftPadding = (consoleWidth - 32) / 2;
+        gotoxy(leftPadding, 18);
+        system("pause");
+        return aux;
     }
     for (int i = 1; i < alias.size(); i++) // desde i=1 pk i=0 ya se valido
     {
         if (isspace(alias[i]))
         {
             aux = false;
-            cout << "Caracter invalido en el alias, solo se permiten letras, numeros y guiones bajos" << endl;
+            line = "Caracter invalido en el alias, solo se permiten letras, numeros y guiones bajos";
+            leftPadding = (consoleWidth - line.length()) / 2;
+            gotoxy(leftPadding, 17);
+            cout << line;
+            leftPadding = (consoleWidth - 32) / 2;
+            gotoxy(leftPadding, 18);
+            system("pause");
+            return aux;
         }
     }
-    if (!aux)
-    {
-        cout << "El alias Ingresado no es correcto, por favor intente de nuevo" << endl;
-        system("pause");
-    }
-    return aux;
 }
-bool validarCategoria(string cat)
+bool validarCategoria(string cat, int consoleWidth)
 {
+    string line;
+    int leftPadding;
     bool aux = false;
     // condiciones de validacion
     if (cat == "Dispositivos electronicos")
@@ -395,14 +415,21 @@ bool validarCategoria(string cat)
     }
     if (!aux)
     {
-        cout << "La categoria ingresada no es correcta, por favor intente de nuevo" << endl;
+        line = "La categoria ingresada no es correcta, por favor intente de nuevo";
+        leftPadding = (consoleWidth - line.length()) / 2;
+        gotoxy(leftPadding, 19);
+        cout << line;
+        leftPadding = (consoleWidth - 32) / 2;
+        gotoxy(leftPadding, 20);
         system("pause");
     }
     return aux;
 }
-bool validarPalabras(int words)
+bool validarPalabras(int words, int consoleWidth)
 {
     bool aux = false;
+    string line;
+    int leftPadding;
     // condiciones de validacion
     if (words == 3)
     {
@@ -419,7 +446,12 @@ bool validarPalabras(int words)
 
     if (!aux)
     {
-        cout << "La opcion de palabras ingresada no es correcta, por favor intente de nuevo" << endl;
+        line = "La opcion de palabras ingresada no es correcta, por favor intente de nuevo";
+        leftPadding = (consoleWidth - line.length()) / 2;
+        gotoxy(leftPadding, 20);
+        cout<<line;
+        leftPadding = (consoleWidth - 32) / 2;
+        gotoxy(leftPadding, 21);
         system("pause");
     }
     return aux;
@@ -522,7 +554,7 @@ void modificar(int arch, int consoleWidth)
     {
         if (id == i)
         {
-                }
+        }
     }
     temp.close();
     file.close();
