@@ -33,7 +33,8 @@ bool validarPalabras(int words, int consoleWidth);   /* Caso 2 */
 
 // Archivos
 void leerArch(int arch, int consoleWidth);
-void modificar(int arch, int consoleWidth);
+void agregar(int arch, int consoleWidth);
+void eliminar(int arch, int consoleWidth);
 
 int main(int argc, char const *argv[])
 {
@@ -236,39 +237,56 @@ void opcionesMantenimiento(int arch, int consoleWidth)
 {
     system("cls");
     int opc;
-    string line = "¿Que deseas hacer?";
-    int leftPadding = (consoleWidth - line.length()) / 2;
-    gotoxy(leftPadding, 1);
-    cout << line;
-    line = "1.- Listar";
-    leftPadding = (consoleWidth - line.length()) / 2;
-    gotoxy(leftPadding, 3);
-    cout << line;
-    line = "2.- Modificar";
-    leftPadding = (consoleWidth - line.length()) / 2;
-    gotoxy(leftPadding, 5);
-    cout << line;
-    line = "3.- Salir";
-    leftPadding = (consoleWidth - line.length()) / 2;
-    gotoxy(leftPadding, 7);
-    cout << line;
-
-    line = "Opcion: ";
-    leftPadding = (consoleWidth - line.length()) / 2;
-    gotoxy(leftPadding, 13);
-    cout << line;
-    cin >> opc;
-    switch (opc)
+    do
     {
-    case 1:
-        leerArch(arch, consoleWidth);
-        break;
+        system("cls");
+        string line = "¿Que deseas hacer?";
+        int leftPadding = (consoleWidth - line.length()) / 2;
+        gotoxy(leftPadding, 1);
+        cout << line;
 
-    default:
-        break;
-    }
+        line = "1.- Listar";
+        leftPadding = (consoleWidth - line.length()) / 2;
+        gotoxy(leftPadding, 3);
+        cout << line;
+
+        line = "2.- Agregar";
+        leftPadding = (consoleWidth - line.length()) / 2;
+        gotoxy(leftPadding, 5);
+        cout << line;
+
+        line = "3.- Eliminar";
+        leftPadding = (consoleWidth - line.length()) / 2;
+        gotoxy(leftPadding, 7);
+        cout << line;
+
+        line = "4.- Salir";
+        leftPadding = (consoleWidth - line.length()) / 2;
+        gotoxy(leftPadding, 9);
+        cout << line;
+
+        line = "Opcion: ";
+        leftPadding = (consoleWidth - line.length()) / 2;
+        gotoxy(leftPadding, 11);
+        cout << line;
+        cin >> opc;
+        switch (opc)
+        {
+        case 1:
+            leerArch(arch, consoleWidth);
+            break;
+        case 2:
+            agregar(arch, consoleWidth);
+            break;
+        case 3:
+            eliminar(arch, consoleWidth);
+            break;
+        default:
+            break;
+        }
+
+    } while (opc != 4 || (opc < 1 || opc > 5));
 }
-
 void menuJuego(int consoleWidth)
 {
     int palAUsar;
@@ -491,11 +509,12 @@ void leerArch(int arch, int consoleWidth)
         gotoxy(leftPadding, 1);
         cout << line;
     }
-    int i = 3;
+    int i = 3, j = 1;
     while (getline(file, line))
     {
-        leftPadding = (consoleWidth - line.length()) / 2;
+        leftPadding = (consoleWidth - (line.length() + 3)) / 2;
         gotoxy(leftPadding, i);
+        cout << j << ".-";
         for (int i = 0; i < line.length(); i++)
         {
             if (line[i] == '_')
@@ -509,21 +528,23 @@ void leerArch(int arch, int consoleWidth)
         }
 
         i += 2;
+        j++;
     }
     leftPadding = (consoleWidth - 32) / 2;
     gotoxy(leftPadding, i);
     system("pause");
 }
 
-void modificar(int arch, int consoleWidth)
+void agregar(int arch, int consoleWidth)
 {
-    fstream temp, file;
+    system("cls");
+    fstream file;
     string line;
     int leftPadding;
 
     if (arch == 1)
     {
-        file.open(CAT1, ios::in);
+        file.open(CAT1, ios::out | ios::app);
         line = "DISPOSITIVOS MOVILES";
         leftPadding = (consoleWidth - line.length()) / 2;
         gotoxy(leftPadding, 1);
@@ -531,7 +552,7 @@ void modificar(int arch, int consoleWidth)
     }
     if (arch == 2)
     {
-        file.open(CAT2, ios::in);
+        file.open(CAT2, ios::out | ios::app);
         line = "LENGUAJES DE PROGRAMACION";
         leftPadding = (consoleWidth - line.length()) / 2;
         gotoxy(leftPadding, 1);
@@ -539,27 +560,98 @@ void modificar(int arch, int consoleWidth)
     }
     if (arch == 3)
     {
-        file.open(CAT3, ios::in);
+        file.open(CAT3, ios::out | ios::app);
         line = "PAISES";
         leftPadding = (consoleWidth - line.length()) / 2;
         gotoxy(leftPadding, 1);
         cout << line;
     }
+    string palabra;
+
+    line = "Ingresa la palabra a agregar: ";
+    leftPadding = (consoleWidth - line.length()) / 2;
+    gotoxy(leftPadding, 3);
+    cout << line;
+    fflush(stdin);
+    getline(cin, palabra);
+    file << palabra;
+
+    system("Pause");
+}
+
+void eliminar(int arch, int consoleWidth)
+{
+    system("cls");
+    fstream file, temp;
     temp.open("temp.txt", ios::out);
 
-    string palabra;
-    int id, i = 1;
-    cout << "Ingrese el ID a modificar: ";
-    cin >> id;
+    string line;
+    int leftPadding;
 
-    while (file >> palabra)
+    if (arch == 1)
     {
-        if (id == i)
-        {
-        }
+        file.open(CAT1, ios::in | ios::out);
+        line = "DISPOSITIVOS MOVILES";
+        leftPadding = (consoleWidth - line.length()) / 2;
+        gotoxy(leftPadding, 1);
+        cout << line;
     }
+    if (arch == 2)
+    {
+        file.open(CAT2, ios::in | ios::out);
+        line = "LENGUAJES DE PROGRAMACION";
+        leftPadding = (consoleWidth - line.length()) / 2;
+        gotoxy(leftPadding, 1);
+        cout << line;
+    }
+    if (arch == 3)
+    {
+        file.open(CAT3, ios::in | ios::out);
+        line = "PAISES";
+        leftPadding = (consoleWidth - line.length()) / 2;
+        gotoxy(leftPadding, 1);
+        cout << line;
+    }
+
+    int i = 1, aux;
+    bool flag;
+    string palabra;
+
+    line = "Ingresa el ID: ";
+    leftPadding = (consoleWidth - line.length()) / 2;
+    gotoxy(leftPadding, 3);
+    cout << line;
+    cin >> aux;
+    while (getline(file, palabra))
+    {
+        if (aux != i)
+        {
+            temp << palabra << endl;
+        }
+        else
+        {
+                }
+    }
+    leftPadding = (consoleWidth - 32) / 2;
+    gotoxy(leftPadding, 7);
     temp.close();
     file.close();
-    system("del datos.txt");
-    system("ren temp.txt datos.txt");
+    if (arch == 1)
+    {
+        system("del categoria1.txt");
+        system("ren temp.txt categoria1.txt");
+    }
+    if (arch == 2)
+    {
+        system("del categoria2.txt");
+        system("ren temp.txt categoria2.txt");
+    }
+    if (arch == 3)
+    {
+        system("del categoria3.txt");
+        system("ren temp.txt categoria3.txt");
+    }
+    leftPadding = (consoleWidth - 32) / 2;
+    gotoxy(leftPadding, i);
+    system("pause");
 }
