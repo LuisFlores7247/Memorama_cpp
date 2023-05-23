@@ -32,25 +32,28 @@ void mantenimiento();                                   /* Caso 1 */
 void opcionesMantenimiento(int arch, int consoleWidth); /* Caso 2 */
 
 // Fundamentales
-void gotoxy(int x, int y);            /* Caso 2 */
-casilla **crearTablero(int pal, string categoria);  /* Caso 4 */
-
+void gotoxy(int x, int y);                         /* Caso 2 */
+casilla **crearTablero(int pal, string categoria); /* Caso 4 */
 
 // Assets
-bool validarAlias(string alias, int consoleWidth);   /* Caso 2 */
-bool validarCategoria(string cat, int consoleWidth); /* Caso 2 */
-bool validarPalabras(int words, int consoleWidth);   /* Caso 2 */
-casilla **pedirMemoriaMat(int pal, int *ren, int *col); /* Caso 4 */
-string *pedirMemVec(int tam);   /* Caso 4*/
-void llenarTab(casilla **mat, int ren, int col, string *v, string cat, int pal);    /* Caso 2*/
-void shuffle(string *v, int tam);   /* Caso 2*/
-bool validarRepetidos(int *v, int num, int k);  /* Caso 4*/
-
+bool validarAlias(string alias, int consoleWidth);                               /* Caso 2 */
+bool validarCategoria(string cat, int consoleWidth);                             /* Caso 2 */
+bool validarPalabras(int words, int consoleWidth);                               /* Caso 2 */
+casilla **pedirMemoriaMat(int pal, int *ren, int *col);                          /* Caso 4 */
+string *pedirMemVec(int tam);                                                    /* Caso 4*/
+void llenarTab(casilla **mat, int ren, int col, string *v, string cat, int pal); /* Caso 2*/
+void shuffle(string *v, int tam);                                                /* Caso 2*/
+bool validarRepetidos(int *v, int num, int k);                                   /* Caso 4*/
+void clearLines(int inicio, int lineas);                                         /* Caso 2 */
 
 // Archivos
-void leerArch(int arch, int consoleWidth);  /* Caso 2*/
-void agregar(int arch, int consoleWidth);   /* Caso 2*/
-void eliminar(int arch, int consoleWidth);  /* Caso 2*/
+void leerArch(int arch, int consoleWidth); /* Caso 2*/
+void agregar(int arch, int consoleWidth);  /* Caso 2*/
+void eliminar(int arch, int consoleWidth); /* Caso 2*/
+
+
+//Funciones de prueba que se van a eliminar luego (descomentenlas y llamenlas donde necesiten para ejecutarlas)
+// void pruebaImprimir(casilla **tablero, int ren, int col);
 
 int main(int argc, char const *argv[])
 {
@@ -307,14 +310,16 @@ void opcionesMantenimiento(int arch, int consoleWidth)
 
 void menuJuego(int consoleWidth)
 {
-    int palAUsar;
+    int palAUsar, leftPadding;
+    bool band1, band2, band3;
     string alias, catAJugar, line;
     casilla **tableroDinamico;
-    do
+
+    do // captura alias
     {
         system("cls");
         line = "JUGAR";
-        int leftPadding = (consoleWidth - line.length()) / 2;
+        leftPadding = (consoleWidth - line.length()) / 2;
         gotoxy(leftPadding, 1);
         cout << line;
         line = "Dame tu Alias para jugar: ";
@@ -325,7 +330,11 @@ void menuJuego(int consoleWidth)
         leftPadding = (consoleWidth - 15) / 2;
         gotoxy(leftPadding, 4);
         getline(cin, alias);
-        // Validar Alias
+        band1=validarAlias(alias, consoleWidth);
+    } while (!band1);
+
+    do // Capturar Categoria
+    {
         line = "Dime cual de las 3 categorias quieres jugar: ";
         leftPadding = (consoleWidth - line.length()) / 2;
         gotoxy(leftPadding, 6);
@@ -348,19 +357,36 @@ void menuJuego(int consoleWidth)
         cout << line;
         fflush(stdin);
         getline(cin, catAJugar);
-        // Validar cat
+        band2=validarCategoria(catAJugar, consoleWidth);
+        if (!band2)      //Borra de pantalla cosas basura
+        {
+            clearLines(12, 2);
+            clearLines(19, 3);
+        }
+        
+    } while (!band2);
+    do // Capurar palabras
+    {
         line = "Con cuantas Palabras deseas Jugar (3,6 u 8 palabras): ";
-        leftPadding = (consoleWidth - line.length()) / 2;
-        gotoxy(leftPadding, 14);
-        cout << line;
-        line = "Opcion: ";
         leftPadding = (consoleWidth - line.length()) / 2;
         gotoxy(leftPadding, 15);
         cout << line;
+        line = "Opcion: ";
+        leftPadding = (consoleWidth - line.length()) / 2;
+        gotoxy(leftPadding, 16);
+        cout << line;
         cin >> palAUsar;
-        // validar palabras
-    } while (!validarAlias(alias, consoleWidth) | !validarCategoria(catAJugar, consoleWidth) | !validarPalabras(palAUsar, consoleWidth));
+        band3=validarPalabras(palAUsar, consoleWidth);
+        if (!band3)      //Borra de pantalla cosas basura
+        {
+            clearLines(16, 2);
+            clearLines(20, 3);
+        }
+        
+    } while (!band3);
+
     tableroDinamico = crearTablero(palAUsar, catAJugar);
+
     system("pause");
 }
 
@@ -536,7 +562,7 @@ void llenarTab(casilla **mat, int ren, int col, string *v, string cat, int pal)
 {
     // Primero se llena el vector dinamico con los nombres de la categoria a buscar
     srand(time(NULL));
-    int posicion, k = 0,j=0, total = 0, tam=ren*col, *posiciones=new int[pal];
+    int posicion, k = 0, j = 0, total = 0, tam = ren * col, *posiciones = new int[pal];
     fstream categoria;
     string aux;
     // Saber cual es la categoria que se ocupa
@@ -567,81 +593,99 @@ void llenarTab(casilla **mat, int ren, int col, string *v, string cat, int pal)
         }
         categoria.clear();
         categoria.seekg(0);
-        //crear un vector de las posiciones sin repetidos
+        // crear un vector de las posiciones sin repetidos
         do
         {
             posicion = rand() % total;
-            if (validarRepetidos(posiciones,posicion,k))
+            if (validarRepetidos(posiciones, posicion, k))
             {
-                posiciones[k]=posicion;
+                posiciones[k] = posicion;
                 k++;
-            }                
-        } while (k<pal);
-        
+            }
+        } while (k < pal);
+
         for (int i = 0; i < tam; i++)
         {
-            k=0;
+            k = 0;
             categoria.clear();
             categoria.seekg(0);
-            while (getline(categoria,aux))
+            while (getline(categoria, aux))
             {
-                if (k==posiciones[j])
+                if (k == posiciones[j])
                 {
-                    v[i]=aux;
-                    v[i+1]=aux;
+                    v[i] = aux;
+                    v[i + 1] = aux;
                     j++;
                     i++;
                     break;
                 }
                 k++;
-            }            
+            }
         }
-        shuffle(v,tam);
-        shuffle(v,tam);
-        shuffle(v,tam);
-        shuffle(v,tam);
+        shuffle(v, tam);
+        shuffle(v, tam);
+        shuffle(v, tam);
+        shuffle(v, tam);
         categoria.close();
-        k=0;
-        j=0;
-        //Llenar la matriz dinamica de structs con el vector dinamico, la posicion con un contador y el bool en falso
+        k = 0;
+        j = 0;
+        // Llenar la matriz dinamica de structs con el vector dinamico, la posicion con un contador y el bool en falso
         for (int i = 0; i < ren; i++)
         {
             for (int j = 0; j < col; j++)
             {
-                mat[i][j].palabra=v[k];
-                mat[i][j].estado=false;
-                mat[i][j].posicion=k+1;
+                mat[i][j].palabra = v[k];
+                mat[i][j].estado = false;
+                mat[i][j].posicion = k + 1;
                 k++;
-            }            
-        }        
+            }
+        }
     }
-    delete []v;
+    delete[] v;
 }
 
-bool validarRepetidos(int *v, int num, int k){
-    bool aux=true;
+bool validarRepetidos(int *v, int num, int k)
+{
+    bool aux = true;
     for (int j = 0; j < k; j++)
     {
-        if (v[j]==num)
+        if (v[j] == num)
         {
-            aux=false;
+            aux = false;
             break;
-        }        
+        }
     }
     return aux;
 }
 
-void shuffle(string *v, int tam){
-    if (tam>1)
+void shuffle(string *v, int tam)
+{
+    if (tam > 1)
     {
-        for (int i = 0; i < tam-1; i++)
+        for (int i = 0; i < tam - 1; i++)
         {
-            int j=i+rand()/(RAND_MAX/(tam-i)+1);
-            string t=v[j];
-            v[j]=v[i];
-            v[i]=t;
-        }        
-    }    
+            int j = i + rand() / (RAND_MAX / (tam - i) + 1);
+            string t = v[j];
+            v[j] = v[i];
+            v[i] = t;
+        }
+    }
+}
+
+void clearLines(int inicio, int lineas)
+{
+    // Mover el cursor a la línea especificada
+    cout << "\033[" << inicio << ";1H";
+
+    // Borrar las líneas desde la posición actual
+    for (int i = 0; i < lineas; i++)
+    {
+        cout << "\033[K"; // Borrar hasta el final de la línea
+        if (i < lineas - 1)
+        {
+            cout << "\033[E"; // Mover el cursor al principio de la siguiente línea
+        }
+    }
 }
 
 // Archivos
@@ -822,3 +866,26 @@ void eliminar(int arch, int consoleWidth)
     gotoxy(leftPadding, i);
     system("pause");
 }
+
+//Implementacion de funciones prueba
+
+// void pruebaImprimir(casilla **tablero,int ren,int col){
+//     for (int i = 0; i < ren; i++)
+//     {
+//         for (int j = 0; j < col; j++)
+//         {
+//             cout<<setw(20)<<tablero[i][j].palabra;
+//         }
+//         cout<<endl;
+//     }
+//     cout<<endl<<endl<<"Ahora la posicion"<<endl<<endl;
+//     for (int i = 0; i < ren; i++)
+//     {
+//         for (int j = 0; j < col; j++)
+//         {
+//             cout<<setw(10)<<tablero[i][j].posicion;
+//         }
+//         cout<<endl;
+//     }
+    
+// }
