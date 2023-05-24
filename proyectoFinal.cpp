@@ -43,6 +43,7 @@ bool validarPalabras(int words, int consoleWidth);   /* Caso 2 */
 casilla **pedirMemoriaMat(int pal, int *ren, int *col); /* Caso 4 */
 string *pedirMemVec(int tam);   /* Caso 4*/
 void llenarTab(casilla **mat, int ren, int col, string *v, string cat, int pal);    /* Caso 2*/
+void imprimirTab(int palAUsar, casilla **TableroDinamico);
 void shuffle(string *v, int tam);   /* Caso 2*/
 bool validarRepetidos(int *v, int num, int k);  /* Caso 4*/
 
@@ -361,6 +362,7 @@ void menuJuego(int consoleWidth)
         // validar palabras
     } while (!validarAlias(alias, consoleWidth) | !validarCategoria(catAJugar, consoleWidth) | !validarPalabras(palAUsar, consoleWidth));
     tableroDinamico = crearTablero(palAUsar, catAJugar);
+    imprimirTab(palAUsar, tableroDinamico);
     system("pause");
 }
 
@@ -616,6 +618,31 @@ void llenarTab(casilla **mat, int ren, int col, string *v, string cat, int pal)
         }        
     }
     delete []v;
+}
+
+void imprimirTab(int palAUsar, casilla **TableroDinamico){
+    
+    if(palAUsar==3){
+        for (int i = 0; i < 3; i++)
+        {
+            for (int j = 0; j < 2; j++)
+            {
+                cout << setw(4) << TableroDinamico[i][j].palabra;
+            }
+            
+        }
+        
+        
+    }
+    /* else{
+        if(palAUsar==6){
+
+        }
+        else{
+
+        }
+    } */
+    
 }
 
 bool validarRepetidos(int *v, int num, int k){
