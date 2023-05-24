@@ -33,7 +33,7 @@ void opcionesMantenimiento(int arch, int consoleWidth); /* Caso 2 */
 
 // Fundamentales
 void gotoxy(int x, int y);                         /* Caso 2 */
-casilla **crearTablero(int pal, string categoria); /* Caso 4 */
+casilla **crearTablero(int pal, string categoria, int *ren,int *col); /* Caso 4 */
 
 // Assets
 bool validarAlias(string alias, int consoleWidth);                               /* Caso 2 */
@@ -54,7 +54,7 @@ void registrarjugador(string alias, string cate, int dimension);
 
 
 //Funciones de prueba que se van a eliminar luego (descomentenlas y llamenlas donde necesiten para ejecutarlas)
-void pruebaImprimir(casilla **tablero, int ren, int col);
+// void pruebaImprimir(casilla **tablero, int ren, int col);
 
 int main(int argc, char const *argv[])
 {
@@ -311,7 +311,7 @@ void opcionesMantenimiento(int arch, int consoleWidth)
 
 void menuJuego(int consoleWidth)
 {
-    int palAUsar, leftPadding;
+    int palAUsar, leftPadding, ren, col;
     bool band1, band2, band3;
     string alias, catAJugar, line;
     casilla **tableroDinamico;
@@ -386,10 +386,9 @@ void menuJuego(int consoleWidth)
         
     } while (!band3);
 
-    tableroDinamico = crearTablero(palAUsar, catAJugar);
+    tableroDinamico = crearTablero(palAUsar, catAJugar, &ren, &col);
     registrarjugador(alias,catAJugar,palAUsar);
 	//tablero dinamico es casilla**
-    
     system("pause");
 }
 
@@ -405,15 +404,17 @@ void gotoxy(int x, int y)
     SetConsoleCursorPosition(hcon, dwPos);
 }
 
-casilla **crearTablero(int pal, string categoria)
+casilla **crearTablero(int pal, string categoria, int *ren, int *col)
 {
-    int ren, col;
+    int aux1, aux2;
     string *vecDina;
     casilla **tableroDinamico;
-    tableroDinamico = pedirMemoriaMat(pal, &ren, &col);
-    vecDina = pedirMemVec(ren * col);
-    llenarTab(tableroDinamico, ren, col, vecDina, categoria, pal);
-    pruebaImprimir(tableroDinamico,ren,col);
+    tableroDinamico = pedirMemoriaMat(pal, &aux1, &aux2);
+    *ren=aux1;
+    *col=aux2;
+    vecDina = pedirMemVec((*ren) * (*col));
+    llenarTab(tableroDinamico, *ren, *col, vecDina, categoria, pal);
+
     return tableroDinamico;
 }
 
@@ -873,26 +874,26 @@ void eliminar(int arch, int consoleWidth)
 
 //Implementacion de funciones prueba
 
-void pruebaImprimir(casilla **tablero,int ren,int col){
-    for (int i = 0; i < ren; i++)
-    {
-        for (int j = 0; j < col; j++)
-        {
-            cout<<setw(20)<<tablero[i][j].palabra;
-        }
-        cout<<endl;
-    }
-    cout<<endl<<endl<<"Ahora la posicion"<<endl<<endl;
-    for (int i = 0; i < ren; i++)
-    {
-        for (int j = 0; j < col; j++)
-        {
-            cout<<setw(10)<<tablero[i][j].posicion;
-        }
-        cout<<endl;
-    }
+// void pruebaImprimir(casilla **tablero,int ren,int col){
+//     for (int i = 0; i < ren; i++)
+//     {
+//         for (int j = 0; j < col; j++)
+//         {
+//             cout<<setw(20)<<tablero[i][j].palabra;
+//         }
+//         cout<<endl;
+//     }
+//     cout<<endl<<endl<<"Ahora la posicion"<<endl<<endl;
+//     for (int i = 0; i < ren; i++)
+//     {
+//         for (int j = 0; j < col; j++)
+//         {
+//             cout<<setw(10)<<tablero[i][j].posicion;
+//         }
+//         cout<<endl;
+//     }
     
-}
+// }
 void registrarjugador(string alias, string cate, int dimension){
 	fstream juga;
 	char nomarch[30]="registrojugadores.txt";
