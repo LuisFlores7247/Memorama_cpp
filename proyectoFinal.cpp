@@ -54,7 +54,7 @@ void registrarjugador(string alias, string cate, int dimension);
 
 
 //Funciones de prueba que se van a eliminar luego (descomentenlas y llamenlas donde necesiten para ejecutarlas)
-// void pruebaImprimir(casilla **tablero, int ren, int col);
+void pruebaImprimir(casilla **tablero, int ren, int col);
 
 int main(int argc, char const *argv[])
 {
@@ -389,6 +389,7 @@ void menuJuego(int consoleWidth)
     tableroDinamico = crearTablero(palAUsar, catAJugar);
     registrarjugador(alias,catAJugar,palAUsar);
 	//tablero dinamico es casilla**
+    
     system("pause");
 }
 
@@ -412,6 +413,7 @@ casilla **crearTablero(int pal, string categoria)
     tableroDinamico = pedirMemoriaMat(pal, &ren, &col);
     vecDina = pedirMemVec(ren * col);
     llenarTab(tableroDinamico, ren, col, vecDina, categoria, pal);
+    pruebaImprimir(tableroDinamico,ren,col);
     return tableroDinamico;
 }
 
@@ -871,26 +873,26 @@ void eliminar(int arch, int consoleWidth)
 
 //Implementacion de funciones prueba
 
-// void pruebaImprimir(casilla **tablero,int ren,int col){
-//     for (int i = 0; i < ren; i++)
-//     {
-//         for (int j = 0; j < col; j++)
-//         {
-//             cout<<setw(20)<<tablero[i][j].palabra;
-//         }
-//         cout<<endl;
-//     }
-//     cout<<endl<<endl<<"Ahora la posicion"<<endl<<endl;
-//     for (int i = 0; i < ren; i++)
-//     {
-//         for (int j = 0; j < col; j++)
-//         {
-//             cout<<setw(10)<<tablero[i][j].posicion;
-//         }
-//         cout<<endl;
-//     }
+void pruebaImprimir(casilla **tablero,int ren,int col){
+    for (int i = 0; i < ren; i++)
+    {
+        for (int j = 0; j < col; j++)
+        {
+            cout<<setw(20)<<tablero[i][j].palabra;
+        }
+        cout<<endl;
+    }
+    cout<<endl<<endl<<"Ahora la posicion"<<endl<<endl;
+    for (int i = 0; i < ren; i++)
+    {
+        for (int j = 0; j < col; j++)
+        {
+            cout<<setw(10)<<tablero[i][j].posicion;
+        }
+        cout<<endl;
+    }
     
-// }
+}
 void registrarjugador(string alias, string cate, int dimension){
 	fstream juga;
 	char nomarch[30]="registrojugadores.txt";
