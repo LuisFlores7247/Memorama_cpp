@@ -50,6 +50,7 @@ void clearLines(int inicio, int lineas);                                        
 void leerArch(int arch, int consoleWidth); /* Caso 2*/
 void agregar(int arch, int consoleWidth);  /* Caso 2*/
 void eliminar(int arch, int consoleWidth); /* Caso 2*/
+void registrarjugador(string alias, string cate, int dimension);
 
 
 //Funciones de prueba que se van a eliminar luego (descomentenlas y llamenlas donde necesiten para ejecutarlas)
@@ -386,7 +387,9 @@ void menuJuego(int consoleWidth)
     } while (!band3);
 
     tableroDinamico = crearTablero(palAUsar, catAJugar);
-    pruebaImprimir(tableroDinamico,4,3);
+    registrarjugador(alias,catAJugar,palAUsar);
+	//tablero dinamico es casilla**
+    
     system("pause");
 }
 
@@ -410,6 +413,7 @@ casilla **crearTablero(int pal, string categoria)
     tableroDinamico = pedirMemoriaMat(pal, &ren, &col);
     vecDina = pedirMemVec(ren * col);
     llenarTab(tableroDinamico, ren, col, vecDina, categoria, pal);
+    pruebaImprimir(tableroDinamico,ren,col);
     return tableroDinamico;
 }
 
@@ -888,4 +892,21 @@ void pruebaImprimir(casilla **tablero,int ren,int col){
         cout<<endl;
     }
     
+}
+void registrarjugador(string alias, string cate, int dimension){
+	fstream juga;
+	char nomarch[30]="registrojugadores.txt";
+	juga.open(nomarch,ios::out|ios::app);
+	time_t now = time(0);
+	struct tm *time = localtime(&now);
+	char dia[12];
+	char hora[10];
+	strftime(dia,12,"%d/%m/%Y",time);
+	strftime(hora,10,"%H:%M:%S",time);
+	if ( !juga ) 
+	    cout << " No se pudo hacer el registro " << endl ;
+		else{ 
+			juga << alias << " " << cate << " "<< dimension<< " "<< hora<< " "<<dia<< endl;
+			juga.close();
+		}
 }
