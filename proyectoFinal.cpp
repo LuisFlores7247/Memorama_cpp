@@ -386,7 +386,9 @@ void menuJuego(int consoleWidth)
     tableroDinamico = crearTablero(palAUsar, catAJugar, &ren, &col);
     registrarjugador(alias, catAJugar, palAUsar);
     // tablero dinamico es casilla**
-    system("pause");
+    leftPadding = (consoleWidth - 32) / 2;
+    gotoxy(leftPadding, 17);
+    system("Pause");
 }
 
 // Fundamentales
@@ -787,8 +789,16 @@ void agregar(int arch, int consoleWidth)
     cout << line;
     fflush(stdin);
     getline(cin, palabra);
+    for (int i = 0; i < palabra.length(); i++)
+    {
+        if (palabra[i] == ' ')
+        {
+            palabra[i] = '_';
+        }
+    }
     file << palabra << endl;
-
+    leftPadding = (consoleWidth - 32) / 2;
+    gotoxy(leftPadding, 17);
     system("Pause");
 }
 
@@ -891,7 +901,7 @@ void eliminar(int arch, int consoleWidth)
         }
         leftPadding = (consoleWidth - 32) / 2;
         gotoxy(leftPadding, i);
-        system("pause");
+        system("Pause");
     }
 }
 
