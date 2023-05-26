@@ -21,6 +21,18 @@ struct casilla
     int posicion;
 };
 
+struct dato
+{
+    string alias;
+    string catAJugar;
+    int palAUsar;
+    int ren;
+    int col;
+    casilla **tableroDinamico;
+    int horaIn;     //No se si la hora se pueda guardar asi pero aja, se entiende la idea
+};
+
+
 // Portada
 void portada(int consoleWidth);      /* Caso 2 */
 void presentacion(int consoleWidth); /* Caso 2 */
@@ -308,10 +320,10 @@ void opcionesMantenimiento(int arch, int consoleWidth)
 
 void menuJuego(int consoleWidth)
 {
-    int palAUsar, leftPadding, ren, col;
+    int leftPadding;
     bool band1, band2, band3;
-    string alias, catAJugar, line;
-    casilla **tableroDinamico;
+    string line;
+    dato datos;
 
     do // captura alias
     {
@@ -327,8 +339,8 @@ void menuJuego(int consoleWidth)
         fflush(stdin);
         leftPadding = (consoleWidth - 15) / 2;
         gotoxy(leftPadding, 4);
-        getline(cin, alias);
-        band1=validarAlias(alias, consoleWidth);
+        getline(cin, datos.alias);
+        band1=validarAlias(datos.alias, consoleWidth);
     } while (!band1);
 
     do // Capturar Categoria
@@ -354,8 +366,8 @@ void menuJuego(int consoleWidth)
         gotoxy(leftPadding, 12);
         cout << line;
         fflush(stdin);
-        getline(cin, catAJugar);
-        band2=validarCategoria(catAJugar, consoleWidth);
+        getline(cin, datos.catAJugar);
+        band2=validarCategoria(datos.catAJugar, consoleWidth);
         if (!band2)      //Borra de pantalla cosas basura
         {
             clearLines(12, 2);
@@ -373,8 +385,8 @@ void menuJuego(int consoleWidth)
         leftPadding = (consoleWidth - line.length()) / 2;
         gotoxy(leftPadding, 16);
         cout << line;
-        cin >> palAUsar;
-        band3=validarPalabras(palAUsar, consoleWidth);
+        cin >> datos.palAUsar;
+        band3=validarPalabras(datos.palAUsar, consoleWidth);
         if (!band3)      //Borra de pantalla cosas basura
         {
             clearLines(16, 2);
@@ -383,8 +395,8 @@ void menuJuego(int consoleWidth)
         
     } while (!band3);
 
-    tableroDinamico = crearTablero(palAUsar, catAJugar, &ren, &col);
-    registrarjugador(alias,catAJugar,palAUsar);
+    datos.tableroDinamico = crearTablero(datos.palAUsar, datos.catAJugar, &datos.ren, &datos.col);
+    registrarjugador(datos.alias,datos.catAJugar,datos.palAUsar);
 	//tablero dinamico es casilla**
     system("pause");
 }
