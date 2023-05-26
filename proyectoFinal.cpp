@@ -42,7 +42,7 @@ bool validarPalabras(int words, int consoleWidth);   /* Caso 2 */
 casilla **pedirMemoriaMat(int pal, int *ren, int *col); /* Caso 4 */
 string *pedirMemVec(int tam);   /* Caso 4*/
 void llenarTab(casilla **mat, int ren, int col, string *v, string cat, int pal);    /* Caso 2*/
-void imprimirTab(int palAUsar, casilla **TableroDinamico);
+void imprimirTab(int ren, int col, casilla **tablero, int seleccion, int consoleWidth);
 void shuffle(string *v, int tam);   /* Caso 2*/
 bool validarRepetidos(int *v, int num, int k);  /* Caso 4*/               
 void clearLines(int inicio, int lineas);                                         /* Caso 2 */
@@ -112,7 +112,7 @@ void portada(int consoleWidth)
     gotoxy(leftPadding, 3);
     cout << line;
 
-    line = "Programacion 1";
+    line = "Programacion I";
     leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 5);
     cout << line;
@@ -312,7 +312,7 @@ void opcionesMantenimiento(int arch, int consoleWidth)
 
 void menuJuego(int consoleWidth)
 {
-    int palAUsar, leftPadding, ren, col;
+    int palAUsar, leftPadding, ren, col, seleccion;
     bool band1, band2, band3;
     string alias, catAJugar, line;
     casilla **tableroDinamico;
@@ -389,7 +389,9 @@ void menuJuego(int consoleWidth)
 
     tableroDinamico = crearTablero(palAUsar, catAJugar, &ren, &col);
     registrarjugador(alias,catAJugar,palAUsar);
-	//tablero dinamico es casilla**
+    imprimirTab(ren, col, tableroDinamico, seleccion, consoleWidth);
+
+	//tab, int casillalero dinamico es casilla**
     system("pause");
 }
 
@@ -650,7 +652,48 @@ void llenarTab(casilla **mat, int ren, int col, string *v, string cat, int pal)
     delete[] v;
 }
 
-void imprimirTab(int ren, int col, casilla **tablero){
+void imprimirTab(int ren, int col, casilla **tablero, int seleccion, int consoleWidth){
+    system("cls");
+    
+        for (int i = 0; i < ren; i++)
+        {
+            if (i==0)
+            {
+            for (int j = 0; j < col; j++)
+                {
+                    cout<<" _______________";
+                }
+            }
+            else{  
+                for (int j = 0; j < col; j++)
+                    {
+                        cout<<"_______________|";
+                    }
+                }
+            cout<<endl<<"|";
+            for (int k = 0; k < col; k++)
+            {
+                cout<<setw(16)<<"|";
+            }
+            cout<<endl<<"|";
+            for (int j = 0; j < col; j++)
+            {
+                if(tablero[i][j].posicion==seleccion){
+                cout<<setw(12)<<tablero[i][j].palabra<<setw(4)<<"|";
+                }
+                cout<<setw(12)<<tablero[i][j].posicion<<setw(4)<<"|";
+            }
+            cout<<endl<<"|";
+            if(i==ren-1){
+                for (int j = 0; j < col; j++)
+                {
+                    cout<<"_______________|";
+                }
+            }
+            
+            
+        }
+    //}while(!win);
     
 }
 bool validarRepetidos(int *v, int num, int k)

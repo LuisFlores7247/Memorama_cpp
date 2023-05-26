@@ -5,8 +5,8 @@ Mouse
 Teclado
 Audino
 Radio
-Acelerador_de_particulas
+Cautin
 Audifonos
-Bobina_de_tesla
-Pistola_de_protones
+Bobina
+Protoboard
 Tamagochi
