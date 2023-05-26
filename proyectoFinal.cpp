@@ -51,7 +51,7 @@ void leerArch(int arch, int consoleWidth); /* Caso 2*/
 void agregar(int arch, int consoleWidth);  /* Caso 2*/
 void eliminar(int arch, int consoleWidth); /* Caso 2*/
 void registrarjugador(string alias, string cate, int dimension);
-bool validarPalabras(int arch); /* Caso 4 */
+bool validarPalabrasArch(int arch); /* Caso 4 */
 
 int main(int argc, char const *argv[])
 {
@@ -810,7 +810,7 @@ void eliminar(int arch, int consoleWidth)
 
     string line = "";
     int leftPadding;
-    bool status = validarPalabras(arch);
+    bool status = validarPalabrasArch(arch);
     if (!status)
     {
         line = "El numero de palabras es menor a ocho";
@@ -831,7 +831,7 @@ void eliminar(int arch, int consoleWidth)
         {
             system("cls");
             agregar(arch, consoleWidth);
-            status = validarPalabras(arch);
+            status = validarPalabrasArch(arch);
         }
     }
     else
@@ -925,7 +925,7 @@ void registrarjugador(string alias, string cate, int dimension)
     }
 }
 
-bool validarPalabras(int arch)
+bool validarPalabrasArch(int arch)
 {
     fstream file;
     bool status;
