@@ -21,6 +21,17 @@ struct casilla
     int posicion;
 };
 
+struct dato
+{
+    string alias;
+    string catAJugar;
+    int palAUsar;
+    int ren;
+    int col;
+    casilla **tableroDinamico;
+    int horaIn;     //No se si la hora se pueda guardar asi pero aja, se entiende la idea
+};
+
 // Portada
 void portada(int consoleWidth);      /* Caso 2 */
 void presentacion(int consoleWidth); /* Caso 2 */
@@ -34,6 +45,7 @@ void opcionesMantenimiento(int arch, int consoleWidth); /* Caso 2 */
 // Fundamentales
 void gotoxy(int x, int y);                                             /* Caso 2 */
 casilla **crearTablero(int pal, string categoria, int *ren, int *col); /* Caso 4 */
+void juego(dato info, int consoleWith);
 
 // Assets
 bool validarAlias(string alias, int consoleWidth);                               /* Caso 2 */
@@ -308,10 +320,10 @@ void opcionesMantenimiento(int arch, int consoleWidth)
 
 void menuJuego(int consoleWidth)
 {
-    int palAUsar, leftPadding, ren, col;
+    int palAUsar, leftPadding;
     bool band1, band2, band3;
-    string alias, catAJugar, line;
-    casilla **tableroDinamico;
+    string line;
+    dato datos;
 
     do // captura alias
     {
@@ -327,8 +339,8 @@ void menuJuego(int consoleWidth)
         fflush(stdin);
         leftPadding = (consoleWidth - 15) / 2;
         gotoxy(leftPadding, 4);
-        getline(cin, alias);
-        band1 = validarAlias(alias, consoleWidth);
+        getline(cin, datos.alias);
+        band1=validarAlias(datos.alias, consoleWidth);
     } while (!band1);
 
     do // Capturar Categoria
@@ -354,14 +366,14 @@ void menuJuego(int consoleWidth)
         gotoxy(leftPadding, 12);
         cout << line;
         fflush(stdin);
-        getline(cin, catAJugar);
-        band2 = validarCategoria(catAJugar, consoleWidth);
-        if (!band2) // Borra de pantalla cosas basura
+        getline(cin, datos.catAJugar);
+        band2=validarCategoria(datos.catAJugar, consoleWidth);
+        if (!band2)      //Borra de pantalla cosas basura
         {
             clearLines(12, 2);
             clearLines(19, 3);
         }
-
+        
     } while (!band2);
     do // Capurar palabras
     {
@@ -373,22 +385,21 @@ void menuJuego(int consoleWidth)
         leftPadding = (consoleWidth - line.length()) / 2;
         gotoxy(leftPadding, 16);
         cout << line;
-        cin >> palAUsar;
-        band3 = validarPalabras(palAUsar, consoleWidth);
-        if (!band3) // Borra de pantalla cosas basura
+        cin >> datos.palAUsar;
+        band3=validarPalabras(datos.palAUsar, consoleWidth);
+        if (!band3)      //Borra de pantalla cosas basura
         {
             clearLines(16, 2);
             clearLines(20, 3);
         }
-
+        
     } while (!band3);
 
-    tableroDinamico = crearTablero(palAUsar, catAJugar, &ren, &col);
-    registrarjugador(alias, catAJugar, palAUsar);
-    // tablero dinamico es casilla**
-    leftPadding = (consoleWidth - 32) / 2;
-    gotoxy(leftPadding, 17);
-    system("Pause");
+    datos.tableroDinamico = crearTablero(datos.palAUsar, datos.catAJugar, &datos.ren, &datos.col);
+    registrarjugador(datos.alias,datos.catAJugar,datos.palAUsar);
+	//tablero dinamico es casilla**
+    juego(datos,consoleWidth);
+    system("pause");
 }
 
 // Fundamentales
@@ -417,6 +428,24 @@ casilla **crearTablero(int pal, string categoria, int *ren, int *col)
     return tableroDinamico;
 }
 
+void juego(dato info, int consoleWidth)
+{
+    int seleccion;
+    bool win=false;
+    do
+    {
+        //ImprimirTab
+        //MedirTiempo
+        //PreguntarCasilla 
+        //Validar casilla
+        //condiciones de destapar
+        //Condicion de ganar
+    } while (!win);
+    //MedirT y sacar cuanto se tardo
+    //Mensaje de Ganar
+    //Guardar Todo en el Bin
+    //regreso al menu
+}
 // Assets
 
 bool validarAlias(string alias, int consoleWidth)
