@@ -661,47 +661,47 @@ void llenarTab(casilla **mat, int ren, int col, string *v, string cat, int pal)
 
 void imprimirTab(int ren, int col, casilla **tablero, int seleccion, int consoleWidth){
     system("cls");
-    
-        for (int i = 0; i < ren; i++)
+
+    for (int i = 0; i < ren; i++)
+    {
+        if (i==0)
         {
-            if (i==0)
+        for (int j = 0; j < col; j++)
             {
+                cout<<" _______________";
+            }
+        }
+        else{  
             for (int j = 0; j < col; j++)
-                {
-                    cout<<" _______________";
-                }
-            }
-            else{  
-                for (int j = 0; j < col; j++)
-                    {
-                        cout<<"_______________|";
-                    }
-                }
-            cout<<endl<<"|";
-            for (int k = 0; k < col; k++)
-            {
-                cout<<setw(16)<<"|";
-            }
-            cout<<endl<<"|";
-            for (int j = 0; j < col; j++)
-            {
-                if(tablero[i][j].posicion==seleccion){
-                cout<<setw(12)<<tablero[i][j].palabra<<setw(4)<<"|";
-                }
-                cout<<setw(12)<<tablero[i][j].posicion<<setw(4)<<"|";
-            }
-            cout<<endl<<"|";
-            if(i==ren-1){
-                for (int j = 0; j < col; j++)
                 {
                     cout<<"_______________|";
                 }
             }
-            
-            
+        cout<<endl<<"|";
+        for (int k = 0; k < col; k++)
+        {
+            cout<<setw(16)<<"|";
         }
-    //}while(!win);
-    
+        cout<<endl<<"|";
+        for (int j = 0; j < col; j++)
+        {
+            if(tablero[i][j].posicion==seleccion){
+            cout<<setw(12)<<tablero[i][j].palabra<<setw(4)<<"|";
+            }
+            cout<<setw(12)<<tablero[i][j].posicion<<setw(4)<<"|";
+        }
+        cout<<endl<<"|";
+        if(i==ren-1){
+            for (int j = 0; j < col; j++)
+            {
+                cout<<"_______________|";
+            }
+        }
+        
+        
+    }
+
+
 }
 bool validarRepetidos(int *v, int num, int k)
 {
