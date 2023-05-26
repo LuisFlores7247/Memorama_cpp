@@ -28,6 +28,7 @@ struct dato
     int palAUsar;
     int ren;
     int col;
+    double tiempo;
     casilla **tableroDinamico;
     int horaIn;     //No se si la hora se pueda guardar asi pero aja, se entiende la idea
 };
@@ -46,6 +47,7 @@ void opcionesMantenimiento(int arch, int consoleWidth); /* Caso 2 */
 // Fundamentales
 void gotoxy(int x, int y);                         /* Caso 2 */
 casilla **crearTablero(int pal, string categoria, int *ren,int *col); /* Caso 4 */
+void juego(dato info, int consoleWidth);
 
 // Assets
 bool validarAlias(string alias, int consoleWidth);   /* Caso 2 */
@@ -399,6 +401,7 @@ void menuJuego(int consoleWidth)
     datos.tableroDinamico = crearTablero(datos.palAUsar, datos.catAJugar, &datos.ren, &datos.col);
     registrarjugador(datos.alias,datos.catAJugar,datos.palAUsar);
 	//tablero dinamico es casilla**
+    juego(datos,consoleWidth);
     system("pause");
 }
 
@@ -428,6 +431,24 @@ casilla **crearTablero(int pal, string categoria, int *ren, int *col)
     return tableroDinamico;
 }
 
+void juego(dato info, int consoleWidth)
+{
+    bool win=false;
+    do
+    {
+        //ImprimirTab
+        //medirT
+        //PreguntarCasilla
+        //ValidarCasilla
+        //Guardar casilla
+        //condiciones de destapar
+        //condicion de ganar
+    } while (!win); 
+    //medirT y sacar cuanto se tardo   
+    //Mensaje de ganar 
+    //guardar todo en bin
+    //regreso al menu
+}
 // Assets
 
 bool validarAlias(string alias, int consoleWidth)
