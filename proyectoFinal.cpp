@@ -54,7 +54,7 @@ bool validarPalabras(int words, int consoleWidth);                              
 casilla **pedirMemoriaMat(int pal, int *ren, int *col);                          /* Caso 4 */
 string *pedirMemVec(int tam);                                                    /* Caso 4*/
 void llenarTab(casilla **mat, int ren, int col, string *v, string cat, int pal); /* Caso 2*/
-void imprimirTab(int ren, int col, casilla **tablero, int seleccion, int consoleWidth);
+void imprimirTab(dato info, int seleccion, int consoleWidth);
 void shuffle(string *v, int tam);                                                /* Caso 2*/
 bool validarRepetidos(int *v, int num, int k);                                   /* Caso 4*/
 void clearLines(int inicio, int lineas);                                         /* Caso 2 */
@@ -63,7 +63,7 @@ void clearLines(int inicio, int lineas);                                        
 void leerArch(int arch, int consoleWidth); /* Caso 2*/
 void agregar(int arch, int consoleWidth);  /* Caso 2*/
 void eliminar(int arch, int consoleWidth); /* Caso 2*/
-void registrarjugador(string alias, string cate, int dimension);
+void registrarjugador(dato info);
 bool validarPalabrasArch(int arch); /* Caso 4 */
 
 int main(int argc, char const *argv[])
@@ -397,10 +397,9 @@ void menuJuego(int consoleWidth)
     } while (!band3);
 
     datos.tableroDinamico = crearTablero(datos.palAUsar, datos.catAJugar, &datos.ren, &datos.col);
-    registrarjugador(datos.alias,datos.catAJugar,datos.palAUsar);
+    registrarjugador(datos);
 	//tablero dinamico es casilla**
-    // juego(datos,consoleWidth);
-    imprimirTab(datos.ren,datos.col,datos.tableroDinamico,0,consoleWidth);
+    juego(datos,consoleWidth);
     system("pause");
 }
 
@@ -432,11 +431,11 @@ casilla **crearTablero(int pal, string categoria, int *ren, int *col)
 
 void juego(dato info, int consoleWidth)
 {
-    int seleccion;
+    int seleccion=0;
     bool win=false;
     do
     {
-        //ImprimirTab
+        imprimirTab(info,seleccion, consoleWidth);
         //MedirTiempo
         //PreguntarCasilla 
         //Validar casilla
@@ -679,41 +678,41 @@ void llenarTab(casilla **mat, int ren, int col, string *v, string cat, int pal)
     delete[] v;
 }
 
-void imprimirTab(int ren, int col, casilla **tablero, int seleccion, int consoleWidth)
+void imprimirTab(dato info, int seleccion, int consoleWidth)
 {
     system("cls");
 
-    for (int i = 0; i < ren; i++)
+    for (int i = 0; i < info.ren; i++)
     {
         if (i==0)
         {
-        for (int j = 0; j < col; j++)
+        for (int j = 0; j < info.col; j++)
             {
                 cout<<" _______________";
             }
         }
         else{  
-            for (int j = 0; j < col; j++)
+            for (int j = 0; j < info.col; j++)
                 {
                     cout<<"_______________|";
                 }
             }
         cout<<endl<<"|";
-        for (int k = 0; k < col; k++)
+        for (int k = 0; k < info.col; k++)
         {
             cout<<setw(16)<<"|";
         }
         cout<<endl<<"|";
-        for (int j = 0; j < col; j++)
+        for (int j = 0; j < info.col; j++)
         {
-            if(tablero[i][j].posicion==seleccion){
-            cout<<setw(12)<<tablero[i][j].palabra<<setw(4)<<"|";
+            if(info.tableroDinamico[i][j].posicion==seleccion){
+            cout<<setw(12)<<info.tableroDinamico[i][j].palabra<<setw(4)<<"|";
             }
-            cout<<setw(12)<<tablero[i][j].posicion<<setw(4)<<"|";
+            cout<<setw(12)<<info.tableroDinamico[i][j].posicion<<setw(4)<<"|";
         }
         cout<<endl<<"|";
-        if(i==ren-1){
-            for (int j = 0; j < col; j++)
+        if(i==info.ren-1){
+            for (int j = 0; j < info.col; j++)
             {
                 cout<<"_______________|";
             }
@@ -980,7 +979,7 @@ void eliminar(int arch, int consoleWidth)
     }
 }
 
-void registrarjugador(string alias, string cate, int dimension)
+void registrarjugador(dato info)
 {
     fstream juga;
     char nomarch[30] = "registrojugadores.txt";
@@ -995,7 +994,7 @@ void registrarjugador(string alias, string cate, int dimension)
         cout << " No se pudo hacer el registro " << endl;
     else
     {
-        juga << alias << " " << cate << " " << dimension << " " << hora << " " << dia << endl;
+        juga << info.alias << " " << info.catAJugar << " " << info.palAUsar << " " << hora << " " << dia << endl;
         juga.close();
     }
 }
