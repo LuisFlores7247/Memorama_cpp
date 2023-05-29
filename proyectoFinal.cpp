@@ -21,6 +21,18 @@ struct casilla
     int posicion;
 };
 
+struct dato
+{
+    string alias;
+    string catAJugar;
+    int palAUsar;
+    int ren;
+    int col;
+    casilla **tableroDinamico;
+    int horaIn; // No se si la hora se pueda guardar asi pero aja, se entiende la idea
+    double duracDeJueg;
+};
+
 // Portada
 void portada(int consoleWidth);      /* Caso 2 */
 void presentacion(int consoleWidth); /* Caso 2 */
@@ -32,30 +44,30 @@ void mantenimiento();                                   /* Caso 1 */
 void opcionesMantenimiento(int arch, int consoleWidth); /* Caso 2 */
 
 // Fundamentales
-void gotoxy(int x, int y);                         /* Caso 2 */
-casilla **crearTablero(int pal, string categoria, int *ren,int *col); /* Caso 4 */
+void gotoxy(int x, int y);                                             /* Caso 2 */
+casilla **crearTablero(int pal, string categoria, int *ren, int *col); /* Caso 4 */
+void juego(dato info, int consoleWith);
 
 // Assets
-bool validarAlias(string alias, int consoleWidth);   /* Caso 2 */
-bool validarCategoria(string cat, int consoleWidth); /* Caso 2 */
-bool validarPalabras(int words, int consoleWidth);   /* Caso 2 */
-casilla **pedirMemoriaMat(int pal, int *ren, int *col); /* Caso 4 */
-string *pedirMemVec(int tam);   /* Caso 4*/
-void llenarTab(casilla **mat, int ren, int col, string *v, string cat, int pal);    /* Caso 2*/
-void imprimirTab(int ren, int col, casilla **tablero, int seleccion, int consoleWidth); /* Caso 2*/
-void shuffle(string *v, int tam);   /* Caso 2*/
-bool validarRepetidos(int *v, int num, int k);  /* Caso 4*/               
+bool validarAlias(string alias, int consoleWidth);                               /* Caso 2 */
+bool validarCategoria(string cat, int consoleWidth);                             /* Caso 2 */
+bool validarPalabras(int words, int consoleWidth);                               /* Caso 2 */
+casilla **pedirMemoriaMat(int pal, int *ren, int *col);                          /* Caso 4 */
+string *pedirMemVec(int tam);                                                    /* Caso 4*/
+void llenarTab(casilla **mat, int ren, int col, string *v, string cat, int pal); /* Caso 2*/
+void imprimirTab(dato info, int seleccion, int consoleWidth);                    /* Caso 2 */
+void shuffle(string *v, int tam);                                                /* Caso 2*/
+bool validarRepetidos(int *v, int num, int k);                                   /* Caso 4*/
 void clearLines(int inicio, int lineas);                                         /* Caso 2 */
+clock_t medirT();                                                                /* Caso 3 */
+string palabraSeleccion(dato info, int posicion);
 
 // Archivos
 void leerArch(int arch, int consoleWidth); /* Caso 2*/
 void agregar(int arch, int consoleWidth);  /* Caso 2*/
 void eliminar(int arch, int consoleWidth); /* Caso 2*/
-void registrarjugador(string alias, string cate, int dimension);
-
-
-//Funciones de prueba que se van a eliminar luego (descomentenlas y llamenlas donde necesiten para ejecutarlas)
-// void pruebaImprimir(casilla **tablero, int ren, int col);
+void registrarjugador(dato info);          /* Caso 2*/
+bool validarPalabrasArch(int arch);        /* Caso 4 */
 
 int main(int argc, char const *argv[])
 {
@@ -312,10 +324,10 @@ void opcionesMantenimiento(int arch, int consoleWidth)
 
 void menuJuego(int consoleWidth)
 {
-    int palAUsar, leftPadding, ren, col, seleccion;
+    int palAUsar, leftPadding;
     bool band1, band2, band3;
-    string alias, catAJugar, line;
-    casilla **tableroDinamico;
+    string line;
+    dato datos;
 
     do // captura alias
     {
@@ -331,8 +343,8 @@ void menuJuego(int consoleWidth)
         fflush(stdin);
         leftPadding = (consoleWidth - 15) / 2;
         gotoxy(leftPadding, 4);
-        getline(cin, alias);
-        band1=validarAlias(alias, consoleWidth);
+        getline(cin, datos.alias);
+        band1 = validarAlias(datos.alias, consoleWidth);
     } while (!band1);
 
     do // Capturar Categoria
@@ -358,14 +370,14 @@ void menuJuego(int consoleWidth)
         gotoxy(leftPadding, 12);
         cout << line;
         fflush(stdin);
-        getline(cin, catAJugar);
-        band2=validarCategoria(catAJugar, consoleWidth);
-        if (!band2)      //Borra de pantalla cosas basura
+        getline(cin, datos.catAJugar);
+        band2 = validarCategoria(datos.catAJugar, consoleWidth);
+        if (!band2) // Borra de pantalla cosas basura
         {
             clearLines(12, 2);
             clearLines(19, 3);
         }
-        
+
     } while (!band2);
     do // Capurar palabras
     {
@@ -377,21 +389,20 @@ void menuJuego(int consoleWidth)
         leftPadding = (consoleWidth - line.length()) / 2;
         gotoxy(leftPadding, 16);
         cout << line;
-        cin >> palAUsar;
-        band3=validarPalabras(palAUsar, consoleWidth);
-        if (!band3)      //Borra de pantalla cosas basura
+        cin >> datos.palAUsar;
+        band3 = validarPalabras(datos.palAUsar, consoleWidth);
+        if (!band3) // Borra de pantalla cosas basura
         {
             clearLines(16, 2);
             clearLines(20, 3);
         }
-        
+
     } while (!band3);
 
-    tableroDinamico = crearTablero(palAUsar, catAJugar, &ren, &col);
-    registrarjugador(alias,catAJugar,palAUsar);
-    imprimirTab(ren, col, tableroDinamico, seleccion, consoleWidth);
-
-	//tab, int casillalero dinamico es casilla**
+    datos.tableroDinamico = crearTablero(datos.palAUsar, datos.catAJugar, &datos.ren, &datos.col);
+    registrarjugador(datos);
+    // tablero dinamico es casilla**
+    juego(datos, consoleWidth);
     system("pause");
 }
 
@@ -413,14 +424,60 @@ casilla **crearTablero(int pal, string categoria, int *ren, int *col)
     string *vecDina;
     casilla **tableroDinamico;
     tableroDinamico = pedirMemoriaMat(pal, &aux1, &aux2);
-    *ren=aux1;
-    *col=aux2;
+    *ren = aux1;
+    *col = aux2;
     vecDina = pedirMemVec((*ren) * (*col));
     llenarTab(tableroDinamico, *ren, *col, vecDina, categoria, pal);
 
     return tableroDinamico;
 }
 
+void juego(dato info, int consoleWidth)
+{
+    int seleccion = 0, selecAnterior = 0, palabrasRestantes=info.palAUsar;
+    bool win = false;
+    clock_t start, end;
+    do
+    {
+        imprimirTab(info, seleccion, consoleWidth);
+        start = medirT();
+        system("pause");
+        // PreguntarCasilla
+        // Validar casilla que este dentro de lo rangos y que no se haya seleccionado anteriormente
+        // condiciones de destapar
+        if (palabraSeleccion(info, seleccion) == palabraSeleccion(info, selecAnterior))
+        {
+            // Felicitaciones
+            for (int i = 0; i < info.ren; i++)
+            {
+                for (int j = 0; j < info.col; j++)
+                {
+                    if (info.tableroDinamico[i][j].posicion==seleccion)
+                    {
+                        info.tableroDinamico[i][j].estado=true;
+                    }
+                    if (info.tableroDinamico[i][j].posicion==selecAnterior)
+                    {
+                        info.tableroDinamico[i][j].estado=true;
+                    }
+                }         
+            }            
+            palabrasRestantes--;
+        }
+        // Condicion de ganar
+        if (palabrasRestantes==0)
+        {
+            win=true;
+        }
+        
+        selecAnterior = seleccion;
+    } while (!win);
+    end = medirT();
+    info.duracDeJueg = static_cast<double>(end - start) / CLOCKS_PER_SEC;
+    // Mensaje de Ganar
+    // Guardar Todo en el Bin
+    // regreso al menu
+}
 // Assets
 
 bool validarAlias(string alias, int consoleWidth)
@@ -652,49 +709,54 @@ void llenarTab(casilla **mat, int ren, int col, string *v, string cat, int pal)
     delete[] v;
 }
 
-void imprimirTab(int ren, int col, casilla **tablero, int seleccion, int consoleWidth){
+void imprimirTab(dato info, int seleccion, int consoleWidth)
+{
     system("cls");
-    
-        for (int i = 0; i < ren; i++)
+
+    for (int i = 0; i < info.ren; i++)
+    {
+        if (i == 0)
         {
-            if (i==0)
+            for (int j = 0; j < info.col; j++)
             {
-            for (int j = 0; j < col; j++)
-                {
-                    cout<<" _______________";
-                }
+                cout << " _______________";
             }
-            else{  
-                for (int j = 0; j < col; j++)
-                    {
-                        cout<<"_______________|";
-                    }
-                }
-            cout<<endl<<"|";
-            for (int k = 0; k < col; k++)
-            {
-                cout<<setw(16)<<"|";
-            }
-            cout<<endl<<"|";
-            for (int j = 0; j < col; j++)
-            {
-                if(tablero[i][j].posicion==seleccion){
-                cout<<setw(12)<<tablero[i][j].palabra<<setw(4)<<"|";
-                }
-                cout<<setw(12)<<tablero[i][j].posicion<<setw(4)<<"|";
-            }
-            cout<<endl<<"|";
-            if(i==ren-1){
-                for (int j = 0; j < col; j++)
-                {
-                    cout<<"_______________|";
-                }
-            }
-            
-            
         }
-    
+        else
+        {
+            for (int j = 0; j < info.col; j++)
+            {
+                cout << "_______________|";
+            }
+        }
+        cout << endl
+             << "|";
+        for (int k = 0; k < info.col; k++)
+        {
+            cout << setw(16) << "|";
+        }
+        cout << endl
+             << "|";
+        for (int j = 0; j < info.col; j++)
+        {
+            if (info.tableroDinamico[i][j].posicion == seleccion)
+            {
+                cout << setw(12) << info.tableroDinamico[i][j].palabra << setw(4) << "|";
+            }
+            cout << setw(12) << info.tableroDinamico[i][j].posicion << setw(4) << "|";
+        }
+        cout << endl
+             << "|";
+        if (i == info.ren - 1)
+        {
+            for (int j = 0; j < info.col; j++)
+            {
+                cout << "_______________|";
+            }
+        }
+    }
 }
+
 bool validarRepetidos(int *v, int num, int k)
 {
     bool aux = true;
@@ -737,6 +799,26 @@ void clearLines(int inicio, int lineas)
             cout << "\033[E"; // Mover el cursor al principio de la siguiente línea
         }
     }
+}
+
+clock_t medirT()
+{
+    clock_t time = clock();
+    return time;
+}
+
+string palabraSeleccion(dato info, int seleccion)
+{
+    for (int i = 0; i < info.ren; i++)
+    {
+        for (int j = 0; j < info.col; j++)
+        {
+            if (info.tableroDinamico[i][j].posicion==seleccion)
+            {
+                return info.tableroDinamico[i][j].palabra;
+            }            
+        }        
+    }    
 }
 
 // Archivos
@@ -836,8 +918,16 @@ void agregar(int arch, int consoleWidth)
     cout << line;
     fflush(stdin);
     getline(cin, palabra);
-    file << palabra;
-
+    for (int i = 0; i < palabra.length(); i++)
+    {
+        if (palabra[i] == ' ')
+        {
+            palabra[i] = '_';
+        }
+    }
+    file << palabra << endl;
+    leftPadding = (consoleWidth - 32) / 2;
+    gotoxy(leftPadding, 17);
     system("Pause");
 }
 
@@ -847,113 +937,145 @@ void eliminar(int arch, int consoleWidth)
     fstream file, temp;
     temp.open("temp.txt", ios::out);
 
-    string line;
+    string line = "";
     int leftPadding;
-
-    if (arch == 1)
+    bool status = validarPalabrasArch(arch);
+    if (!status)
     {
-        file.open(CAT1, ios::in | ios::out);
-        line = "DISPOSITIVOS MOVILES";
+        line = "El numero de palabras es menor a ocho";
         leftPadding = (consoleWidth - line.length()) / 2;
         gotoxy(leftPadding, 1);
         cout << line;
+
+        line = "Por favor agregue mas palabras";
+        leftPadding = (consoleWidth - line.length()) / 2;
+        gotoxy(leftPadding, 3);
+        cout << line;
+
+        leftPadding = (consoleWidth - 32) / 2;
+        gotoxy(leftPadding, 17);
+        system("Pause");
+
+        while (!status)
+        {
+            system("cls");
+            agregar(arch, consoleWidth);
+            status = validarPalabrasArch(arch);
+        }
+    }
+    else
+    {
+        if (arch == 1)
+        {
+            file.open(CAT1, ios::in | ios::out);
+            line = "DISPOSITIVOS MOVILES";
+            leftPadding = (consoleWidth - line.length()) / 2;
+            gotoxy(leftPadding, 1);
+            cout << line;
+        }
+        if (arch == 2)
+        {
+            file.open(CAT2, ios::in | ios::out);
+            line = "LENGUAJES DE PROGRAMACION";
+            leftPadding = (consoleWidth - line.length()) / 2;
+            gotoxy(leftPadding, 1);
+            cout << line;
+        }
+        if (arch == 3)
+        {
+            file.open(CAT3, ios::in | ios::out);
+            line = "PAISES";
+            leftPadding = (consoleWidth - line.length()) / 2;
+            gotoxy(leftPadding, 1);
+            cout << line;
+        }
+
+        int i = 1, aux;
+        bool flag;
+        string palabra;
+
+        line = "Ingresa el ID: ";
+        leftPadding = (consoleWidth - line.length()) / 2;
+        gotoxy(leftPadding, 3);
+        cout << line;
+        cin >> aux;
+        while (getline(file, palabra))
+        {
+            if (aux != i)
+            {
+                temp << palabra << endl;
+            }
+            else
+            {
+            }
+        }
+        leftPadding = (consoleWidth - 32) / 2;
+        gotoxy(leftPadding, 7);
+        temp.close();
+        file.close();
+        if (arch == 1)
+        {
+            system("del categoria1.txt");
+            system("ren temp.txt categoria1.txt");
+        }
+        if (arch == 2)
+        {
+            system("del categoria2.txt");
+            system("ren temp.txt categoria2.txt");
+        }
+        if (arch == 3)
+        {
+            system("del categoria3.txt");
+            system("ren temp.txt categoria3.txt");
+        }
+        leftPadding = (consoleWidth - 32) / 2;
+        gotoxy(leftPadding, i);
+        system("Pause");
+    }
+}
+
+void registrarjugador(dato info)
+{
+    fstream juga;
+    char nomarch[30] = "registrojugadores.txt";
+    juga.open(nomarch, ios::out | ios::app);
+    time_t now = time(0);
+    struct tm *time = localtime(&now);
+    char dia[12];
+    char hora[10];
+    strftime(dia, 12, "%d/%m/%Y", time);
+    strftime(hora, 10, "%H:%M:%S", time);
+    if (!juga)
+        cout << " No se pudo hacer el registro " << endl;
+    else
+    {
+        juga << info.alias << " " << info.catAJugar << " " << info.palAUsar << " " << hora << " " << dia << endl;
+        juga.close();
+    }
+}
+
+bool validarPalabrasArch(int arch)
+{
+    fstream file;
+    bool status;
+    string palabra;
+    int palabras = 0;
+    if (arch == 1)
+    {
+        file.open(CAT1, ios::in | ios::out);
     }
     if (arch == 2)
     {
         file.open(CAT2, ios::in | ios::out);
-        line = "LENGUAJES DE PROGRAMACION";
-        leftPadding = (consoleWidth - line.length()) / 2;
-        gotoxy(leftPadding, 1);
-        cout << line;
     }
     if (arch == 3)
     {
         file.open(CAT3, ios::in | ios::out);
-        line = "PAISES";
-        leftPadding = (consoleWidth - line.length()) / 2;
-        gotoxy(leftPadding, 1);
-        cout << line;
     }
-
-    int i = 1, aux;
-    bool flag;
-    string palabra;
-
-    line = "Ingresa el ID: ";
-    leftPadding = (consoleWidth - line.length()) / 2;
-    gotoxy(leftPadding, 3);
-    cout << line;
-    cin >> aux;
     while (getline(file, palabra))
     {
-        if (aux != i)
-        {
-            temp << palabra << endl;
-        }
-        else
-        {
-        }
+        palabras++;
     }
-    leftPadding = (consoleWidth - 32) / 2;
-    gotoxy(leftPadding, 7);
-    temp.close();
-    file.close();
-    if (arch == 1)
-    {
-        system("del categoria1.txt");
-        system("ren temp.txt categoria1.txt");
-    }
-    if (arch == 2)
-    {
-        system("del categoria2.txt");
-        system("ren temp.txt categoria2.txt");
-    }
-    if (arch == 3)
-    {
-        system("del categoria3.txt");
-        system("ren temp.txt categoria3.txt");
-    }
-    leftPadding = (consoleWidth - 32) / 2;
-    gotoxy(leftPadding, i);
-    system("pause");
-}
-
-//Implementacion de funciones prueba
-
-// void pruebaImprimir(casilla **tablero,int ren,int col){
-//     for (int i = 0; i < ren; i++)
-//     {
-//         for (int j = 0; j < col; j++)
-//         {
-//             cout<<setw(20)<<tablero[i][j].palabra;
-//         }
-//         cout<<endl;
-//     }
-//     cout<<endl<<endl<<"Ahora la posicion"<<endl<<endl;
-//     for (int i = 0; i < ren; i++)
-//     {
-//         for (int j = 0; j < col; j++)
-//         {
-//             cout<<setw(10)<<tablero[i][j].posicion;
-//         }
-//         cout<<endl;
-//     }
-    
-// }
-void registrarjugador(string alias, string cate, int dimension){
-	fstream juga;
-	char nomarch[30]="registrojugadores.txt";
-	juga.open(nomarch,ios::out|ios::app);
-	time_t now = time(0);
-	struct tm *time = localtime(&now);
-	char dia[12];
-	char hora[10];
-	strftime(dia,12,"%d/%m/%Y",time);
-	strftime(hora,10,"%H:%M:%S",time);
-	if ( !juga ) 
-	    cout << " No se pudo hacer el registro " << endl ;
-		else{ 
-			juga << alias << " " << cate << " "<< dimension<< " "<< hora<< " "<<dia<< endl;
-			juga.close();
-		}
+    status = palabras < 8 ? false : true;
+    return status;
 }
