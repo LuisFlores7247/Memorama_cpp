@@ -442,7 +442,6 @@ void juego(dato info, int consoleWidth)
         imprimirTab(info, seleccion, consoleWidth);
         cout<<endl;
         start = medirT();
-        system("pause");
         // PreguntarCasilla
         do{
             string line= "Selecciona una casilla: ";
@@ -457,7 +456,7 @@ void juego(dato info, int consoleWidth)
         // condiciones de destapar
         if (palabraSeleccion(info, seleccion) == palabraSeleccion(info, selecAnterior))
         {
-            // Felicitaciones
+
             for (int i = 0; i < info.ren; i++)
             {
                 for (int j = 0; j < info.col; j++)
@@ -751,11 +750,14 @@ void imprimirTab(dato info, int seleccion, int consoleWidth)
         cout << endl<<setw(leftPadding) << "|";
         for (int j = 0; j < info.col; j++)
         {
-            if (info.tableroDinamico[i][j].posicion == seleccion)
+            if (info.tableroDinamico[i][j].posicion == seleccion || info.tableroDinamico[i][j].estado)
             {
                 cout << setw(12) << info.tableroDinamico[i][j].palabra << setw(4) << "|";
             }
-            cout << setw(12) << info.tableroDinamico[i][j].posicion << setw(4) << "|";
+            else
+            {
+                cout << setw(12) << info.tableroDinamico[i][j].posicion << setw(4) << "|";
+            }
         }
         cout << endl <<setw(leftPadding) << "|";
         if (i == info.ren - 1)
