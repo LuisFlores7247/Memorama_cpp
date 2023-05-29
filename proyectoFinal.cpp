@@ -42,7 +42,7 @@ bool validarPalabras(int words, int consoleWidth);   /* Caso 2 */
 casilla **pedirMemoriaMat(int pal, int *ren, int *col); /* Caso 4 */
 string *pedirMemVec(int tam);   /* Caso 4*/
 void llenarTab(casilla **mat, int ren, int col, string *v, string cat, int pal);    /* Caso 2*/
-void imprimirTab(int ren, int col, casilla **tablero, int seleccion, int consoleWidth);
+void imprimirTab(int ren, int col, casilla **tablero, int seleccion, int consoleWidth); /* Caso 2*/
 void shuffle(string *v, int tam);   /* Caso 2*/
 bool validarRepetidos(int *v, int num, int k);  /* Caso 4*/               
 void clearLines(int inicio, int lineas);                                         /* Caso 2 */
@@ -693,7 +693,6 @@ void imprimirTab(int ren, int col, casilla **tablero, int seleccion, int console
             
             
         }
-    //}while(!win);
     
 }
 bool validarRepetidos(int *v, int num, int k)
