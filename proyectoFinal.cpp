@@ -11,6 +11,8 @@
 #define CAT1 "categoria1.txt"
 #define CAT2 "categoria2.txt"
 #define CAT3 "categoria3.txt"
+#define color SetConsoleTextAttribute
+
 
 using namespace std;
 
@@ -434,6 +436,7 @@ casilla **crearTablero(int pal, string categoria, int *ren, int *col)
 
 void juego(dato info, int consoleWidth)
 {
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     int seleccion = 0, selecAnterior = 0, palabrasRestantes=info.palAUsar;
     bool win = false;
     clock_t start, end;
@@ -486,6 +489,43 @@ void juego(dato info, int consoleWidth)
     system("cls");
     // Guardar Todo en el Bin
     // regreso al menu
+    color(hConsole, 6);
+    for (int i = 0; i < 15; i++)
+    {
+        Sleep(800);
+        string line=" _______________________________";
+        int leftPadding=(consoleWidth-line.length())/2;
+        gotoxy(leftPadding, 14);
+        cout<<line;
+        line="|                               |";
+        leftPadding=(consoleWidth-line.length())/2;
+        gotoxy(leftPadding, 15);
+        cout<<line;
+        line="| #   #  ##  #  #  #   # # #  # |";
+        leftPadding=(consoleWidth-line.length())/2;
+        gotoxy(leftPadding, 16);
+        cout<<line;
+        line="|  # #  #  # #  #  #   # # ## # |";
+        leftPadding=(consoleWidth-line.length())/2;
+        gotoxy(leftPadding, 17);
+        cout<<line;
+        line="|   #   #  # #  #  # # # # # ## |";
+        leftPadding=(consoleWidth-line.length())/2;
+        gotoxy(leftPadding, 18);
+        cout<<line;
+        line="|   #    ##   ##    # #  # #  # |";
+        leftPadding=(consoleWidth-line.length())/2;
+        gotoxy(leftPadding, 19);
+        cout<<line;
+        line="|_______________________________|";
+        leftPadding=(consoleWidth-line.length())/2;
+        gotoxy(leftPadding, 20);
+        cout<<line;
+        Sleep(800);
+        if(i<14){
+            system("cls");
+        }    
+    }
 }
 // Assets
 
