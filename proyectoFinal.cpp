@@ -30,6 +30,7 @@ struct dato
     int col;
     casilla **tableroDinamico;
     int horaIn;     //No se si la hora se pueda guardar asi pero aja, se entiende la idea
+    double duracDeJueg;
 };
 
 // Portada
@@ -58,12 +59,13 @@ void imprimirTab(dato info, int seleccion, int consoleWidth);
 void shuffle(string *v, int tam);                                                /* Caso 2*/
 bool validarRepetidos(int *v, int num, int k);                                   /* Caso 4*/
 void clearLines(int inicio, int lineas);                                         /* Caso 2 */
+clock_t medirT();                                                                /* Caso 3 */
 
 // Archivos
 void leerArch(int arch, int consoleWidth); /* Caso 2*/
 void agregar(int arch, int consoleWidth);  /* Caso 2*/
 void eliminar(int arch, int consoleWidth); /* Caso 2*/
-void registrarjugador(dato info);
+void registrarjugador(dato info);           /* Caso 2*/
 bool validarPalabrasArch(int arch); /* Caso 4 */
 
 int main(int argc, char const *argv[])
@@ -433,16 +435,19 @@ void juego(dato info, int consoleWidth)
 {
     int seleccion=0;
     bool win=false;
+    clock_t start, end;
     do
     {
         imprimirTab(info,seleccion, consoleWidth);
-        //MedirTiempo
+        start=medirT();
+        system("pause");
         //PreguntarCasilla 
         //Validar casilla
         //condiciones de destapar
         //Condicion de ganar
     } while (!win);
-    //MedirT y sacar cuanto se tardo
+    end=medirT();
+    info.duracDeJueg= static_cast<double>(end - start) / CLOCKS_PER_SEC;
     //Mensaje de Ganar
     //Guardar Todo en el Bin
     //regreso al menu
@@ -764,6 +769,12 @@ void clearLines(int inicio, int lineas)
             cout << "\033[E"; // Mover el cursor al principio de la siguiente línea
         }
     }
+}
+
+clock_t medirT()
+{
+    clock_t time = clock();
+    return time;
 }
 
 // Archivos
