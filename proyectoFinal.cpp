@@ -440,6 +440,7 @@ void juego(dato info, int consoleWidth)
     do
     {
         imprimirTab(info, seleccion, consoleWidth);
+        cout<<endl;
         start = medirT();
         system("pause");
         // PreguntarCasilla
@@ -712,31 +713,33 @@ void llenarTab(casilla **mat, int ren, int col, string *v, string cat, int pal)
 void imprimirTab(dato info, int seleccion, int consoleWidth)
 {
     system("cls");
-
+    int leftPadding=(consoleWidth-(info.ren*16))/2, k=1;
     for (int i = 0; i < info.ren; i++)
     {
+        
+
         if (i == 0)
         {
+            gotoxy((leftPadding-1),k);
             for (int j = 0; j < info.col; j++)
             {
-                cout << " _______________";
+                cout << "________________";
             }
         }
         else
         {
+            gotoxy(leftPadding,k);
             for (int j = 0; j < info.col; j++)
             {
                 cout << "_______________|";
             }
         }
-        cout << endl
-             << "|";
+        cout << endl<<setw(leftPadding) << "|";
         for (int k = 0; k < info.col; k++)
         {
             cout << setw(16) << "|";
         }
-        cout << endl
-             << "|";
+        cout << endl<<setw(leftPadding) << "|";
         for (int j = 0; j < info.col; j++)
         {
             if (info.tableroDinamico[i][j].posicion == seleccion)
@@ -745,8 +748,7 @@ void imprimirTab(dato info, int seleccion, int consoleWidth)
             }
             cout << setw(12) << info.tableroDinamico[i][j].posicion << setw(4) << "|";
         }
-        cout << endl
-             << "|";
+        cout << endl <<setw(leftPadding) << "|";
         if (i == info.ren - 1)
         {
             for (int j = 0; j < info.col; j++)
@@ -754,6 +756,7 @@ void imprimirTab(dato info, int seleccion, int consoleWidth)
                 cout << "_______________|";
             }
         }
+        k+=3;
     }
 }
 
