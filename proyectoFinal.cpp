@@ -443,6 +443,15 @@ void juego(dato info, int consoleWidth)
         start = medirT();
         system("pause");
         // PreguntarCasilla
+        do{
+            string line= "Selecciona una casilla: ";
+            int leftPadding= (consoleWidth-line.length())/2;
+            gotoxy(leftPadding, 16);
+            cout<<line;
+            leftPadding= (consoleWidth)/2;
+            gotoxy(leftPadding, 17);
+            cin>>seleccion;
+        }while(seleccion<1);
         // Validar casilla que este dentro de lo rangos y que no se haya seleccionado anteriormente
         // condiciones de destapar
         if (palabraSeleccion(info, seleccion) == palabraSeleccion(info, selecAnterior))
@@ -474,7 +483,7 @@ void juego(dato info, int consoleWidth)
     } while (!win);
     end = medirT();
     info.duracDeJueg = static_cast<double>(end - start) / CLOCKS_PER_SEC;
-    // Mensaje de Ganar
+    system("cls");
     // Guardar Todo en el Bin
     // regreso al menu
 }
