@@ -68,7 +68,7 @@ string palabraSeleccion(dato info, int posicion);
 void leerArch(int arch, int consoleWidth); /* Caso 2*/
 void agregar(int arch, int consoleWidth);  /* Caso 2*/
 void eliminar(int arch, int consoleWidth); /* Caso 2*/
-void registrarjugador(dato info);          /* Caso 2*/
+void registrarjugador(dato info, int consoleWidth);          /* Caso 2*/
 bool validarPalabrasArch(int arch);        /* Caso 4 */
 
 int main(int argc, char const *argv[])
@@ -402,7 +402,7 @@ void menuJuego(int consoleWidth)
     } while (!band3);
 
     datos.tableroDinamico = crearTablero(datos.palAUsar, datos.catAJugar, &datos.ren, &datos.col);
-    registrarjugador(datos);
+    registrarjugador(datos,consoleWidth);
     // tablero dinamico es casilla**
     juego(datos, consoleWidth);
     system("pause");
@@ -1088,7 +1088,7 @@ void eliminar(int arch, int consoleWidth)
     }
 }
 
-void registrarjugador(dato info)
+void registrarjugador(dato info, int consoleWidth)
 {
     fstream juga;
     char nomarch[30] = "registrojugadores.txt";
@@ -1104,6 +1104,56 @@ void registrarjugador(dato info)
     else
     {
         juga << info.alias << " " << info.catAJugar << " " << info.palAUsar << " " << hora << " " << dia << endl;
+	    system("cls");
+	    int leftPadding=(consoleWidth-(info.ren*16))/2, k=1;
+	    for (int i = 0; i < info.ren; i++)
+	    {
+	        
+	
+	        if (i == 0)
+	        {
+	            gotoxy((leftPadding-1),k);
+	            for (int j = 0; j < info.col; j++)
+	            {
+	                juga <<setw(16) <<"________________aa";
+	            }
+	        }
+	        else
+	        {
+	            gotoxy(leftPadding,k);
+	            for (int j = 0; j < info.col; j++)
+	            {
+	                juga << "_______________|";
+	            }
+	        }
+	        juga << endl<<setw(leftPadding) << "|";
+	        for (int k = 0; k < info.col; k++)
+	        {
+	            juga << setw(16) << "|";
+	        }
+	        juga << endl<<setw(leftPadding) << "|";
+	        for (int j = 0; j < info.col; j++)
+	        {
+	            if (info.tableroDinamico[i][j].posicion == 0 || info.tableroDinamico[i][j].estado)
+	            {
+	                juga << setw(12) <<  info.tableroDinamico[i][j].palabra << setw(4) << "|";
+	            }
+	            else
+	            {
+	                juga << setw(12) <<  info.tableroDinamico[i][j].palabra << setw(4) << "|";
+	            }
+	        }
+	        juga << endl <<setw(leftPadding) << "|";
+	        if (i == info.ren - 1)
+	        {
+	            for (int j = 0; j < info.col; j++)
+	            {
+	                juga << "_______________|";
+	            }
+	        }
+	        k+=3;
+	    }
+	    juga<<endl;
         juga.close();
     }
 }
@@ -1133,3 +1183,4 @@ bool validarPalabrasArch(int arch)
     status = palabras < 8 ? false : true;
     return status;
 }
+
