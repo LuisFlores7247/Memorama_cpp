@@ -1150,34 +1150,29 @@ void registrarjugador(dato info, int consoleWidth)
     {
         juga << info.alias << " " << info.catAJugar << " " << info.palAUsar << " " << hora << " " << dia << endl;
         system("cls");
-        int leftPadding = (consoleWidth - (info.ren * 16)) / 2, k = 1;
         for (int i = 0; i < info.ren; i++)
         {
 
             if (i == 0)
             {
-                gotoxy((leftPadding - 1), k);
                 for (int j = 0; j < info.col; j++)
                 {
-                    juga << setw(16) << "________________aa";
+                    juga << setw(16) << "________________";
                 }
             }
             else
             {
-                gotoxy(leftPadding, k);
                 for (int j = 0; j < info.col; j++)
                 {
                     juga << "_______________|";
                 }
             }
-            juga << endl
-                 << setw(leftPadding) << "|";
+            juga << endl << "|";
             for (int k = 0; k < info.col; k++)
             {
                 juga << setw(16) << "|";
             }
-            juga << endl
-                 << setw(leftPadding) << "|";
+            juga << endl << "|";
             for (int j = 0; j < info.col; j++)
             {
                 if (info.tableroDinamico[i][j].posicion == 0 || info.tableroDinamico[i][j].estado)
@@ -1189,8 +1184,7 @@ void registrarjugador(dato info, int consoleWidth)
                     juga << setw(12) << info.tableroDinamico[i][j].palabra << setw(4) << "|";
                 }
             }
-            juga << endl
-                 << setw(leftPadding) << "|";
+            juga << endl << "|";
             if (i == info.ren - 1)
             {
                 for (int j = 0; j < info.col; j++)
@@ -1198,7 +1192,6 @@ void registrarjugador(dato info, int consoleWidth)
                     juga << "_______________|";
                 }
             }
-            k += 3;
         }
         juga << endl;
         juga.close();
