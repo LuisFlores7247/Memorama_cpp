@@ -8,11 +8,12 @@
 #include <ctime>
 #include <iomanip>
 
+
+
 #define CAT1 "categoria1.txt"
 #define CAT2 "categoria2.txt"
 #define CAT3 "categoria3.txt"
 #define color SetConsoleTextAttribute
-
 
 using namespace std;
 
@@ -771,7 +772,7 @@ void imprimirTab(dato info, int seleccion, int consoleWidth)
             gotoxy((leftPadding-1),k);
             for (int j = 0; j < info.col; j++)
             {
-                cout << "________________";
+                cout << " _______________";
             }
         }
         else
