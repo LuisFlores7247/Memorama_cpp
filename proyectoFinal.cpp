@@ -460,11 +460,6 @@ void juego(dato info, int consoleWidth)
         Sleep(1000);
         system("cls");
         imprimirTab(info, seleccion, selecAnterior, consoleWidth);
-        // cout<<endl<<endl;
-        // cout<<"S "<<seleccion;
-        // cout<<"SA "<<selecAnterior;
-        // cout<<"I "<<intentos;
-        system("pause");
         if (palabraSeleccion(info, seleccion) == palabraSeleccion(info, selecAnterior))
         {
 
@@ -483,14 +478,12 @@ void juego(dato info, int consoleWidth)
                 }
             }
             palabrasRestantes--;
-            cout << "Reset pk salio el par" << endl;
             seleccion = 0; // Reset de variables
             selecAnterior = 0;
             intentos = 0;
         }
         if (intentos == 2)
         {
-            cout << "Reset pk no salio el par" << endl;
             seleccion = 0; // Reset de variables
             selecAnterior = 0;
             intentos = 0;
@@ -890,15 +883,23 @@ clock_t medirT()
 
 string palabraSeleccion(dato info, int seleccion)
 {
-    for (int i = 0; i < info.ren; i++)
+
+    if (seleccion!=0)
     {
-        for (int j = 0; j < info.col; j++)
+        for (int i = 0; i < info.ren; i++)
         {
-            if (info.tableroDinamico[i][j].posicion == seleccion)
+            for (int j = 0; j < info.col; j++)
             {
-                return info.tableroDinamico[i][j].palabra;
+                if (info.tableroDinamico[i][j].posicion == seleccion)
+                {
+                    return info.tableroDinamico[i][j].palabra;
+                }
             }
-        }
+        }        
+    }
+    else
+    {
+        return " ";
     }
 }
 
