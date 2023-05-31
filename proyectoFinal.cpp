@@ -807,7 +807,7 @@ void imprimirTab(dato info, int seleccion, int seleccionAnterior, int consoleWid
             gotoxy((leftPadding - 1), k);
             for (int j = 0; j < info.col; j++)
             {
-                cout << "________________";
+                cout << " _______________";
             }
         }
         else
