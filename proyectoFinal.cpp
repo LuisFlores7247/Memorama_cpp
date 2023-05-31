@@ -441,6 +441,7 @@ void juego(dato info, int consoleWidth)
     clock_t start, end;
     do
     {
+        bool seleccionada;
         imprimirTab(info, seleccion, consoleWidth);
         cout << endl;
         start = medirT();
@@ -454,7 +455,24 @@ void juego(dato info, int consoleWidth)
             leftPadding = (consoleWidth) / 2;
             gotoxy(leftPadding, 17);
             cin >> seleccion;
-        } while (seleccion < 1);
+            for (int i = 0; i < info.ren; i++)
+            {
+                for (int j = 0; j < info.col; j++)
+                {
+                    if (info.tableroDinamico[i][j].posicion == seleccion && info.tableroDinamico[i][j].estado == true)
+                    {
+                        seleccionada = true;
+                        line = "La casilla ya ha sido destapada, por fvaor elija otra";
+                        leftPadding = (consoleWidth - line.length()) / 2;
+                        gotoxy(leftPadding, 15);
+                        cout << line;
+                        Sleep(3000);
+                    }
+                }
+            }
+
+        } while (seleccion < 1 || seleccion > (info.palAUsar * 2));
+
         // Validar casilla que este dentro de lo rangos y que no se haya seleccionado anteriormente
         // condiciones de destapar
         if (palabraSeleccion(info, seleccion) == palabraSeleccion(info, selecAnterior))
