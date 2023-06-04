@@ -406,6 +406,10 @@ void menuJuego(int consoleWidth)
     } while (!band3);
 
     datos.tableroDinamico = crearTablero(datos.palAUsar, datos.catAJugar, &datos.ren, &datos.col);
+    time_t now = time(0);
+    struct tm *time = localtime(&now);
+    strftime(datos.dia, 12, "%d/%m/%Y", time);
+    strftime(datos.hora, 10, "%H:%M:%S", time);
     registrarjugador(datos, consoleWidth);
     // tablero dinamico es casilla**
     juego(datos, consoleWidth);
@@ -1163,10 +1167,7 @@ void registrarjugador(dato info, int consoleWidth)
     fstream juga;
     char nomarch[30] = "registrojugadores.txt";
     juga.open(nomarch, ios::out | ios::app);
-    time_t now = time(0);
-    struct tm *time = localtime(&now);
-    strftime(info.dia, 12, "%d/%m/%Y", time);
-    strftime(info.hora, 10, "%H:%M:%S", time);
+
 
     if (!juga)
         cout << " No se pudo hacer el registro " << endl;
