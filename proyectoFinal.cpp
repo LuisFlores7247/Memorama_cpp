@@ -521,7 +521,7 @@ void juego(dato info, int consoleWidth)
 
     } while (!win);
     end = medirT();
-    registrobin(dato info);
+    registrobin( info);
     info.duracDeJueg = static_cast<double>(end - start) / CLOCKS_PER_SEC;
     Sleep(2000);
     system("cls");
@@ -1232,11 +1232,10 @@ void registrobin(dato info){
     {
         cerr<<"No se puede hacer el registro binario "<<endl;
         cin.get();
-        return 1;
     }
-    char dia[12];
-    strftime(dia, 12, "%d/%m/%Y", time);
-    regs << dia << " ";
+    // char dia[12];
+    // strftime(dia, 12, "%d/%m/%Y", time);
+    // regs << dia << " ";
     regs.write((char *)(&info),sizeof(dato));
     regs.close();
 }
