@@ -34,8 +34,9 @@ struct dato
     int col;
     int par;
     casilla **tableroDinamico;
-    int horaIn; // No se si la hora se pueda guardar asi pero aja, se entiende la idea
     double duracDeJueg;
+    char dia[12];
+    char hora[10];
 };
 
 // Portada
@@ -807,10 +808,6 @@ void llenarTab(casilla **mat, int ren, int col, string *v, string cat, int pal)
 void imprimirTab(dato info, int seleccion, int seleccionAnterior, int consoleWidth)
 {
     system("cls");
-    time_t now = time(0);
-    struct tm *time = localtime(&now);
-    char dia[12];
-    char hora[10];
     int leftPadding, k = 8;
     if(info.palAUsar==8){
         leftPadding = (consoleWidth- (info.ren * 16) )/ 2;
@@ -821,12 +818,11 @@ void imprimirTab(dato info, int seleccion, int seleccionAnterior, int consoleWid
         }
     }
     gotoxy(leftPadding, 1);
-    strftime(dia, 12, "%d/%m/%Y", time);
-    strftime(hora, 10, "%H:%M:%S", time);
+
     gotoxy(leftPadding, 2);
-    cout<<"Alias: "<<info.alias<<setw(20)<<"Fecha: "<<dia;
+    cout<<"Alias: "<<info.alias<<setw(20)<<"Fecha: "<<info.dia;
     gotoxy(leftPadding, 4);
-    cout<<"Total de pares: "<<info.par<<setw(16)<<"Hora: "<<hora;
+    cout<<"Total de pares: "<<info.par<<setw(16)<<"Hora: "<<info.hora;
     for (int i = 0; i < info.ren; i++)
     {
         
@@ -1169,15 +1165,14 @@ void registrarjugador(dato info, int consoleWidth)
     juga.open(nomarch, ios::out | ios::app);
     time_t now = time(0);
     struct tm *time = localtime(&now);
-    char dia[12];
-    char hora[10];
-    strftime(dia, 12, "%d/%m/%Y", time);
-    strftime(hora, 10, "%H:%M:%S", time);
+    strftime(info.dia, 12, "%d/%m/%Y", time);
+    strftime(info.hora, 10, "%H:%M:%S", time);
+
     if (!juga)
         cout << " No se pudo hacer el registro " << endl;
     else
     {
-        juga << info.alias << " " << info.catAJugar << " " << info.palAUsar << " " << hora << " " << dia << endl;
+        juga << info.alias << " " << info.catAJugar << " " << info.palAUsar << " " << info.hora << " " << info.dia << endl;
         system("cls");
         for (int i = 0; i < info.ren; i++)
         {
