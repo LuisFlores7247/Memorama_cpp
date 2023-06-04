@@ -812,7 +812,12 @@ void llenarTab(casilla **mat, int ren, int col, string *v, string cat, int pal)
 void imprimirTab(dato info, int seleccion, int seleccionAnterior, int consoleWidth)
 {
     system("cls");
+    char diaA[12], horaA[10];
     int leftPadding, k = 8;
+    time_t now = time(0);
+    struct tm *time = localtime(&now);
+    strftime(diaA, 12, "%d/%m/%Y", time);
+    strftime(horaA, 10, "%H:%M:%S", time);
     if(info.palAUsar==8){
         leftPadding = (consoleWidth- (info.ren * 16) )/ 2;
     }
@@ -824,9 +829,9 @@ void imprimirTab(dato info, int seleccion, int seleccionAnterior, int consoleWid
     gotoxy(leftPadding, 1);
 
     gotoxy(leftPadding, 2);
-    cout<<"Alias: "<<info.alias<<setw(20)<<"Fecha: "<<info.dia;
+    cout<<"Alias: "<<info.alias<<setw(20)<<"Fecha: "<<diaA;
     gotoxy(leftPadding, 4);
-    cout<<"Total de pares: "<<info.par<<setw(16)<<"Hora: "<<info.hora;
+    cout<<"Total de pares: "<<info.par<<setw(16)<<"Hora: "<<horaA;
     for (int i = 0; i < info.ren; i++)
     {
         
