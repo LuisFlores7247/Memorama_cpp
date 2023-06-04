@@ -440,7 +440,7 @@ void juego(dato info, int consoleWidth)
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     int seleccion = 0, selecAnterior = 0, palabrasRestantes = info.palAUsar, intentos = 0;
     bool win = false;
-    string symbl ="x220";
+    string symbl ="#";
     clock_t start, end;
     start = medirT();
     system("cls");
@@ -540,7 +540,7 @@ void juego(dato info, int consoleWidth)
         leftPadding = (consoleWidth - line.length()) / 2;
         gotoxy(leftPadding, 15);
         cout<<line;
-        line="| "+symbl+"   "+symbl+"  "+symbl+"  "+symbl+"  "+symbl+"  "+symbl+"  "+symbl+"   "+symbl+" "+symbl+" "+symbl+"  "+symbl+" |";
+        line=" | #   # #  #  #  #  #   # # #  # |";
         leftPadding=(consoleWidth-line.length())/2;
         gotoxy(leftPadding, 16);
         cout << line;
