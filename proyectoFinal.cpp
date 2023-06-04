@@ -69,6 +69,7 @@ void agregar(int arch, int consoleWidth);           /* Caso 2*/
 void eliminar(int arch, int consoleWidth);          /* Caso 2*/
 void registrarjugador(dato info, int consoleWidth); /* Caso 2*/
 bool validarPalabrasArch(int arch);                 /* Caso 4 */
+void registrobin(dato info);                        /* Caso 2 */
 
 int main(int argc, char const *argv[])
 {
@@ -520,6 +521,7 @@ void juego(dato info, int consoleWidth)
 
     } while (!win);
     end = medirT();
+    registrobin(dato info);
     info.duracDeJueg = static_cast<double>(end - start) / CLOCKS_PER_SEC;
     Sleep(2000);
     system("cls");
@@ -1222,4 +1224,19 @@ bool validarPalabrasArch(int arch)
     }
     status = palabras < 8 ? false : true;
     return status;
+}
+void registrobin(dato info){
+	fstream regs;
+    regs.open("registrobinario.dat", ios::binary|ios::out|ios::app);
+    if (!regs)      
+    {
+        cerr<<"No se puede hacer el registro binario "<<endl;
+        cin.get();
+        return 1;
+    }
+    char dia[12];
+    strftime(dia, 12, "%d/%m/%Y", time);
+    regs << dia << " ";
+    regs.write((char *)(&info),sizeof(dato));
+    regs.close();
 }
