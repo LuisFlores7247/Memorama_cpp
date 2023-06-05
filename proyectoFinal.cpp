@@ -53,6 +53,8 @@ void opcionesMantenimiento(int arch, int consoleWidth); /* Caso 2 */
 void gotoxy(int x, int y);                                             /* Caso 2 */
 casilla **crearTablero(int pal, string categoria, int *ren, int *col); /* Caso 4 */
 void juego(dato info, int consoleWith);
+void reportes(int consoleWidth);
+
 
 // Assets
 bool validarAlias(string alias, int consoleWidth);                                   /* Caso 2 */
@@ -67,6 +69,7 @@ bool validarRepetidos(int *v, int num, int k);                                  
 void clearLines(int inicio, int lineas);                                             /* Caso 2 */
 clock_t medirT();                                                                    /* Caso 3 */
 string palabraSeleccion(dato info, int posicion);
+void BorrarEspMemDina(casilla **mat, int ren);
 
 // Archivos
 void leerArch(int arch, int consoleWidth);          /* Caso 2*/
@@ -99,7 +102,7 @@ int main(int argc, char const *argv[])
             /* code */
             break;
         case 3:
-            /* code */
+            reportes(consoleWidth);
             break;
         case 4:
             mantenimiento();
@@ -535,11 +538,11 @@ void juego(dato info, int consoleWidth)
 
     } while (!win);
     end = medirT();
-    registrobin( info);
     info.duracDeJueg = static_cast<double>(end - start) / CLOCKS_PER_SEC;
     Sleep(2000);
     system("cls");
-    // Guardar Todo en el Bin
+    registrobin( info);
+    BorrarEspMemDina(info.tableroDinamico,info.ren);
     // regreso al menu
     color(hConsole, 6);
     for (int i = 0; i < 15; i++)
@@ -580,6 +583,57 @@ void juego(dato info, int consoleWidth)
         }
     }
 }
+
+void reportes(int consoleWidth)
+{
+    fstream file;
+    int leftPadding;
+    int opc=0;
+    string line;
+    do
+    {
+        system("cls");
+        line="Reportes";
+        leftPadding=(consoleWidth-line.length())/2;
+        gotoxy(leftPadding, 1);
+        cout<<line;
+        line="Lugar donde puedes ver todos los registros de juegos pasados";
+        leftPadding=(consoleWidth-line.length())/2;
+        gotoxy(leftPadding, 3);
+        cout<<line;
+        line="Como quieres que sea ordenado el reporte?";
+        leftPadding=(consoleWidth-line.length())/2;
+        gotoxy(leftPadding, 5);
+        cout<<line;
+        line="1.-Por categoria";
+        leftPadding=(consoleWidth-line.length())/2;
+        gotoxy(leftPadding, 7);
+        cout<<line;
+        line="2.-Por nombre";
+        leftPadding=(consoleWidth-line.length())/2;
+        gotoxy(leftPadding, 8);
+        cout<<line;
+        line="3.-Por Tiempo";
+        leftPadding=(consoleWidth-line.length())/2;
+        gotoxy(leftPadding, 9);
+        cout<<line;
+        leftPadding=consoleWidth/2;
+        gotoxy(leftPadding,10);
+        cin>>opc;
+        if (opc<1 || opc>3)
+        {
+            line="Opcion invalida, por favor intente de nuevo";
+            leftPadding=(consoleWidth-line.length())/2;
+            gotoxy(leftPadding, 13);
+            cout<<line;
+            system("Pause");
+        }
+        
+    } while (opc<1 || opc>3);
+    cout<<"Pasao, like";
+
+}
+
 // Assets
 
 bool validarAlias(string alias, int consoleWidth)
@@ -956,6 +1010,15 @@ string palabraSeleccion(dato info, int seleccion)
     {
         return " ";
     }
+}
+
+void BorrarEspMemDina(casilla **mat, int ren)
+{
+    for (int i = 0; i < ren; i++)
+    {
+        delete []mat[i];
+    }
+    delete []mat;
 }
 
 // Archivos
