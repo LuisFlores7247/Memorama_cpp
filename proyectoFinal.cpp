@@ -54,7 +54,7 @@ void opcionesMantenimiento(int arch, int consoleWidth); /* Caso 2 */
 void gotoxy(int x, int y);                                             /* Caso 2 */
 casilla **crearTablero(int pal, char categoria[], int *ren, int *col); /* Caso 4 */
 void juego(dato info, int consoleWith);
-void reportes(int consoleWidth);
+void menuReportes(int consoleWidth);
 
 
 // Assets
@@ -71,6 +71,12 @@ void clearLines(int inicio, int lineas);                                        
 clock_t medirT();                                                                    /* Caso 3 */
 string palabraSeleccion(dato info, int posicion);
 void BorrarEspMemDina(casilla **mat, int ren);
+
+//Reportes
+void repXCategoria(int total, dato *v, int consoleWith);
+void repXNombre(int total, dato *v, int consoleWith);
+void repXTiempo(int total, dato *v, int consoleWith);
+void imprimirRep(dato registro, int consoleWith);
 
 // Archivos
 void leerArch(int arch, int consoleWidth);          /* Caso 2*/
@@ -103,7 +109,7 @@ int main(int argc, char const *argv[])
             /* code */
             break;
         case 3:
-            reportes(consoleWidth);
+            menuReportes(consoleWidth);
             break;
         case 4:
             mantenimiento();
@@ -585,84 +591,6 @@ void juego(dato info, int consoleWidth)
     }
 }
 
-void reportes(int consoleWidth)
-{
-    dato aux, *registros;
-    fstream file;
-    int leftPadding;
-    int opc=0, k=0;
-    string line;
-    do
-    {
-        system("cls");
-        line="Reportes";
-        leftPadding=(consoleWidth-line.length())/2;
-        gotoxy(leftPadding, 1);
-        cout<<line;
-        line="Lugar donde puedes ver todos los registros de juegos pasados";
-        leftPadding=(consoleWidth-line.length())/2;
-        gotoxy(leftPadding, 3);
-        cout<<line;
-        line="Como quieres que sea ordenado el reporte?";
-        leftPadding=(consoleWidth-line.length())/2;
-        gotoxy(leftPadding, 5);
-        cout<<line;
-        line="1.-Por categoria";
-        leftPadding=(consoleWidth-line.length())/2;
-        gotoxy(leftPadding, 7);
-        cout<<line;
-        line="2.-Por nombre";
-        leftPadding=(consoleWidth-line.length())/2;
-        gotoxy(leftPadding, 8);
-        cout<<line;
-        line="3.-Por Tiempo";
-        leftPadding=(consoleWidth-line.length())/2;
-        gotoxy(leftPadding, 9);
-        cout<<line;
-        leftPadding=consoleWidth/2;
-        gotoxy(leftPadding,10);
-        cin>>opc;
-        if (opc<1 || opc>3)
-        {
-            line="Opcion invalida, por favor intente de nuevo";
-            leftPadding=(consoleWidth-line.length())/2;
-            gotoxy(leftPadding, 13);
-            cout<<line;
-            system("Pause");
-        }
-        
-    } while (opc<1 || opc>3);
-
-    //Contando la cantidad de registros existentes en el archivo binario
-    
-    file.open("registrosbin.dat",ios::binary | ios::in);
-    while (file.read((char *)(&aux),sizeof(dato)))
-    {
-        k++;
-    }
-    registros=new dato[k];
-
-    //Llenando el vector dinamico de structs con todos los registros del archivo binario 
-    for (int i = 0; i < k; i++)
-    {
-        file.read((char *)(&registros[i]),sizeof(dato));
-    }
-    file.close();
-    //Switch para las opciones
-    switch (opc)
-    {
-    case 1:
-        cout<<"Caso 1"<<endl;
-        break;
-    case 2:
-        cout<<"Caso 2"<<endl;
-        break;
-    case 3:
-        cout<<"Caso 3"<<endl;
-        break;
-    }
-}
-
 // Assets
 
 bool validarAlias(char alias[], int consoleWidth)
@@ -1050,6 +978,168 @@ void BorrarEspMemDina(casilla **mat, int ren)
     delete []mat;
 }
 
+//Reportes
+
+void menuReportes(int consoleWidth)
+{
+    dato aux, *registros;
+    fstream file;
+    int leftPadding;
+    int opc=0, k=0;
+    string line;
+    do
+    {
+        system("cls");
+        line="Reportes";
+        leftPadding=(consoleWidth-line.length())/2;
+        gotoxy(leftPadding, 1);
+        cout<<line;
+        line="Lugar donde puedes ver todos los registros de juegos pasados";
+        leftPadding=(consoleWidth-line.length())/2;
+        gotoxy(leftPadding, 3);
+        cout<<line;
+        line="Como quieres que sea ordenado el reporte?";
+        leftPadding=(consoleWidth-line.length())/2;
+        gotoxy(leftPadding, 5);
+        cout<<line;
+        line="1.-Por categoria";
+        leftPadding=(consoleWidth-line.length())/2;
+        gotoxy(leftPadding, 7);
+        cout<<line;
+        line="2.-Por nombre";
+        leftPadding=(consoleWidth-line.length())/2;
+        gotoxy(leftPadding, 8);
+        cout<<line;
+        line="3.-Por Tiempo";
+        leftPadding=(consoleWidth-line.length())/2;
+        gotoxy(leftPadding, 9);
+        cout<<line;
+        leftPadding=consoleWidth/2;
+        gotoxy(leftPadding,10);
+        cin>>opc;
+        if (opc<1 || opc>3)
+        {
+            line="Opcion invalida, por favor intente de nuevo";
+            leftPadding=(consoleWidth-line.length())/2;
+            gotoxy(leftPadding, 13);
+            cout<<line;
+            system("Pause");
+        }
+        
+    } while (opc<1 || opc>3);
+
+    //Contando la cantidad de registros existentes en el archivo binario
+    
+    file.open("registrosbin.dat",ios::binary | ios::in);
+    while (file.read((char *)(&aux),sizeof(dato)))
+    {
+        k++;
+    }
+    registros=new dato[k];
+
+    file.close();
+    file.open("registrosbin.dat",ios::binary | ios::in);    //Para resetear el cursor del archivo
+
+    //Llenando el vector dinamico de structs con todos los registros del archivo binario 
+    for (int i = 0; i < k; i++)
+    {
+        file.read((char *)(&aux),sizeof(dato));
+        registros[i]=aux;
+    }
+    file.close();
+    //Switch para las opciones
+    switch (opc)
+    {
+    case 1:
+        repXCategoria(k,registros,consoleWidth);
+        system("cls");
+        Sleep(1000);
+        break;
+    case 2:
+        repXNombre(k,registros,consoleWidth);
+        system("cls");
+        Sleep(1000);
+        break;
+    case 3:
+        repXTiempo(k,registros,consoleWidth);
+        system("cls");
+        Sleep(1000);
+        break;
+    }
+}
+
+void repXCategoria(int total, dato *v, int consoleWith)
+{
+    char catSeleccionada[40];
+    string resp;
+    do
+    {
+        system("cls");
+        string line="Cual categoria deseas buscar?";
+        int leftpadding=(consoleWith-line.length())/2;
+        gotoxy(leftpadding,1);
+        fflush(stdin);
+        cout<<line;
+        leftpadding=consoleWith/2;
+        gotoxy(leftpadding,3);
+        cin.getline(catSeleccionada,40);
+        bool encontrado=false;
+        for (int i = 0; i < total; i++)
+        {
+            if (strcmp(v[i].catAJugar,catSeleccionada)==0)
+            {
+                encontrado=true;
+                imprimirRep(v[i],consoleWith);
+
+            }
+            cout<<endl<<endl;
+        }
+        if (!encontrado)
+        {
+            line="Categoria no encontrada";
+            leftpadding=(consoleWith-line.length())/2;
+
+        }
+        system("pause");
+        line="Quieres buscar otra categoria? si/no";
+        leftpadding=(consoleWith-line.length())/2;
+        gotoxy(leftpadding,20);
+        cout<<line;
+        leftpadding=consoleWith/2;
+        gotoxy(leftpadding,21);
+        cin>>resp;
+    } while (resp=="si");
+    
+    
+}
+void repXNombre(int total, dato *v, int consoleWith)
+{
+
+}
+void repXTiempo(int total, dato *v, int consoleWith)
+{
+    //Ordenamiento del vector con respecto al tiempo
+    // system("cls");
+    // string line="Aqui esta el reporte del 'Paseo de la fama':";
+    // int leftPadding=(consoleWith-line.length())/2;
+    // gotoxy(leftPadding, 1);
+    // cout<<line;
+    // for (int i = 0; i < total; i++)
+    // {
+    //     imprimirRep(v[i],consoleWith);
+    // }
+    
+}
+void imprimirRep(dato registro, int consoleWith)
+{
+    cout<<registro.alias<<endl;
+    cout<<registro.duracDeJueg<<endl;
+    cout<<registro.dia<<endl;
+    cout<<registro.hora<<endl;
+    cout<<registro.catAJugar<<endl;
+    cout<<registro.ren<<endl;
+    cout<<registro.col<<endl;
+}
 // Archivos
 
 void leerArch(int arch, int consoleWidth)
