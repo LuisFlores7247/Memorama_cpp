@@ -7,6 +7,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <iomanip>
+#include <cstring>
 
 
 
@@ -27,8 +28,8 @@ struct casilla
 
 struct dato
 {
-    string alias;
-    string catAJugar;
+    char alias[15];
+    char catAJugar[40];
     int palAUsar;
     int ren;
     int col;
@@ -51,18 +52,18 @@ void opcionesMantenimiento(int arch, int consoleWidth); /* Caso 2 */
 
 // Fundamentales
 void gotoxy(int x, int y);                                             /* Caso 2 */
-casilla **crearTablero(int pal, string categoria, int *ren, int *col); /* Caso 4 */
+casilla **crearTablero(int pal, char categoria[], int *ren, int *col); /* Caso 4 */
 void juego(dato info, int consoleWith);
 void reportes(int consoleWidth);
 
 
 // Assets
-bool validarAlias(string alias, int consoleWidth);                                   /* Caso 2 */
-bool validarCategoria(string cat, int consoleWidth);                                 /* Caso 2 */
+bool validarAlias(char alias[], int consoleWidth);                                   /* Caso 2 */
+bool validarCategoria(char cat[], int consoleWidth);                                 /* Caso 2 */
 bool validarPalabras(int words, int consoleWidth);                                   /* Caso 2 */
 casilla **pedirMemoriaMat(int pal, int *ren, int *col);                              /* Caso 4 */
 string *pedirMemVec(int tam);                                                        /* Caso 4*/
-void llenarTab(casilla **mat, int ren, int col, string *v, string cat, int pal);     /* Caso 2*/
+void llenarTab(casilla **mat, int ren, int col, string *v, char cat[], int pal);     /* Caso 2*/
 void imprimirTab(dato info, int seleccion, int seleccionAnterior, int consoleWidth); /* Caso 2 */
 void shuffle(string *v, int tam);                                                    /* Caso 2*/
 bool validarRepetidos(int *v, int num, int k);                                       /* Caso 4*/
@@ -353,7 +354,7 @@ void menuJuego(int consoleWidth)
         fflush(stdin);
         leftPadding = (consoleWidth - 15) / 2;
         gotoxy(leftPadding, 4);
-        getline(cin, datos.alias);
+        cin.getline(datos.alias, 15);
         band1 = validarAlias(datos.alias, consoleWidth);
     } while (!band1);
 
@@ -380,7 +381,7 @@ void menuJuego(int consoleWidth)
         gotoxy(leftPadding, 12);
         cout << line;
         fflush(stdin);
-        getline(cin, datos.catAJugar);
+        cin.getline(datos.catAJugar,40);
         band2 = validarCategoria(datos.catAJugar, consoleWidth);
         if (!band2) // Borra de pantalla cosas basura
         {
@@ -432,7 +433,7 @@ void gotoxy(int x, int y)
     SetConsoleCursorPosition(hcon, dwPos);
 }
 
-casilla **crearTablero(int pal, string categoria, int *ren, int *col)
+casilla **crearTablero(int pal, char categoria[], int *ren, int *col)
 {
     int aux1, aux2;
     string *vecDina;
@@ -586,9 +587,10 @@ void juego(dato info, int consoleWidth)
 
 void reportes(int consoleWidth)
 {
+    dato aux, *registros;
     fstream file;
     int leftPadding;
-    int opc=0;
+    int opc=0, k=0;
     string line;
     do
     {
@@ -630,19 +632,46 @@ void reportes(int consoleWidth)
         }
         
     } while (opc<1 || opc>3);
-    cout<<"Pasao, like";
 
+    //Contando la cantidad de registros existentes en el archivo binario
+    
+    file.open("registrosbin.dat",ios::binary | ios::in);
+    while (file.read((char *)(&aux),sizeof(dato)))
+    {
+        k++;
+    }
+    registros=new dato[k];
+
+    //Llenando el vector dinamico de structs con todos los registros del archivo binario 
+    for (int i = 0; i < k; i++)
+    {
+        file.read((char *)(&registros[i]),sizeof(dato));
+    }
+    file.close();
+    //Switch para las opciones
+    switch (opc)
+    {
+    case 1:
+        cout<<"Caso 1"<<endl;
+        break;
+    case 2:
+        cout<<"Caso 2"<<endl;
+        break;
+    case 3:
+        cout<<"Caso 3"<<endl;
+        break;
+    }
 }
 
 // Assets
 
-bool validarAlias(string alias, int consoleWidth)
+bool validarAlias(char alias[], int consoleWidth)
 {
     int leftPadding;
     bool aux = true;
     string line;
     // condiciones de validacion
-    if (alias.length() < 4 || alias.length() > 12)
+    if (strlen(alias) < 4 || strlen(alias) > 12)
     {
         aux = false;
         line = "La longitud del Alias no es permitida, por favor inserte un alias con mas de 4 caracteres y menos de 12";
@@ -666,7 +695,7 @@ bool validarAlias(string alias, int consoleWidth)
         system("pause");
         return aux;
     }
-    for (int i = 1; i < alias.size(); i++) // desde i=1 pk i=0 ya se valido
+    for (int i = 1; i < strlen(alias); i++) // desde i=1 pk i=0 ya se valido
     {
         if (isspace(alias[i]))
         {
@@ -684,21 +713,21 @@ bool validarAlias(string alias, int consoleWidth)
     return aux;
 }
 
-bool validarCategoria(string cat, int consoleWidth)
+bool validarCategoria(char cat[], int consoleWidth)
 {
     string line;
     int leftPadding;
     bool aux = false;
     // condiciones de validacion
-    if (cat == "Dispositivos electronicos")
+    if (strcmp(cat,"Dispositivos electronicos")==0 )
     {
         aux = true;
     }
-    if (cat == "Lenguajes de programacion")
+    if (strcmp(cat,"Lenguajes de programacion") == 0)
     {
         aux = true;
     }
-    if (cat == "Paises")
+    if (strcmp(cat,"Paises") == 0)
     {
         aux = true;
     }
@@ -779,7 +808,7 @@ string *pedirMemVec(int tam)
     return new string[tam];
 }
 
-void llenarTab(casilla **mat, int ren, int col, string *v, string cat, int pal)
+void llenarTab(casilla **mat, int ren, int col, string *v, char cat[], int pal)
 {
     // Primero se llena el vector dinamico con los nombres de la categoria a buscar
     srand(time(NULL));
@@ -787,15 +816,15 @@ void llenarTab(casilla **mat, int ren, int col, string *v, string cat, int pal)
     fstream categoria;
     string aux;
     // Saber cual es la categoria que se ocupa
-    if (cat == "Dispositivos electronicos")
+    if (strcmp(cat,"Dispositivos electronicos") == 0)
     {
         categoria.open(CAT1, ios::in);
     }
-    if (cat == "Lenguajes de programacion")
+    if (strcmp(cat,"Lenguajes de programacion" ) == 0)
     {
         categoria.open(CAT2, ios::in);
     }
-    if (cat == "Paises")
+    if (strcmp(cat,"Paises") == 0)
     {
         categoria.open(CAT3, ios::in);
     }
@@ -1320,7 +1349,7 @@ bool validarPalabrasArch(int arch)
 }
 void registrobin(dato info){
 	fstream regs;
-    regs.open("registrobinario.dat", ios::binary|ios::out|ios::app);
+    regs.open("registrosBin.dat", ios::binary|ios::out|ios::app);
     if (!regs)      
     {
         cerr<<"No se puede hacer el registro binario "<<endl;
