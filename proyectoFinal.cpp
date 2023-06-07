@@ -71,6 +71,7 @@ void clearLines(int inicio, int lineas);                                        
 clock_t medirT();                                                                    /* Caso 3 */
 string palabraSeleccion(dato info, int posicion);
 void BorrarEspMemDina(casilla **mat, int ren);
+void quitarMayus(char str[], char aux[]);
 
 //Reportes
 void repXCategoria(int total, dato *v, int consoleWith);
@@ -978,6 +979,15 @@ void BorrarEspMemDina(casilla **mat, int ren)
     delete []mat;
 }
 
+void quitarMayus(char str[], char aux[])
+{
+    strcpy(aux,str);
+    for (int i = 0; i < strlen(aux); i++)
+    {
+        aux[i]=tolower(aux[i]);
+    }    
+}
+
 //Reportes
 
 void menuReportes(int consoleWidth)
@@ -1083,6 +1093,18 @@ void repXCategoria(int total, dato *v, int consoleWith)
         leftpadding=consoleWith/2;
         gotoxy(leftpadding,3);
         cin.getline(catSeleccionada,40);
+        line="------------------------------------------------------------------------------------";
+        leftpadding=(consoleWith-line.length())/2;
+        gotoxy(leftpadding, 4);
+        cout<<line;
+        line="|   Alias   |  Tiempo(segs) |   Dia   |   hora   |   Categoria   |   Dimensiones   |";
+        leftpadding=(consoleWith-line.length())/2;
+        gotoxy(leftpadding, 5);
+        cout<<line;
+        line="------------------------------------------------------------------------------------";
+        leftpadding=(consoleWith-line.length())/2;
+        gotoxy(leftpadding, 6);
+        cout<<line<<endl;
         bool encontrado=false;
         for (int i = 0; i < total; i++)
         {
@@ -1114,31 +1136,104 @@ void repXCategoria(int total, dato *v, int consoleWith)
 }
 void repXNombre(int total, dato *v, int consoleWith)
 {
+    //Ordenamiento del vector con respecto al nombre usando el algoritmo de ordenamiento por seleccion
+    dato aux;
+    int posMin;
+    char straux1[15], straux2[15],c;
 
+    for (int i = 0; i < total; i++)
+    {
+        posMin=i;
+        for (int j = i+1; j < total; j++)
+        {
+            quitarMayus(v[j].alias, straux1);
+            quitarMayus(v[posMin].alias, straux2);
+            cout<<straux1<<" "<<straux2<<endl;
+            if (strcmp(straux1,straux2)<0)   //Busqueda del valor menor
+            {
+                posMin=j;
+            }            
+        }
+        //cambio de posicion
+        aux=v[i];
+        v[i]=v[posMin];
+        v[posMin]=aux;
+    }
+    //Impresion del arreglo ordenado
+    system("cls");
+    string line="Aqui esta el reporte ordenado alfabeticamente por el alias:";
+    int leftPadding=(consoleWith-line.length())/2;
+    gotoxy(leftPadding, 1);
+    cout<<line<<endl;
+    line="------------------------------------------------------------------------------------";
+    leftPadding=(consoleWith-line.length())/2;
+    gotoxy(leftPadding, 4);
+    cout<<line;
+    line="|   Alias   |  Tiempo(segs) |   Dia   |   hora   |   Categoria   |   Dimensiones   |";
+    leftPadding=(consoleWith-line.length())/2;
+    gotoxy(leftPadding, 5);
+    cout<<line;
+    line="------------------------------------------------------------------------------------";
+    leftPadding=(consoleWith-line.length())/2;
+    gotoxy(leftPadding, 6);
+    cout<<line<<endl;
+    for (int i = 0; i < total; i++)
+    {
+        imprimirRep(v[i],consoleWith);
+    }
+    system("pause");
 }
 void repXTiempo(int total, dato *v, int consoleWith)
 {
-    //Ordenamiento del vector con respecto al tiempo
-    // system("cls");
-    // string line="Aqui esta el reporte del 'Paseo de la fama':";
-    // int leftPadding=(consoleWith-line.length())/2;
-    // gotoxy(leftPadding, 1);
-    // cout<<line;
-    // for (int i = 0; i < total; i++)
-    // {
-    //     imprimirRep(v[i],consoleWith);
-    // }
+    //Ordenamiento del vector con respecto al tiempo usando el algoritmo de ordenamiento por seleccion
+    dato aux;
+    int posMin;
+    for (int i = 0; i < total; i++)
+    {
+        posMin=i;
+        for (int j = i+1; j < total; j++)
+        {
+            if (v[j].duracDeJueg<v[posMin].duracDeJueg) //Busca el numero menor de lo que queda del arreglo
+            {
+                posMin=j;
+            }
+        }
+        //Cambio de posicion
+        aux=v[i];
+        v[i]=v[posMin];
+        v[posMin]=aux;
+    }
     
+    //Impresion del arreglo odenado
+    system("cls");
+    string line="Aqui esta el reporte del 'Paseo de la fama':";
+    int leftPadding=(consoleWith-line.length())/2;
+    gotoxy(leftPadding, 1);
+    cout<<line<<endl;
+    line="------------------------------------------------------------------------------------";
+    leftPadding=(consoleWith-line.length())/2;
+    gotoxy(leftPadding, 4);
+    cout<<line;
+    line="|   Alias   |  Tiempo(segs) |   Dia   |   hora   |   Categoria   |   Dimensiones   |";
+    leftPadding=(consoleWith-line.length())/2;
+    gotoxy(leftPadding, 5);
+    cout<<line;
+    line="------------------------------------------------------------------------------------";
+    leftPadding=(consoleWith-line.length())/2;
+    gotoxy(leftPadding, 6);
+    cout<<line<<endl;
+    for (int i = 0; i < total; i++)
+    {
+        imprimirRep(v[i],consoleWith);
+    }
+    system("pause");
 }
 void imprimirRep(dato registro, int consoleWith)
 {
-    cout<<registro.alias<<endl;
-    cout<<registro.duracDeJueg<<endl;
-    cout<<registro.dia<<endl;
-    cout<<registro.hora<<endl;
-    cout<<registro.catAJugar<<endl;
-    cout<<registro.ren<<endl;
-    cout<<registro.col<<endl;
+    string line;
+    int leftPadding;
+
+    cout<<setw(40)<<"|"<<setw(10)<<registro.alias<<setw(10)<<"|"<<setw(10)<<registro.duracDeJueg<<setw(10)<<"|"<<setw(10)<<registro.dia<<setw(10)<<"|"<<setw(10)<<registro.hora<<setw(10)<<"|"<<setw(20)<<registro.catAJugar<<setw(20)<<"|"<<setw(10)<<registro.ren<<"x"<<registro.col<<setw(10)<<"|"<<endl;
 }
 // Archivos
 
