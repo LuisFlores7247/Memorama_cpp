@@ -37,6 +37,10 @@ struct dato
     char hora[10];
 };
 
+//Aqui van las librerias .h
+
+#include "creaTablas.h"
+
 // Portada
 void portada(int consoleWidth);      /* Caso 2 */
 void presentacion(int consoleWidth); /* Caso 2 */
@@ -1574,46 +1578,4 @@ void registrobin(dato info)
     }
     regs.write((char *)(&info), sizeof(dato));
     regs.close();
-}
-
-// Creadores de tablas
-
-string esquinas(int n) // n=0 Esquina superior izquierda, n=1 Esquina superior derecha, n=2 Esquina inferior izquierda, n=3 Esquina inferior derecha
-{
-    if (n == 0)
-    {
-        return string(1, char(201));
-    }
-    if (n == 1)
-    {
-        return string(1, char(187));
-    }
-    if (n == 2)
-    {
-        return string(1, char(200));
-    }
-    if (n == 3)
-    {
-        return string(1, char(188));
-    }
-}
-string lRecta(int n)
-{ // n=Longitud de la linea recta
-
-    return string(n - 2, char(205));
-}
-string lLateral()
-{
-    return string(1, char(186));
-}
-string lLatDivisoria(int n)
-{ // n=0 linea divisoria izquierda, n=1 linea divisoria derecha
-    if (n == 0)
-    {
-        return string(1, char(204));
-    }
-    if (n == 1)
-    {
-        return string(1, char(185));
-    }
 }
