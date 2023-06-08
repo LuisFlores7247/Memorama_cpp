@@ -1,0 +1,1 @@
+lLatDivisoria(0)+lRecta(line.length())+lLatDivisoria(1)
