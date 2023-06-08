@@ -137,7 +137,7 @@ void portada(int consoleWidth)
     system("cls");
     HANDLE hConsole=GetStdHandle(STD_OUTPUT_HANDLE);
     color(hConsole, 1);
-    PlaySound("Time.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
+    // PlaySound("Time.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
     Sleep(500);
     string line = "UNIVERSIDAD AUTONOMA DE AGUASCALIENTES";
     int leftPadding = (consoleWidth - line.length()) / 2;
@@ -397,7 +397,7 @@ int menu(int consoleWidth)
     int consolaAncho = csbi.srWindow.Right - csbi.srWindow.Left + 1;
     int consolaAlto = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
     system("cls");
-    PlaySound("Time.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
+    // PlaySound("Time.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
     Sleep(500);
     color(hConsole, 5);
     string line = "MENU";
@@ -478,9 +478,9 @@ void mantenimiento()
     GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
     int consoleWidth = consoleInfo.dwSize.X;
     int opc;
-    PlaySound(NULL,0,0);
+    // PlaySound(NULL,0,0);
     system("cls");
-    PlaySound("sans.wav", NULL, SND_ASYNC | SND_NOSTOP | SND_LOOP| SND_FILENAME);
+    // PlaySound("sans.wav", NULL, SND_ASYNC | SND_NOSTOP | SND_LOOP| SND_FILENAME);
     string line = "Categoria a modificar";
     int leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 1);
@@ -577,7 +577,7 @@ void opcionesMantenimiento(int arch, int consoleWidth)
         }
 
     } while (opc != 4 || (opc < 1 || opc > 5));
-    PlaySound(NULL,0,0);
+    // PlaySound(NULL,0,0);
 }
 
 void menuJuego(int consoleWidth)
@@ -587,8 +587,8 @@ void menuJuego(int consoleWidth)
     bool band1, band2, band3;
     string line;
     dato datos;
-    PlaySound(NULL,0,0);
-    PlaySound("snail.wav", NULL, SND_ASYNC | SND_NOSTOP | SND_LOOP| SND_FILENAME);
+    // PlaySound(NULL,0,0);
+    // PlaySound("snail.wav", NULL, SND_ASYNC | SND_NOSTOP | SND_LOOP| SND_FILENAME);
 
 
     do // captura alias
@@ -708,7 +708,7 @@ void juego(dato info, int consoleWidth)
     bool win = false;
     string symbl = "#";
     clock_t start, end;
-    PlaySound(NULL,0,0);
+    // PlaySound(NULL,0,0);
     start = medirT();
     system("cls");
     color(hConsole, 15);
@@ -733,8 +733,8 @@ void juego(dato info, int consoleWidth)
                     if (info.tableroDinamico[i][j].posicion == seleccion && info.tableroDinamico[i][j].estado == true)
                     {
                         seleccionada = true;
-                        PlaySound(NULL,0,0);
-                        PlaySound("Error.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
+                        // PlaySound(NULL,0,0);
+                        // PlaySound("Error.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
                         line = "La casilla ya ha sido destapada, por fvaor elija otra";
                         leftPadding = (consoleWidth - line.length()) / 2;
                         gotoxy(leftPadding, 25);
@@ -763,8 +763,8 @@ void juego(dato info, int consoleWidth)
                     }
                 }
             }
-            PlaySound(NULL,0,0);
-            PlaySound("Correct.wav",NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP);
+            // PlaySound(NULL,0,0);
+            // PlaySound("Correct.wav",NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP);
             info.par = info.par + 1;
             palabrasRestantes--;
             seleccion = 0; // Reset de variables
@@ -787,8 +787,8 @@ void juego(dato info, int consoleWidth)
         if (palabrasRestantes == 0)
         {
             win = true;
-            PlaySound(NULL, 0, 0 );
-            PlaySound("Yay.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
+            // PlaySound(NULL, 0, 0 );
+            // PlaySound("Yay.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
         }
 
         selecAnterior = seleccion;
@@ -802,8 +802,8 @@ void juego(dato info, int consoleWidth)
     BorrarEspMemDina(info.tableroDinamico, info.ren);
     // regreso al menu
     color(hConsole, 6);
-    PlaySound(NULL,0,0);
-    PlaySound("maxwell.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP | SND_LOOP );
+    // PlaySound(NULL,0,0);
+    // PlaySound("maxwell.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP | SND_LOOP );
     for (int i = 0; i < 12; i++)
     {
         Sleep(800);
@@ -866,7 +866,7 @@ void juego(dato info, int consoleWidth)
         }
         
     }
-    PlaySound(NULL, 0, 0 );
+    // PlaySound(NULL, 0, 0 );
 }
 
 // Assets
@@ -1128,7 +1128,7 @@ void imprimirTab(dato info, int seleccion, int seleccionAnterior, int consoleWid
     struct tm *time = localtime(&now);
     strftime(diaA, 12, "%d/%m/%Y", time);
     strftime(horaA, 10, "%H:%M:%S", time);
-    PlaySound("Shop.wav", NULL, SND_ASYNC | SND_NOSTOP | SND_LOOP| SND_FILENAME);
+    // PlaySound("Shop.wav", NULL, SND_ASYNC | SND_NOSTOP | SND_LOOP| SND_FILENAME);
     if (info.palAUsar == 8)
     {
         leftPadding = (consoleWidth - (info.ren * 16)) / 2;
@@ -1195,8 +1195,8 @@ void imprimirTab(dato info, int seleccion, int seleccionAnterior, int consoleWid
                     }
                     else
                     {
-                        PlaySound(NULL,0,0);
-                        PlaySound("Error.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
+                        // PlaySound(NULL,0,0);
+                        // PlaySound("Error.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
                         color(hConsole,12);
                         cout << setw(12) << info.tableroDinamico[i][j].palabra << setw(4);
                         color(hConsole,7);
