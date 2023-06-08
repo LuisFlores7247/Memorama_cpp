@@ -87,12 +87,6 @@ void registrarjugador(dato info, int consoleWidth); /* Caso 2*/
 bool validarPalabrasArch(int arch);                 /* Caso 4 */
 void registrobin(dato info);                        /* Caso 2 */
 
-// Creadores de tablas
-string lRecta(int n);
-string lLateral();
-string esquinas(int n);
-string lLatDivisoria(int n);
-
 int main(int argc, char const *argv[])
 {
     srand(time(NULL));
