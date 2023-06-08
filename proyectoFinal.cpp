@@ -582,11 +582,13 @@ void juego(dato info, int consoleWidth, int opc)
         } while (!win);
         break;
     case SIMULAR:
+        info.tableroDinamico = crearTablero(info.palAUsar, info.catAJugar, &info.ren, &info.col);
+
+        int val1, val2, i, tam;
+        i = 0;
         system("cls");
         imprimirTab(info, seleccion, selecAnterior, consoleWidth);
         cout << endl;
-        int val1, val2, i, tam;
-        i = 0;
         int *vec;
         tam = (info.palAUsar) * 2;
         vec = pedirMemVector(tam);

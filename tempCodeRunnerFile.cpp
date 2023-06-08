@@ -1,1 +1,2 @@
-lLatDivisoria(0)+lRecta(line.length())+lLatDivisoria(1)
+
+void imprimirTab(dato info, int seleccion, int selecc
