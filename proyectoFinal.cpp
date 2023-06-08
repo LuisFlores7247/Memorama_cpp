@@ -137,7 +137,7 @@ void portada(int consoleWidth)
     system("cls");
     HANDLE hConsole=GetStdHandle(STD_OUTPUT_HANDLE);
     color(hConsole, 1);
-    //PlaySound("Time.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
+    PlaySound("Time.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
     Sleep(500);
     string line = "UNIVERSIDAD AUTONOMA DE AGUASCALIENTES";
     int leftPadding = (consoleWidth - line.length()) / 2;
@@ -153,7 +153,7 @@ void portada(int consoleWidth)
     leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 7);
     cout << line;
-    color(hConsole, 9);
+    color(hConsole, 11);
     Sleep(500);
     line = "Nombre";
     leftPadding = (consoleWidth - line.length()) / 2;
@@ -216,7 +216,7 @@ void portada(int consoleWidth)
     gotoxy(leftPadding, 17);
     cout << line;
     system("cls");
-    color(hConsole, 3);
+    color(hConsole, 15);
     line = "UNIVERSIDAD AUTONOMA DE AGUASCALIENTES";
     leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 3);
@@ -229,7 +229,7 @@ void portada(int consoleWidth)
     leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 7);
     cout << line;
-    color(hConsole, 9);
+    color(hConsole, 15);
     line = "Nombre";
     leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 9);
@@ -271,7 +271,7 @@ void portada2(int consoleWidth){
     leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 7);
     cout << line;
-    color(hConsole, 9);
+    color(hConsole, 11);
     line = "Nombre";
     leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 9);
@@ -322,15 +322,16 @@ void presentacion(int consoleWidth)
 {0,1,0,1,0,0,1,0,0,0,0,1,0,0,1,0,1,0,0,0,0,0},
 {0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0}};
     int k=15;
-    color(hConsole, 9);
+    color(hConsole, 15);
     string line = "Las Memorables Aventuras De Memorin";
     int leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 3);
     cout << line;
     Sleep(200);
-    leftPadding = (consoleWidth - 20) / 2;
+    leftPadding = (consoleWidth - 40) / 2;
     gotoxy(leftPadding, 6);
-    cout << "Programando Sue"<<char(164)<<"os";
+    color(hConsole, 13);
+    cout << "*Programando Sue"<<char(164)<<"os, Maquinando Ideas*";
     Sleep(200);
     imprimirMatrizCentrada(matriz);
 
@@ -373,41 +374,94 @@ void imprimirMatrizCentrada(int matriz[][22]){
 
 int menu(int consoleWidth)
 {
+    
     int opc;
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    int matriz[15][28]={{0,0,0,0,0,0,1,0,1,1,1,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,1,0,1,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,1,0,1,1,0,0,1,1,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0},
+{0,0,0,0,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0},
+{0,0,0,0,1,0,1,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,1},
+{0,0,0,0,1,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0},
+{0,0,0,0,1,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0},
+{0,0,1,1,1,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0},
+{0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0},
+{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+{0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0}};
+    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+    HANDLE hConsole=GetStdHandle(STD_OUTPUT_HANDLE);
+    int consolaAncho = csbi.srWindow.Right - csbi.srWindow.Left + 1;
+    int consolaAlto = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
     system("cls");
-    //PlaySound("Time.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
+    PlaySound("Time.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
     Sleep(500);
+    color(hConsole, 5);
     string line = "MENU";
     int leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 1);
     cout << line;
     Sleep(500);
+    color(hConsole, 10);
     line = "1.- Jugar";
     leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 3);
     cout << line;
     Sleep(500);
+    color(hConsole, 6);
     line = "2.- Simulacion";
     leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 5);
     cout << line;
     Sleep(500);
+    color(hConsole, 3);
     line = "3.- Reporte";
     leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 7);
     cout << line;
     Sleep(500);
+    color(hConsole, 8);
     line = "4.- Mantenimiento";
     leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 9);
     cout << line;
     Sleep(500);
+    color(hConsole, 12);
     line = "5.- Salir";
     leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 11);
     cout << line;
     Sleep(500);
+    int inicioX = (consolaAncho - 28) / 2;
+    int inicioY = (consolaAlto - 15) / 2;
 
+    for (int i = 0; i < 15; i++) {
+        gotoxy(inicioX+30, (inicioY + i)+5);
+        for (int j = 0; j < 28; j++) {
+            if (matriz[i][j]==1)
+            {
+                color(hConsole, 15);
+                cout<<char(219);
+            }
+            else{
+                if(matriz[i][j]==2){
+                    color(hConsole, 12);
+                    cout<<char(219);
+                }
+                else{
+                    cout<<" ";
+                    
+                }
+            }
+            
+        }
+        Sleep(200);
+    }
+    
+    color(hConsole, 11);
     line = "Opcion: ";
     leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 13);
@@ -424,9 +478,9 @@ void mantenimiento()
     GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
     int consoleWidth = consoleInfo.dwSize.X;
     int opc;
-    //PlaySound(NULL,0,0);
+    PlaySound(NULL,0,0);
     system("cls");
-    //PlaySound("sans.wav", NULL, SND_ASYNC | SND_NOSTOP | SND_LOOP| SND_FILENAME);
+    PlaySound("sans.wav", NULL, SND_ASYNC | SND_NOSTOP | SND_LOOP| SND_FILENAME);
     string line = "Categoria a modificar";
     int leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 1);
@@ -523,23 +577,25 @@ void opcionesMantenimiento(int arch, int consoleWidth)
         }
 
     } while (opc != 4 || (opc < 1 || opc > 5));
-    //PlaySound(NULL,0,0);
+    PlaySound(NULL,0,0);
 }
 
 void menuJuego(int consoleWidth)
 {
+    HANDLE hConsole=GetStdHandle(STD_OUTPUT_HANDLE);
     int palAUsar, leftPadding;
     bool band1, band2, band3;
     string line;
     dato datos;
-    //PlaySound(NULL,0,0);
-    //PlaySound("snail.wav", NULL, SND_ASYNC | SND_NOSTOP | SND_LOOP| SND_FILENAME);
+    PlaySound(NULL,0,0);
+    PlaySound("snail.wav", NULL, SND_ASYNC | SND_NOSTOP | SND_LOOP| SND_FILENAME);
 
 
     do // captura alias
     {
         
         system("cls");
+        color(hConsole, 10);
         line = "JUGAR";
         leftPadding = (consoleWidth - line.length()) / 2;
         gotoxy(leftPadding, 1);
@@ -652,10 +708,9 @@ void juego(dato info, int consoleWidth)
     bool win = false;
     string symbl = "#";
     clock_t start, end;
-    //PlaySound(NULL,0,0);
+    PlaySound(NULL,0,0);
     start = medirT();
     system("cls");
-    //PlaySound("Shop.wav", NULL, SND_ASYNC | SND_NOSTOP | SND_LOOP| SND_FILENAME);
     color(hConsole, 15);
     imprimirTab(info, seleccion, selecAnterior, consoleWidth);
     cout << endl;
@@ -678,6 +733,8 @@ void juego(dato info, int consoleWidth)
                     if (info.tableroDinamico[i][j].posicion == seleccion && info.tableroDinamico[i][j].estado == true)
                     {
                         seleccionada = true;
+                        PlaySound(NULL,0,0);
+                        PlaySound("Error.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
                         line = "La casilla ya ha sido destapada, por fvaor elija otra";
                         leftPadding = (consoleWidth - line.length()) / 2;
                         gotoxy(leftPadding, 25);
@@ -706,6 +763,8 @@ void juego(dato info, int consoleWidth)
                     }
                 }
             }
+            PlaySound(NULL,0,0);
+            PlaySound("Correct.wav",NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP);
             info.par = info.par + 1;
             palabrasRestantes--;
             seleccion = 0; // Reset de variables
@@ -728,6 +787,8 @@ void juego(dato info, int consoleWidth)
         if (palabrasRestantes == 0)
         {
             win = true;
+            PlaySound(NULL, 0, 0 );
+            PlaySound("Yay.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
         }
 
         selecAnterior = seleccion;
@@ -735,68 +796,68 @@ void juego(dato info, int consoleWidth)
     } while (!win);
     end = medirT();
     info.duracDeJueg = static_cast<double>(end - start) / CLOCKS_PER_SEC;
-    Sleep(5000);
+    Sleep(6000);
     system("cls");
     registrobin(info);
     BorrarEspMemDina(info.tableroDinamico, info.ren);
     // regreso al menu
     color(hConsole, 6);
-    //PlaySound(NULL, 0, 0 );
-    //PlaySound("maxwell.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP | SND_LOOP );
-    for (int i = 0; i < 15; i++)
+    PlaySound(NULL,0,0);
+    PlaySound("maxwell.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP | SND_LOOP );
+    for (int i = 0; i < 12; i++)
     {
         Sleep(800);
-        string line = " ______________________________________________________________";
+        string line = "______________________________________________________________";
         int leftPadding = (consoleWidth - line.length()) / 2;
+        gotoxy(leftPadding, 4);
+        cout << line;
+        line = "|                                                              |";
+        leftPadding = (consoleWidth - line.length()) / 2;
+        gotoxy(leftPadding, 5);
+        cout<<line;
+        line = "|                                                              |";
+        leftPadding = (consoleWidth - line.length()) / 2;
+        gotoxy(leftPadding, 6);
+        cout<<line;
+        line ="|  ##      ##    ####    ##    ##    ##      ##  ##  ##    ##  |";
+        leftPadding=(consoleWidth-line.length())/2;
+        gotoxy(leftPadding, 7);
+        cout << line;
+        line ="|  ##      ##    ####    ##    ##    ##      ##  ##  ##    ##  |";
+        leftPadding=(consoleWidth-line.length())/2;
         gotoxy(leftPadding, 8);
         cout << line;
-        line = "|                                                              |";
+        line = "|    ##  ##    ##    ##  ##    ##    ##      ##  ##  ####  ##  |";
         leftPadding = (consoleWidth - line.length()) / 2;
         gotoxy(leftPadding, 9);
-        cout<<line;
-        line = "|                                                              |";
-        leftPadding = (consoleWidth - line.length()) / 2;
-        gotoxy(leftPadding, 10);
-        cout<<line;
-        line ="|  ##      ##    ####    ##    ##    ##      ##  ##  ##    ##  |";
-        leftPadding=(consoleWidth-line.length())/2;
-        gotoxy(leftPadding, 11);
-        cout << line;
-        line ="|  ##      ##    ####    ##    ##    ##      ##  ##  ##    ##  |";
-        leftPadding=(consoleWidth-line.length())/2;
-        gotoxy(leftPadding, 12);
         cout << line;
         line = "|    ##  ##    ##    ##  ##    ##    ##      ##  ##  ####  ##  |";
+        leftPadding = (consoleWidth - line.length()) / 2;
+        gotoxy(leftPadding, 10);
+        cout << line;
+        line = "|      ##      ##    ##  ##    ##    ##  ##  ##  ##  ##  ####  |";
+        leftPadding = (consoleWidth - line.length()) / 2;
+        gotoxy(leftPadding, 11);
+        cout << line;
+        line = "|      ##      ##    ##  ##    ##    ##  ##  ##  ##  ##  ####  |";
+        leftPadding = (consoleWidth - line.length()) / 2;
+        gotoxy(leftPadding, 12);
+        cout << line;
+        line = "|      ##        ####      ####        ##  ##    ##  ##    ##  |";
         leftPadding = (consoleWidth - line.length()) / 2;
         gotoxy(leftPadding, 13);
         cout << line;
-        line = "|    ##  ##    ##    ##  ##    ##    ##      ##  ##  ####  ##  |";
+        line = "|      ##        ####      ####        ##  ##    ##  ##    ##  |";
         leftPadding = (consoleWidth - line.length()) / 2;
         gotoxy(leftPadding, 14);
         cout << line;
-        line = "|      ##      ##    ##  ##    ##    ##  ##  ##  ##  ##  ####  |";
+        line = "|                                                              |";
         leftPadding = (consoleWidth - line.length()) / 2;
         gotoxy(leftPadding, 15);
         cout << line;
-        line = "|      ##      ##    ##  ##    ##    ##  ##  ##  ##  ##  ####  |";
-        leftPadding = (consoleWidth - line.length()) / 2;
-        gotoxy(leftPadding, 16);
-        cout << line;
-        line = "|      ##        ####      ####        ##  ##    ##  ##    ##  |";
-        leftPadding = (consoleWidth - line.length()) / 2;
-        gotoxy(leftPadding, 17);
-        cout << line;
-        line = "|      ##        ####      ####        ##  ##    ##  ##    ##  |";
-        leftPadding = (consoleWidth - line.length()) / 2;
-        gotoxy(leftPadding, 18);
-        cout << line;
-        line = "|                                                              |";
-        leftPadding = (consoleWidth - line.length()) / 2;
-        gotoxy(leftPadding, 19);
-        cout << line;
         line = "|______________________________________________________________|";
         leftPadding = (consoleWidth - line.length()) / 2;
-        gotoxy(leftPadding, 20);
+        gotoxy(leftPadding, 16);
         cout << line;
         Sleep(800);
         if (i < 14)
@@ -805,7 +866,7 @@ void juego(dato info, int consoleWidth)
         }
         
     }
-    //PlaySound(NULL, 0, 0 );
+    PlaySound(NULL, 0, 0 );
 }
 
 // Assets
@@ -1043,12 +1104,31 @@ void imprimirTab(dato info, int seleccion, int seleccionAnterior, int consoleWid
 {
     system("cls");
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+    int consolaAncho = csbi.srWindow.Right - csbi.srWindow.Left + 1;
+    int consolaAlto = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
+    int matriz[14][32]={{0,0,0,0,0,0,0,0,0,0,1,0,1,1,1,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0},
+{0,1,1,1,0,0,0,0,1,0,0,0,1,1,0,0,0,1,1,1,0,0,0,0,0,0,0,1,0,0,0,0},
+{1,0,0,0,1,1,0,0,1,0,1,0,1,0,0,1,1,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0},
+{1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,0,0,0,1,0,0,1,0,0,1,0},
+{0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,1,1,0,1},
+{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0,0,1},
+{1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,0,1,1,0,0,0,0,1,0,1,0},
+{0,1,1,1,0,0,0,0,1,0,0,1,0,0,1,0,0,1,1,1,0,1,0,0,0,0,0,1,0,1,0,0},
+{0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0}};
     char diaA[12], horaA[10];
-    int leftPadding, k = 8;
+    int leftPadding, k = 3;
     time_t now = time(0);
     struct tm *time = localtime(&now);
     strftime(diaA, 12, "%d/%m/%Y", time);
     strftime(horaA, 10, "%H:%M:%S", time);
+    PlaySound("Shop.wav", NULL, SND_ASYNC | SND_NOSTOP | SND_LOOP| SND_FILENAME);
     if (info.palAUsar == 8)
     {
         leftPadding = (consoleWidth - (info.ren * 16)) / 2;
@@ -1060,14 +1140,14 @@ void imprimirTab(dato info, int seleccion, int seleccionAnterior, int consoleWid
             leftPadding = (consoleWidth - (info.ren * 12)) / 2;
         }
     }
-    gotoxy(leftPadding, 1);
+    gotoxy(leftPadding, 0);
 
+    gotoxy(leftPadding, 1);
+    cout << "Alias: " << info.alias << setw(18) << "Fecha: " << diaA;
     gotoxy(leftPadding, 2);
-    cout << "Alias: " << info.alias << setw(20) << "Fecha: " << diaA;
-    gotoxy(leftPadding, 4);
     cout << "Total de pares: " << info.par << setw(16) << "Hora: " << horaA;
-    for (int i = 0; i < info.ren; i++)
-    {
+    
+    for (int i = 0; i < info.ren; i++){
 
         if (i == 0)
         {
@@ -1103,6 +1183,7 @@ void imprimirTab(dato info, int seleccion, int seleccionAnterior, int consoleWid
                     cout << setw(12) << info.tableroDinamico[i][j].palabra << setw(4);
                     color(hConsole,7);
                     cout<<lLateral();
+                    
                 }
                 else{
                     if (seleccionAnterior==0)
@@ -1114,6 +1195,8 @@ void imprimirTab(dato info, int seleccion, int seleccionAnterior, int consoleWid
                     }
                     else
                     {
+                        PlaySound(NULL,0,0);
+                        PlaySound("Error.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
                         color(hConsole,12);
                         cout << setw(12) << info.tableroDinamico[i][j].palabra << setw(4);
                         color(hConsole,7);
@@ -1136,6 +1219,23 @@ void imprimirTab(dato info, int seleccion, int seleccionAnterior, int consoleWid
             }
         }
         k += 3;
+    }
+    color(hConsole, 15);
+    int inicioX = (consolaAncho - 32) / 2;
+    int inicioY = (consolaAlto - 14) / 2;
+    for (int i = 0; i < 14; i++) {
+        gotoxy(inicioX-42, (inicioY + i)+8);
+        for (int j = 0; j < 32; j++) {
+            if (matriz[i][j]==1)
+            {
+                cout<<char(219);
+            }
+            else{
+                
+                cout<<" ";    
+            }
+            
+        }
     }
 }
 
@@ -1233,6 +1333,7 @@ void quitarMayus(char str[], char aux[])
 
 void menuReportes(int consoleWidth)
 {
+    HANDLE hConsole=GetStdHandle(STD_OUTPUT_HANDLE);
     dato aux, *registros;
     fstream file;
     int leftPadding;
@@ -1244,6 +1345,7 @@ void menuReportes(int consoleWidth)
         do
         {
             system("cls");
+            color(hConsole, 3);
             line = "Reportes";
             leftPadding = (consoleWidth - line.length()) / 2;
             gotoxy(leftPadding, 1);
