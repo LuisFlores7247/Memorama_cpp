@@ -43,6 +43,10 @@ struct dato
     char hora[10];
 };
 
+// Aqui van las librerias .h
+
+#include "creaTablas.h"
+
 // Portada
 void portada(int consoleWidth);      /* Caso 2 */
 void presentacion(int consoleWidth); /* Caso 2 */
