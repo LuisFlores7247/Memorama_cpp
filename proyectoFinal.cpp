@@ -37,6 +37,10 @@ struct dato
     char hora[10];
 };
 
+//Aqui van las librerias .h
+
+#include "creaTablas.h"
+
 // Portada
 void portada(int consoleWidth);      /* Caso 2 */
 void presentacion(int consoleWidth); /* Caso 2 */
@@ -82,12 +86,6 @@ void eliminar(int arch, int consoleWidth);          /* Caso 2*/
 void registrarjugador(dato info, int consoleWidth); /* Caso 2*/
 bool validarPalabrasArch(int arch);                 /* Caso 4 */
 void registrobin(dato info);                        /* Caso 2 */
-
-// Creadores de tablas
-string lRecta(int n);
-string lLateral();
-string esquinas(int n);
-string lLatDivisoria(int n);
 
 int main(int argc, char const *argv[])
 {
@@ -471,7 +469,6 @@ void juego(dato info, int consoleWidth)
     do
     {
         bool seleccionada;
-        // PreguntarCasilla
         do
         {
             string line = "Selecciona una casilla: ";
@@ -498,12 +495,7 @@ void juego(dato info, int consoleWidth)
             }
 
         } while (seleccion < 1 || seleccion > (info.palAUsar * 2));
-
-        // Validar casilla que este dentro de lo rangos y que no se haya seleccionado anteriormente
         intentos++;
-        Sleep(1000);
-        system("cls");
-        imprimirTab(info, seleccion, selecAnterior, consoleWidth);
         if (palabraSeleccion(info, seleccion) == palabraSeleccion(info, selecAnterior))
         {
 
@@ -527,6 +519,9 @@ void juego(dato info, int consoleWidth)
             selecAnterior = 0;
             intentos = 0;
         }
+        Sleep(1000);
+        system("cls");
+        imprimirTab(info, seleccion, selecAnterior, consoleWidth);
         if (intentos == 2)
         {
             seleccion = 0; // Reset de variables
@@ -826,6 +821,7 @@ void llenarTab(casilla **mat, int ren, int col, string *v, char cat[], int pal)
 void imprimirTab(dato info, int seleccion, int seleccionAnterior, int consoleWidth)
 {
     system("cls");
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     char diaA[12], horaA[10];
     int leftPadding, k = 8;
     time_t now = time(0);
@@ -878,9 +874,31 @@ void imprimirTab(dato info, int seleccion, int seleccionAnterior, int consoleWid
              << setw(leftPadding) << "|";
         for (int j = 0; j < info.col; j++)
         {
-            if (info.tableroDinamico[i][j].posicion == seleccion || info.tableroDinamico[i][j].estado || info.tableroDinamico[i][j].posicion == seleccionAnterior)
-            {
-                cout << setw(12) << info.tableroDinamico[i][j].palabra << setw(4) << "|";
+            if (info.tableroDinamico[i][j].posicion == seleccion || info.tableroDinamico[i][j].posicion == seleccionAnterior || info.tableroDinamico[i][j].estado)
+            {                
+                if (info.tableroDinamico[i][j].estado)
+                {
+                    color(hConsole,2);
+                    cout << setw(12) << info.tableroDinamico[i][j].palabra << setw(4);
+                    color(hConsole,7);
+                    cout<<lLateral();
+                }
+                else{
+                    if (seleccionAnterior==0)
+                    {
+                        color(hConsole,6);
+                        cout << setw(12) << info.tableroDinamico[i][j].palabra << setw(4);
+                        color(hConsole,7);
+                        cout<<lLateral();                            
+                    }
+                    else
+                    {
+                        color(hConsole,12);
+                        cout << setw(12) << info.tableroDinamico[i][j].palabra << setw(4);
+                        color(hConsole,7);
+                        cout<<lLateral();
+                    }
+                }       
             }
             else
             {
@@ -1574,46 +1592,4 @@ void registrobin(dato info)
     }
     regs.write((char *)(&info), sizeof(dato));
     regs.close();
-}
-
-// Creadores de tablas
-
-string esquinas(int n) // n=0 Esquina superior izquierda, n=1 Esquina superior derecha, n=2 Esquina inferior izquierda, n=3 Esquina inferior derecha
-{
-    if (n == 0)
-    {
-        return string(1, char(201));
-    }
-    if (n == 1)
-    {
-        return string(1, char(187));
-    }
-    if (n == 2)
-    {
-        return string(1, char(200));
-    }
-    if (n == 3)
-    {
-        return string(1, char(188));
-    }
-}
-string lRecta(int n)
-{ // n=Longitud de la linea recta
-
-    return string(n - 2, char(205));
-}
-string lLateral()
-{
-    return string(1, char(186));
-}
-string lLatDivisoria(int n)
-{ // n=0 linea divisoria izquierda, n=1 linea divisoria derecha
-    if (n == 0)
-    {
-        return string(1, char(204));
-    }
-    if (n == 1)
-    {
-        return string(1, char(185));
-    }
 }
