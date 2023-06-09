@@ -79,6 +79,8 @@ clock_t medirT();                                                               
 string palabraSeleccion(dato info, int posicion);
 void BorrarEspMemDina(casilla **mat, int ren);
 void quitarMayus(char str[], char aux[]);
+int generarNumeroAleatorio(int min, int max);
+bool numeroSeleccionadoAnteriormente(int *numerosSeleccionados, int size, int numero);
 
 // Reportes
 void repXCategoria(int total, dato *v, int consoleWith);
@@ -93,12 +95,6 @@ void eliminar(int arch, int consoleWidth);          /* Caso 2*/
 void registrarjugador(dato info, int consoleWidth); /* Caso 2*/
 bool validarPalabrasArch(int arch);                 /* Caso 4 */
 void registrobin(dato info);                        /* Caso 2 */
-
-// Creadores de tablas
-string lRecta(int n);
-string lLateral();
-string esquinas(int n);
-string lLatDivisoria(int n);
 
 int main(int argc, char const *argv[])
 {
@@ -130,6 +126,21 @@ int main(int argc, char const *argv[])
             } while (datos.palAUsar != 3 && datos.palAUsar != 6 && datos.palAUsar != 8);
 
             strcpy(datos.catAJugar, palabras[1 + rand() % 3]);
+            switch (datos.palAUsar)
+            {
+            case 3:
+                datos.ren = 3;
+                break;
+            case 6:
+                datos.ren = 4;
+                break;
+            case 8:
+                datos.ren = 4;
+
+            default:
+                break;
+            }
+
             datos.tableroDinamico = crearTablero(datos.palAUsar, datos.catAJugar, &datos.ren, &datos.col);
             time_t now = time(0);
             struct tm *time = localtime(&now);
@@ -501,7 +512,6 @@ void juego(dato info, int consoleWidth, int opc)
         cout << endl;
         do
         {
-            bool seleccionada;
             // PreguntarCasilla
             do
             {
@@ -586,73 +596,82 @@ void juego(dato info, int consoleWidth, int opc)
         } while (!win);
         break;
     case SIMULAR:
-        info.tableroDinamico = crearTablero(info.palAUsar, info.catAJugar, &info.ren, &info.col);
-
-        int val1, val2, i, tam;
-        i = 0;
         system("cls");
-        imprimirTab(info, seleccion, selecAnterior, consoleWidth);
+        info.tableroDinamico = crearTablero(info.palAUsar, info.catAJugar, &info.ren, &info.col);
+        imprimirTab(info, 0, 0, consoleWidth);
         cout << endl;
-        int *vec;
-        tam = (info.palAUsar) * 2;
-        vec = pedirMemVector(tam);
+
+        int valorMaximo;
+        valorMaximo = (info.palAUsar) * 2;
+        int *numerosSeleccionados;
+        numerosSeleccionados = pedirMemVector(valorMaximo);
+        int val1, val2;
+        int size;
+        size = 0;
+        for (int i = 0; i < sizeof(numerosSeleccionados); i++)
+        {
+            numerosSeleccionados[i] = 0;
+        }
+
         do
         {
-            bool seleccionada;
-            // PreguntarCasilla
             do
             {
-                val1 = 1 + rand() % (info.palAUsar * 2);
-            } while (val1 == val2);
+                val1 = generarNumeroAleatorio(1, valorMaximo);
+            } while (numeroSeleccionadoAnteriormente(numerosSeleccionados, size, val1));
+
+            do
+            {
+                val2 = generarNumeroAleatorio(1, valorMaximo);
+            } while (val2 == val1 || numeroSeleccionadoAnteriormente(numerosSeleccionados, size, val2));
 
             // Validar casilla que este dentro de lo rangos y que no se haya seleccionado anteriormente
             intentos++;
-            Sleep(1000);
+            Sleep(500);
             system("cls");
-            imprimirTab(info, seleccion, selecAnterior, consoleWidth);
-            if (palabraSeleccion(info, seleccion) == palabraSeleccion(info, selecAnterior))
+            imprimirTab(info, val1, 0, consoleWidth);
+            Sleep(500);
+            imprimirTab(info, val1, val2, consoleWidth);
+            if (palabraSeleccion(info, val1) == palabraSeleccion(info, val2))
             {
 
                 for (int i = 0; i < info.ren; i++)
                 {
                     for (int j = 0; j < info.col; j++)
                     {
-                        if (info.tableroDinamico[i][j].posicion == seleccion)
+                        if (info.tableroDinamico[i][j].posicion == val1)
                         {
                             info.tableroDinamico[i][j].estado = true;
                         }
-                        if (info.tableroDinamico[i][j].posicion == selecAnterior)
+                        if (info.tableroDinamico[i][j].posicion == val2)
                         {
                             info.tableroDinamico[i][j].estado = true;
                         }
                     }
                 }
-                vec[i] = val1;
-                i++;
-                vec[i] = val1;
-                i++;
+                numerosSeleccionados[size] = val1;
+                size++;
+                numerosSeleccionados[size] = val2;
+                size++;
+
                 info.par = info.par + 1;
                 palabrasRestantes--;
-                seleccion = 0; // Reset de variables
-                selecAnterior = 0;
-                intentos = 0;
             }
+            intentos = 2;
             if (intentos == 2)
             {
-                seleccion = 0; // Reset de variables
-                selecAnterior = 0;
+                val1 = 0; // Reset de variables
+                val2 = 0;
                 intentos = 0;
-                Sleep(3000);
+                Sleep(1500);
                 system("cls");
-                imprimirTab(info, seleccion, selecAnterior, consoleWidth);
+                imprimirTab(info, val1, val2, consoleWidth);
             }
 
             if (palabrasRestantes == 0)
             {
                 win = true;
             }
-
-            selecAnterior = seleccion;
 
         } while (!win);
         break;
@@ -941,6 +960,7 @@ void llenarTab(casilla **mat, int ren, int col, string *v, char cat[], int pal)
 void imprimirTab(dato info, int seleccion, int seleccionAnterior, int consoleWidth)
 {
     system("cls");
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     char diaA[12], horaA[10];
     int leftPadding, k = 8;
     time_t now = time(0);
@@ -993,9 +1013,32 @@ void imprimirTab(dato info, int seleccion, int seleccionAnterior, int consoleWid
              << setw(leftPadding) << "|";
         for (int j = 0; j < info.col; j++)
         {
-            if (info.tableroDinamico[i][j].posicion == seleccion || info.tableroDinamico[i][j].estado || info.tableroDinamico[i][j].posicion == seleccionAnterior)
+            if (info.tableroDinamico[i][j].posicion == seleccion || info.tableroDinamico[i][j].posicion == seleccionAnterior || info.tableroDinamico[i][j].estado)
             {
-                cout << setw(12) << info.tableroDinamico[i][j].palabra << setw(4) << "|";
+                if (info.tableroDinamico[i][j].estado)
+                {
+                    color(hConsole, 2);
+                    cout << setw(12) << info.tableroDinamico[i][j].palabra << setw(4);
+                    color(hConsole, 7);
+                    cout << lLateral();
+                }
+                else
+                {
+                    if (seleccionAnterior == 0)
+                    {
+                        color(hConsole, 6);
+                        cout << setw(12) << info.tableroDinamico[i][j].palabra << setw(4);
+                        color(hConsole, 7);
+                        cout << lLateral();
+                    }
+                    else
+                    {
+                        color(hConsole, 12);
+                        cout << setw(12) << info.tableroDinamico[i][j].palabra << setw(4);
+                        color(hConsole, 7);
+                        cout << lLateral();
+                    }
+                }
             }
             else
             {
@@ -1689,50 +1732,22 @@ void registrobin(dato info)
     regs.write((char *)(&info), sizeof(dato));
     regs.close();
 }
-
-// Creadores de tablas
-
-string esquinas(int n) // n=0 Esquina superior izquierda, n=1 Esquina superior derecha, n=2 Esquina inferior izquierda, n=3 Esquina inferior derecha
-{
-    if (n == 0)
-    {
-        return string(1, char(201));
-    }
-    if (n == 1)
-    {
-        return string(1, char(187));
-    }
-    if (n == 2)
-    {
-        return string(1, char(200));
-    }
-    if (n == 3)
-    {
-        return string(1, char(188));
-    }
-}
-string lRecta(int n)
-{ // n=Longitud de la linea recta
-
-    return string(n - 2, char(205));
-}
-string lLateral()
-{
-    return string(1, char(186));
-}
-string lLatDivisoria(int n)
-{ // n=0 linea divisoria izquierda, n=1 linea divisoria derecha
-    if (n == 0)
-    {
-        return string(1, char(204));
-    }
-    if (n == 1)
-    {
-        return string(1, char(185));
-    }
-}
-
 int *pedirMemVector(int tam)
 {
     return new int[tam];
+}
+int generarNumeroAleatorio(int min, int max)
+{
+    return min + rand() % (max - min + 1);
+}
+bool numeroSeleccionadoAnteriormente(int *numerosSeleccionados, int size, int numero)
+{
+    for (int i = 0; i < size; i++)
+    {
+        if (numerosSeleccionados[i] == numero)
+        {
+            return true;
+        }
+    }
+    return false;
 }
