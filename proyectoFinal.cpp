@@ -16,6 +16,12 @@
 
 using namespace std;
 
+enum modo
+{
+    JUGAR = 1,
+    SIMULAR
+};
+
 struct casilla
 {
     string palabra;
@@ -37,15 +43,13 @@ struct dato
     char hora[10];
 };
 
-//Aqui van las librerias .h
+// Aqui van las librerias .h
 
 #include "creaTablas.h"
 
 // Portada
 void portada(int consoleWidth);      /* Caso 2 */
-void portada2(int consoleWidth);    /*Caso 2*/
 void presentacion(int consoleWidth); /* Caso 2 */
-void imprimirMatrizCentrada(int matriz[][22]);
 
 // Menus
 int menu(int consoleWidth);                             /* Caso 4 */
@@ -56,7 +60,7 @@ void opcionesMantenimiento(int arch, int consoleWidth); /* Caso 2 */
 // Fundamentales
 void gotoxy(int x, int y);                                             /* Caso 2 */
 casilla **crearTablero(int pal, char categoria[], int *ren, int *col); /* Caso 4 */
-void juego(dato info, int consoleWith);
+void juego(dato info, int consoleWith, int opc);
 void menuReportes(int consoleWidth);
 
 // Assets
@@ -65,6 +69,7 @@ bool validarCategoria(char cat[], int consoleWidth);                            
 bool validarPalabras(int words, int consoleWidth);                                   /* Caso 2 */
 casilla **pedirMemoriaMat(int pal, int *ren, int *col);                              /* Caso 4 */
 string *pedirMemVec(int tam);                                                        /* Caso 4*/
+int *pedirMemVector(int tam);                                                        /* Caso 4*/
 void llenarTab(casilla **mat, int ren, int col, string *v, char cat[], int pal);     /* Caso 2*/
 void imprimirTab(dato info, int seleccion, int seleccionAnterior, int consoleWidth); /* Caso 2 */
 void shuffle(string *v, int tam);                                                    /* Caso 2*/
@@ -74,6 +79,8 @@ clock_t medirT();                                                               
 string palabraSeleccion(dato info, int posicion);
 void BorrarEspMemDina(casilla **mat, int ren);
 void quitarMayus(char str[], char aux[]);
+int generarNumeroAleatorio(int min, int max);
+bool numeroSeleccionadoAnteriormente(int *numerosSeleccionados, int size, int numero);
 
 // Reportes
 void repXCategoria(int total, dato *v, int consoleWith);
@@ -88,7 +95,6 @@ void eliminar(int arch, int consoleWidth);          /* Caso 2*/
 void registrarjugador(dato info, int consoleWidth); /* Caso 2*/
 bool validarPalabrasArch(int arch);                 /* Caso 4 */
 void registrobin(dato info);                        /* Caso 2 */
-
 
 int main(int argc, char const *argv[])
 {
@@ -110,8 +116,40 @@ int main(int argc, char const *argv[])
             menuJuego(consoleWidth);
             break;
         case 2:
-            /* code */
+        {
+            dato datos;
+            char palabras[3][30] = {"Paises", "Lenguajes de programacion", "Dispositivos electronicos"};
+            strcpy(datos.alias, "computadora");
+            do
+            {
+                datos.palAUsar = 1 + rand() % 8;
+            } while (datos.palAUsar != 3 && datos.palAUsar != 6 && datos.palAUsar != 8);
+
+            strcpy(datos.catAJugar, palabras[1 + rand() % 3]);
+            switch (datos.palAUsar)
+            {
+            case 3:
+                datos.ren = 3;
+                break;
+            case 6:
+                datos.ren = 4;
+                break;
+            case 8:
+                datos.ren = 4;
+
+            default:
+                break;
+            }
+
+            datos.tableroDinamico = crearTablero(datos.palAUsar, datos.catAJugar, &datos.ren, &datos.col);
+            time_t now = time(0);
+            struct tm *time = localtime(&now);
+            strftime(datos.dia, 12, "%d/%m/%Y", time);
+            strftime(datos.hora, 10, "%H:%M:%S", time);
+            registrarjugador(datos, consoleWidth);
+            juego(datos, consoleWidth, 2);
             break;
+        }
         case 3:
             menuReportes(consoleWidth);
             break;
@@ -135,333 +173,100 @@ int main(int argc, char const *argv[])
 void portada(int consoleWidth)
 {
     system("cls");
-    HANDLE hConsole=GetStdHandle(STD_OUTPUT_HANDLE);
-    color(hConsole, 1);
-    // PlaySound("Time.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
-    Sleep(500);
     string line = "UNIVERSIDAD AUTONOMA DE AGUASCALIENTES";
     int leftPadding = (consoleWidth - line.length()) / 2;
-    gotoxy(leftPadding, 3);
+    gotoxy(leftPadding, 1);
     cout << line;
-    Sleep(500);
-    line = "Ingenieria en sistemas computacionales";
-    leftPadding = (consoleWidth - line.length()) / 2;
-    gotoxy(leftPadding, 5);
-    cout << line;
-    Sleep(500);
-    line = "Programacion I";
-    leftPadding = (consoleWidth - line.length()) / 2;
-    gotoxy(leftPadding, 7);
-    cout << line;
-    color(hConsole, 11);
-    Sleep(500);
-    line = "Nombre";
-    leftPadding = (consoleWidth - line.length()) / 2;
-    gotoxy(leftPadding, 9);
-    cout << line;
-    Sleep(1000);
-    line = "Sergio Eder Cervantes Rincon";
-    leftPadding = (consoleWidth - line.length()) / 2;
-    gotoxy(leftPadding, 11);
-    cout << line;
-    Sleep(1000);
-    line = "Daan Jostin Carabez Garcia";
-    leftPadding = (consoleWidth - line.length()) / 2;
-    gotoxy(leftPadding, 13);
-    cout << line;
-    Sleep(1000);
-    line = "Luis Alberto Pedroza Diaz";
-    leftPadding = (consoleWidth - line.length()) / 2;
-    gotoxy(leftPadding, 15);
-    cout << line;
-    Sleep(1000);
-    line = "Luis David Flores Martinez";
-    leftPadding = (consoleWidth - line.length()) / 2;
-    gotoxy(leftPadding, 17);
-    cout << line;
-    Sleep(1000);
-    
-    system("cls");
-    color(hConsole, 240);
-    line = "UNIVERSIDAD AUTONOMA DE AGUASCALIENTES";
-    leftPadding = (consoleWidth - line.length()) / 2;
-    gotoxy(leftPadding, 3);
-    cout << line;
-    line = "Ingenieria en sistemas computacionales";
-    leftPadding = (consoleWidth - line.length()) / 2;
-    gotoxy(leftPadding, 5);
-    cout << line;
-    line = "Programacion I";
-    leftPadding = (consoleWidth - line.length()) / 2;
-    gotoxy(leftPadding, 7);
-    cout << line;
-    line = "Nombre";
-    leftPadding = (consoleWidth - line.length()) / 2;
-    gotoxy(leftPadding, 9);
-    cout << line;
-    line = "Sergio Eder Cervantes Rincon";
-    leftPadding = (consoleWidth - line.length()) / 2;
-    gotoxy(leftPadding, 11);
-    cout << line;
-    line = "Daan Jostin Carabez Garcia";
-    leftPadding = (consoleWidth - line.length()) / 2;
-    gotoxy(leftPadding, 13);
-    cout << line;
-    line = "Luis Alberto Pedroza Diaz";
-    leftPadding = (consoleWidth - line.length()) / 2;
-    gotoxy(leftPadding, 15);
-    cout << line;
-    line = "Luis David Flores Martinez";
-    leftPadding = (consoleWidth - line.length()) / 2;
-    gotoxy(leftPadding, 17);
-    cout << line;
-    system("cls");
-    color(hConsole, 15);
-    line = "UNIVERSIDAD AUTONOMA DE AGUASCALIENTES";
-    leftPadding = (consoleWidth - line.length()) / 2;
-    gotoxy(leftPadding, 3);
-    cout << line;
-    line = "Ingenieria en sistemas computacionales";
-    leftPadding = (consoleWidth - line.length()) / 2;
-    gotoxy(leftPadding, 5);
-    cout << line;
-    line = "Programacion I";
-    leftPadding = (consoleWidth - line.length()) / 2;
-    gotoxy(leftPadding, 7);
-    cout << line;
-    color(hConsole, 15);
-    line = "Nombre";
-    leftPadding = (consoleWidth - line.length()) / 2;
-    gotoxy(leftPadding, 9);
-    cout << line;
-    line = "Sergio Eder Cervantes Rincon";
-    leftPadding = (consoleWidth - line.length()) / 2;
-    gotoxy(leftPadding, 11);
-    cout << line;
-    line = "Daan Jostin Carabez Garcia";
-    leftPadding = (consoleWidth - line.length()) / 2;
-    gotoxy(leftPadding, 13);
-    cout << line;
-    line = "Luis Alberto Pedroza Diaz";
-    leftPadding = (consoleWidth - line.length()) / 2;
-    gotoxy(leftPadding, 15);
-    cout << line;
-    line = "Luis David Flores Martinez";
-    leftPadding = (consoleWidth - line.length()) / 2;
-    gotoxy(leftPadding, 17);
-    cout << line;
-    leftPadding = (consoleWidth - 32) / 2;
-    gotoxy(leftPadding, 19);
-    portada2(consoleWidth);
-}
 
-void portada2(int consoleWidth){
-    system("cls");
-    HANDLE hConsole=GetStdHandle(STD_OUTPUT_HANDLE);
-    color(hConsole, 1);
-    string line = "UNIVERSIDAD AUTONOMA DE AGUASCALIENTES";
-    int leftPadding = (consoleWidth - line.length()) / 2;
+    line = "Ingenieria en sistemas computacionales";
+    leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 3);
     cout << line;
-    line = "Ingenieria en sistemas computacionales";
+
+    line = "Programacion I";
     leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 5);
     cout << line;
-    line = "Programacion I";
+
+    line = "Nombre";
     leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 7);
     cout << line;
-    color(hConsole, 11);
-    line = "Nombre";
+
+    line = "Sergio Eder Cervantes Rincon";
     leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 9);
     cout << line;
-    line = "Sergio Eder Cervantes Rincon";
+
+    line = "Daan Jostin Carabez Garcia";
     leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 11);
     cout << line;
-    line = "Daan Jostin Carabez Garcia";
+
+    line = "Luis Alberto Pedroza Diaz";
     leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 13);
     cout << line;
-    line = "Luis Alberto Pedroza Diaz";
+
+    line = "Luis David Flores Martinez";
     leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 15);
     cout << line;
-    line = "Luis David Flores Martinez";
-    leftPadding = (consoleWidth - line.length()) / 2;
-    gotoxy(leftPadding, 17);
-    cout << line;
+
     leftPadding = (consoleWidth - 32) / 2;
-    gotoxy(leftPadding, 19);
+    gotoxy(leftPadding, 17);
     system("Pause");
 }
 
 void presentacion(int consoleWidth)
 {
-    
     system("cls");
-    HANDLE hConsole=GetStdHandle(STD_OUTPUT_HANDLE);
-    int matriz[19][22]={{0,0,1,0,1,1,1,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0},
-{0,1,0,1,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0},
-{0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0},
-{0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0},
-{1,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0},
-{1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0},
-{1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0},
-{1,0,1,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-{1,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0},
-{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0},
-{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0},
-{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0},
-{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0},
-{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0},
-{0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0},
-{0,1,0,0,1,1,0,0,1,1,1,0,0,1,1,0,0,1,0,0,0,0},
-{0,1,0,0,1,1,0,1,0,0,1,0,1,0,1,0,0,1,0,0,0,0},
-{0,1,0,1,0,0,1,0,0,0,0,1,0,0,1,0,1,0,0,0,0,0},
-{0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0}};
-    int k=15;
-    color(hConsole, 15);
-    string line = "Las Memorables Aventuras De Memorin";
+    string line = "Nombre";
     int leftPadding = (consoleWidth - line.length()) / 2;
-    gotoxy(leftPadding, 3);
+    gotoxy(leftPadding, 10);
     cout << line;
-    Sleep(200);
-    leftPadding = (consoleWidth - 40) / 2;
-    gotoxy(leftPadding, 6);
-    color(hConsole, 13);
-    cout << "*Programando Sue"<<char(164)<<"os, Maquinando Ideas*";
-    Sleep(200);
-    imprimirMatrizCentrada(matriz);
+
+    line = "Lema";
+    leftPadding = (consoleWidth - line.length()) / 2;
+    gotoxy(leftPadding, 15);
+    cout << line;
 
     leftPadding = (consoleWidth - 32) / 2;
-    gotoxy(leftPadding, 29);
-    
+    gotoxy(leftPadding, 20);
     system("Pause");
-}
-void imprimirMatrizCentrada(int matriz[][22]){
-    // Obtener las dimensiones de la consola
-    CONSOLE_SCREEN_BUFFER_INFO csbi;
-    HANDLE hConsole=GetStdHandle(STD_OUTPUT_HANDLE);
-    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
-    int consolaAncho = csbi.srWindow.Right - csbi.srWindow.Left + 1;
-    int consolaAlto = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
-
-    // Calcular las coordenadas de inicio para centrar la matriz
-    int inicioX = (consolaAncho - 22) / 2;
-    int inicioY = (consolaAlto - 19) / 2;
-
-    // Imprimir la matriz centrada
-    color(hConsole, 15);
-    for (int i = 0; i < 19; i++) {
-        gotoxy(inicioX, (inicioY + i)+4);
-        for (int j = 0; j < 22; j++) {
-            if (matriz[i][j]==1)
-            {
-                cout<<char(219);
-            }
-            else{
-                cout<<" ";
-            }
-            
-        }
-        Sleep(200);
-    }
 }
 
 // Menus
 
 int menu(int consoleWidth)
 {
-    
     int opc;
-    CONSOLE_SCREEN_BUFFER_INFO csbi;
-    int matriz[15][28]={{0,0,0,0,0,0,1,0,1,1,1,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-{0,0,0,0,0,1,0,1,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0},
-{0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0},
-{0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0},
-{0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0},
-{0,0,0,0,1,0,1,1,0,0,1,1,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0},
-{0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0},
-{0,0,0,0,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0},
-{0,0,0,0,1,0,1,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,1},
-{0,0,0,0,1,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0},
-{0,0,0,0,1,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0},
-{0,0,1,1,1,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0},
-{0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0},
-{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-{0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0}};
-    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
-    HANDLE hConsole=GetStdHandle(STD_OUTPUT_HANDLE);
-    int consolaAncho = csbi.srWindow.Right - csbi.srWindow.Left + 1;
-    int consolaAlto = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
     system("cls");
-    // PlaySound("Time.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
-    Sleep(500);
-    color(hConsole, 5);
     string line = "MENU";
     int leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 1);
     cout << line;
-    Sleep(500);
-    color(hConsole, 10);
     line = "1.- Jugar";
     leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 3);
     cout << line;
-    Sleep(500);
-    color(hConsole, 6);
     line = "2.- Simulacion";
     leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 5);
     cout << line;
-    Sleep(500);
-    color(hConsole, 3);
     line = "3.- Reporte";
     leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 7);
     cout << line;
-    Sleep(500);
-    color(hConsole, 8);
     line = "4.- Mantenimiento";
     leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 9);
     cout << line;
-    Sleep(500);
-    color(hConsole, 12);
     line = "5.- Salir";
     leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 11);
     cout << line;
-    Sleep(500);
-    int inicioX = (consolaAncho - 28) / 2;
-    int inicioY = (consolaAlto - 15) / 2;
 
-    for (int i = 0; i < 15; i++) {
-        gotoxy(inicioX+30, (inicioY + i)+5);
-        for (int j = 0; j < 28; j++) {
-            if (matriz[i][j]==1)
-            {
-                color(hConsole, 15);
-                cout<<char(219);
-            }
-            else{
-                if(matriz[i][j]==2){
-                    color(hConsole, 12);
-                    cout<<char(219);
-                }
-                else{
-                    cout<<" ";
-                    
-                }
-            }
-            
-        }
-        Sleep(200);
-    }
-    
-    color(hConsole, 11);
     line = "Opcion: ";
     leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 13);
@@ -474,13 +279,10 @@ void mantenimiento()
 {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-    
     GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
     int consoleWidth = consoleInfo.dwSize.X;
     int opc;
-    // PlaySound(NULL,0,0);
     system("cls");
-    // PlaySound("sans.wav", NULL, SND_ASYNC | SND_NOSTOP | SND_LOOP| SND_FILENAME);
     string line = "Categoria a modificar";
     int leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 1);
@@ -577,25 +379,18 @@ void opcionesMantenimiento(int arch, int consoleWidth)
         }
 
     } while (opc != 4 || (opc < 1 || opc > 5));
-    // PlaySound(NULL,0,0);
 }
 
 void menuJuego(int consoleWidth)
 {
-    HANDLE hConsole=GetStdHandle(STD_OUTPUT_HANDLE);
     int palAUsar, leftPadding;
     bool band1, band2, band3;
     string line;
     dato datos;
-    // PlaySound(NULL,0,0);
-    // PlaySound("snail.wav", NULL, SND_ASYNC | SND_NOSTOP | SND_LOOP| SND_FILENAME);
-
 
     do // captura alias
     {
-        
         system("cls");
-        color(hConsole, 10);
         line = "JUGAR";
         leftPadding = (consoleWidth - line.length()) / 2;
         gotoxy(leftPadding, 1);
@@ -670,7 +465,7 @@ void menuJuego(int consoleWidth)
     strftime(datos.hora, 10, "%H:%M:%S", time);
     registrarjugador(datos, consoleWidth);
     // tablero dinamico es casilla**
-    juego(datos, consoleWidth);
+    juego(datos, consoleWidth, 1);
     system("pause");
 }
 
@@ -700,7 +495,7 @@ casilla **crearTablero(int pal, char categoria[], int *ren, int *col)
     return tableroDinamico;
 }
 
-void juego(dato info, int consoleWidth)
+void juego(dato info, int consoleWidth, int opc)
 {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     int seleccion = 0, selecAnterior = 0, palabrasRestantes = info.palAUsar, intentos = 0;
@@ -708,165 +503,227 @@ void juego(dato info, int consoleWidth)
     bool win = false;
     string symbl = "#";
     clock_t start, end;
-    // PlaySound(NULL,0,0);
     start = medirT();
-    system("cls");
-    color(hConsole, 15);
-    imprimirTab(info, seleccion, selecAnterior, consoleWidth);
-    cout << endl;
-    do
+    switch (opc)
     {
-        bool seleccionada;
-        do
-        {
-            string line = "Selecciona una casilla: ";
-            int leftPadding = (consoleWidth - line.length()) / 2;
-            gotoxy(leftPadding, 22);
-            cout << line;
-            leftPadding = (consoleWidth) / 2;
-            gotoxy(leftPadding, 23);
-            cin >> seleccion;
-            for (int i = 0; i < info.ren; i++)
-            {
-                for (int j = 0; j < info.col; j++)
-                {
-                    if (info.tableroDinamico[i][j].posicion == seleccion && info.tableroDinamico[i][j].estado == true)
-                    {
-                        seleccionada = true;
-                        // PlaySound(NULL,0,0);
-                        // PlaySound("Error.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
-                        line = "La casilla ya ha sido destapada, por fvaor elija otra";
-                        leftPadding = (consoleWidth - line.length()) / 2;
-                        gotoxy(leftPadding, 25);
-                        cout << line;
-                        Sleep(3000);
-                    }
-                }
-            }
-
-        } while (seleccion < 1 || seleccion > (info.palAUsar * 2));
-        intentos++;
-        if (palabraSeleccion(info, seleccion) == palabraSeleccion(info, selecAnterior))
-        {
-
-            for (int i = 0; i < info.ren; i++)
-            {
-                for (int j = 0; j < info.col; j++)
-                {
-                    if (info.tableroDinamico[i][j].posicion == seleccion)
-                    {
-                        info.tableroDinamico[i][j].estado = true;
-                    }
-                    if (info.tableroDinamico[i][j].posicion == selecAnterior)
-                    {
-                        info.tableroDinamico[i][j].estado = true;
-                    }
-                }
-            }
-            // PlaySound(NULL,0,0);
-            // PlaySound("Correct.wav",NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP);
-            info.par = info.par + 1;
-            palabrasRestantes--;
-            seleccion = 0; // Reset de variables
-            selecAnterior = 0;
-            intentos = 0;
-        }
-        Sleep(1000);
+    case JUGAR:
         system("cls");
         imprimirTab(info, seleccion, selecAnterior, consoleWidth);
-        if (intentos == 2)
+        cout << endl;
+        do
         {
-            seleccion = 0; // Reset de variables
-            selecAnterior = 0;
-            intentos = 0;
-            Sleep(3000);
+            // PreguntarCasilla
+            do
+            {
+                string line = "Selecciona una casilla: ";
+                int leftPadding = (consoleWidth - line.length()) / 2;
+                gotoxy(leftPadding, 22);
+                cout << line;
+                leftPadding = (consoleWidth) / 2;
+                gotoxy(leftPadding, 23);
+                cin >> seleccion;
+
+                for (int i = 0; i < info.ren; i++)
+                {
+                    for (int j = 0; j < info.col; j++)
+                    {
+                        if (info.tableroDinamico[i][j].posicion == seleccion && info.tableroDinamico[i][j].estado == true)
+                        {
+                            line = "La casilla ya ha sido destapada, por favor elija otra";
+                            leftPadding = (consoleWidth - line.length()) / 2;
+                            gotoxy(leftPadding, 25);
+                            cout << line;
+                            Sleep(1000);
+                        }
+                    }
+                }
+
+                if (seleccion == selecAnterior)
+                {
+                    line = "La casilla ya ha sido destapada, por favor elija otra";
+                    leftPadding = (consoleWidth - line.length()) / 2;
+                    gotoxy(leftPadding, 25);
+                    cout << line;
+                    Sleep(3000);
+                }
+
+            } while (seleccion < 1 || seleccion > (info.palAUsar * 2) || seleccion == selecAnterior);
+
+            // Validar casilla que este dentro de lo rangos y que no se haya seleccionado anteriormente
+            intentos++;
+            Sleep(1000);
             system("cls");
             imprimirTab(info, seleccion, selecAnterior, consoleWidth);
-        }
+            if (palabraSeleccion(info, seleccion) == palabraSeleccion(info, selecAnterior))
+            {
 
-        if (palabrasRestantes == 0)
+                for (int i = 0; i < info.ren; i++)
+                {
+                    for (int j = 0; j < info.col; j++)
+                    {
+                        if (info.tableroDinamico[i][j].posicion == seleccion)
+                        {
+                            info.tableroDinamico[i][j].estado = true;
+                        }
+                        if (info.tableroDinamico[i][j].posicion == selecAnterior)
+                        {
+                            info.tableroDinamico[i][j].estado = true;
+                        }
+                    }
+                }
+                info.par = info.par + 1;
+                palabrasRestantes--;
+                seleccion = 0; // Reset de variables
+                selecAnterior = 0;
+                intentos = 0;
+            }
+            if (intentos == 2)
+            {
+                seleccion = 0; // Reset de variables
+                selecAnterior = 0;
+                intentos = 0;
+                Sleep(3000);
+                system("cls");
+                imprimirTab(info, seleccion, selecAnterior, consoleWidth);
+            }
+
+            if (palabrasRestantes == 0)
+            {
+                win = true;
+            }
+
+            selecAnterior = seleccion;
+        } while (!win);
+        break;
+    case SIMULAR:
+        system("cls");
+        info.tableroDinamico = crearTablero(info.palAUsar, info.catAJugar, &info.ren, &info.col);
+        imprimirTab(info, 0, 0, consoleWidth);
+        cout << endl;
+
+        int valorMaximo;
+        valorMaximo = (info.palAUsar) * 2;
+        int *numerosSeleccionados;
+        numerosSeleccionados = pedirMemVector(valorMaximo);
+        int val1, val2;
+        int size;
+        size = 0;
+        for (int i = 0; i < sizeof(numerosSeleccionados); i++)
         {
-            win = true;
-            // PlaySound(NULL, 0, 0 );
-            // PlaySound("Yay.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
+            numerosSeleccionados[i] = 0;
         }
 
-        selecAnterior = seleccion;
+        do
+        {
+            do
+            {
+                val1 = generarNumeroAleatorio(1, valorMaximo);
+            } while (numeroSeleccionadoAnteriormente(numerosSeleccionados, size, val1));
 
-    } while (!win);
+            do
+            {
+                val2 = generarNumeroAleatorio(1, valorMaximo);
+            } while (val2 == val1 || numeroSeleccionadoAnteriormente(numerosSeleccionados, size, val2));
+
+            // Validar casilla que este dentro de lo rangos y que no se haya seleccionado anteriormente
+            intentos++;
+            Sleep(500);
+            system("cls");
+            imprimirTab(info, val1, 0, consoleWidth);
+            Sleep(500);
+            imprimirTab(info, val1, val2, consoleWidth);
+            if (palabraSeleccion(info, val1) == palabraSeleccion(info, val2))
+            {
+
+                for (int i = 0; i < info.ren; i++)
+                {
+                    for (int j = 0; j < info.col; j++)
+                    {
+                        if (info.tableroDinamico[i][j].posicion == val1)
+                        {
+                            info.tableroDinamico[i][j].estado = true;
+                        }
+                        if (info.tableroDinamico[i][j].posicion == val2)
+                        {
+                            info.tableroDinamico[i][j].estado = true;
+                        }
+                    }
+                }
+                numerosSeleccionados[size] = val1;
+                size++;
+                numerosSeleccionados[size] = val2;
+                size++;
+
+                info.par = info.par + 1;
+                palabrasRestantes--;
+            }
+            intentos = 2;
+            if (intentos == 2)
+            {
+                val1 = 0; // Reset de variables
+                val2 = 0;
+                intentos = 0;
+                Sleep(1500);
+                system("cls");
+                imprimirTab(info, val1, val2, consoleWidth);
+            }
+
+            if (palabrasRestantes == 0)
+            {
+                win = true;
+            }
+
+        } while (!win);
+        break;
+    default:
+        break;
+    }
+
     end = medirT();
     info.duracDeJueg = static_cast<double>(end - start) / CLOCKS_PER_SEC;
-    Sleep(6000);
+    Sleep(2000);
     system("cls");
     registrobin(info);
     BorrarEspMemDina(info.tableroDinamico, info.ren);
     // regreso al menu
     color(hConsole, 6);
-    // PlaySound(NULL,0,0);
-    // PlaySound("maxwell.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP | SND_LOOP );
-    for (int i = 0; i < 12; i++)
+    for (int i = 0; i < 15; i++)
     {
         Sleep(800);
-        string line = "______________________________________________________________";
+        string line = " _______________________________";
         int leftPadding = (consoleWidth - line.length()) / 2;
-        gotoxy(leftPadding, 4);
-        cout << line;
-        line = "|                                                              |";
-        leftPadding = (consoleWidth - line.length()) / 2;
-        gotoxy(leftPadding, 5);
-        cout<<line;
-        line = "|                                                              |";
-        leftPadding = (consoleWidth - line.length()) / 2;
-        gotoxy(leftPadding, 6);
-        cout<<line;
-        line ="|  ##      ##    ####    ##    ##    ##      ##  ##  ##    ##  |";
-        leftPadding=(consoleWidth-line.length())/2;
-        gotoxy(leftPadding, 7);
-        cout << line;
-        line ="|  ##      ##    ####    ##    ##    ##      ##  ##  ##    ##  |";
-        leftPadding=(consoleWidth-line.length())/2;
-        gotoxy(leftPadding, 8);
-        cout << line;
-        line = "|    ##  ##    ##    ##  ##    ##    ##      ##  ##  ####  ##  |";
-        leftPadding = (consoleWidth - line.length()) / 2;
-        gotoxy(leftPadding, 9);
-        cout << line;
-        line = "|    ##  ##    ##    ##  ##    ##    ##      ##  ##  ####  ##  |";
-        leftPadding = (consoleWidth - line.length()) / 2;
-        gotoxy(leftPadding, 10);
-        cout << line;
-        line = "|      ##      ##    ##  ##    ##    ##  ##  ##  ##  ##  ####  |";
-        leftPadding = (consoleWidth - line.length()) / 2;
-        gotoxy(leftPadding, 11);
-        cout << line;
-        line = "|      ##      ##    ##  ##    ##    ##  ##  ##  ##  ##  ####  |";
-        leftPadding = (consoleWidth - line.length()) / 2;
-        gotoxy(leftPadding, 12);
-        cout << line;
-        line = "|      ##        ####      ####        ##  ##    ##  ##    ##  |";
-        leftPadding = (consoleWidth - line.length()) / 2;
-        gotoxy(leftPadding, 13);
-        cout << line;
-        line = "|      ##        ####      ####        ##  ##    ##  ##    ##  |";
-        leftPadding = (consoleWidth - line.length()) / 2;
         gotoxy(leftPadding, 14);
         cout << line;
-        line = "|                                                              |";
+        line = "|                               |";
         leftPadding = (consoleWidth - line.length()) / 2;
         gotoxy(leftPadding, 15);
         cout << line;
-        line = "|______________________________________________________________|";
+        line = " | #   #  ##  #  #  #   # # #  # |";
         leftPadding = (consoleWidth - line.length()) / 2;
         gotoxy(leftPadding, 16);
+        cout << line;
+        line = "|  # #  #  # #  #  #   # # ## # |";
+        leftPadding = (consoleWidth - line.length()) / 2;
+        gotoxy(leftPadding, 17);
+        cout << line;
+        line = "|   #   #  # #  #  # # # # # ## |";
+        leftPadding = (consoleWidth - line.length()) / 2;
+        gotoxy(leftPadding, 18);
+        cout << line;
+        line = "|   #    ##   ##    # #  # #  # |";
+        leftPadding = (consoleWidth - line.length()) / 2;
+        gotoxy(leftPadding, 19);
+        cout << line;
+        line = "|_______________________________|";
+        leftPadding = (consoleWidth - line.length()) / 2;
+        gotoxy(leftPadding, 20);
         cout << line;
         Sleep(800);
         if (i < 14)
         {
             system("cls");
         }
-        
     }
-    // PlaySound(NULL, 0, 0 );
 }
 
 // Assets
@@ -1104,31 +961,12 @@ void imprimirTab(dato info, int seleccion, int seleccionAnterior, int consoleWid
 {
     system("cls");
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_SCREEN_BUFFER_INFO csbi;
-    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
-    int consolaAncho = csbi.srWindow.Right - csbi.srWindow.Left + 1;
-    int consolaAlto = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
-    int matriz[14][32]={{0,0,0,0,0,0,0,0,0,0,1,0,1,1,1,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-{0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0},
-{0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0},
-{0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0},
-{0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0},
-{0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0},
-{0,1,1,1,0,0,0,0,1,0,0,0,1,1,0,0,0,1,1,1,0,0,0,0,0,0,0,1,0,0,0,0},
-{1,0,0,0,1,1,0,0,1,0,1,0,1,0,0,1,1,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0},
-{1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,0,0,0,1,0,0,1,0,0,1,0},
-{0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,1,1,0,1},
-{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0,0,1},
-{1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,0,1,1,0,0,0,0,1,0,1,0},
-{0,1,1,1,0,0,0,0,1,0,0,1,0,0,1,0,0,1,1,1,0,1,0,0,0,0,0,1,0,1,0,0},
-{0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0}};
     char diaA[12], horaA[10];
-    int leftPadding, k = 3;
+    int leftPadding, k = 8;
     time_t now = time(0);
     struct tm *time = localtime(&now);
     strftime(diaA, 12, "%d/%m/%Y", time);
     strftime(horaA, 10, "%H:%M:%S", time);
-    // PlaySound("Shop.wav", NULL, SND_ASYNC | SND_NOSTOP | SND_LOOP| SND_FILENAME);
     if (info.palAUsar == 8)
     {
         leftPadding = (consoleWidth - (info.ren * 16)) / 2;
@@ -1140,14 +978,14 @@ void imprimirTab(dato info, int seleccion, int seleccionAnterior, int consoleWid
             leftPadding = (consoleWidth - (info.ren * 12)) / 2;
         }
     }
-    gotoxy(leftPadding, 0);
-
     gotoxy(leftPadding, 1);
-    cout << "Alias: " << info.alias << setw(18) << "Fecha: " << diaA;
+
     gotoxy(leftPadding, 2);
+    cout << "Alias: " << info.alias << setw(20) << "Fecha: " << diaA;
+    gotoxy(leftPadding, 4);
     cout << "Total de pares: " << info.par << setw(16) << "Hora: " << horaA;
-    
-    for (int i = 0; i < info.ren; i++){
+    for (int i = 0; i < info.ren; i++)
+    {
 
         if (i == 0)
         {
@@ -1176,33 +1014,31 @@ void imprimirTab(dato info, int seleccion, int seleccionAnterior, int consoleWid
         for (int j = 0; j < info.col; j++)
         {
             if (info.tableroDinamico[i][j].posicion == seleccion || info.tableroDinamico[i][j].posicion == seleccionAnterior || info.tableroDinamico[i][j].estado)
-            {                
+            {
                 if (info.tableroDinamico[i][j].estado)
                 {
-                    color(hConsole,2);
+                    color(hConsole, 2);
                     cout << setw(12) << info.tableroDinamico[i][j].palabra << setw(4);
-                    color(hConsole,7);
-                    cout<<lLateral();
-                    
+                    color(hConsole, 7);
+                    cout << lLateral();
                 }
-                else{
-                    if (seleccionAnterior==0)
+                else
+                {
+                    if (seleccionAnterior == 0)
                     {
-                        color(hConsole,6);
+                        color(hConsole, 6);
                         cout << setw(12) << info.tableroDinamico[i][j].palabra << setw(4);
-                        color(hConsole,7);
-                        cout<<lLateral();                            
+                        color(hConsole, 7);
+                        cout << lLateral();
                     }
                     else
                     {
-                        // PlaySound(NULL,0,0);
-                        // PlaySound("Error.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
-                        color(hConsole,12);
+                        color(hConsole, 12);
                         cout << setw(12) << info.tableroDinamico[i][j].palabra << setw(4);
-                        color(hConsole,7);
-                        cout<<lLateral();
+                        color(hConsole, 7);
+                        cout << lLateral();
                     }
-                }       
+                }
             }
             else
             {
@@ -1219,23 +1055,6 @@ void imprimirTab(dato info, int seleccion, int seleccionAnterior, int consoleWid
             }
         }
         k += 3;
-    }
-    color(hConsole, 15);
-    int inicioX = (consolaAncho - 32) / 2;
-    int inicioY = (consolaAlto - 14) / 2;
-    for (int i = 0; i < 14; i++) {
-        gotoxy(inicioX-42, (inicioY + i)+8);
-        for (int j = 0; j < 32; j++) {
-            if (matriz[i][j]==1)
-            {
-                cout<<char(219);
-            }
-            else{
-                
-                cout<<" ";    
-            }
-            
-        }
     }
 }
 
@@ -1333,7 +1152,6 @@ void quitarMayus(char str[], char aux[])
 
 void menuReportes(int consoleWidth)
 {
-    HANDLE hConsole=GetStdHandle(STD_OUTPUT_HANDLE);
     dato aux, *registros;
     fstream file;
     int leftPadding;
@@ -1345,7 +1163,6 @@ void menuReportes(int consoleWidth)
         do
         {
             system("cls");
-            color(hConsole, 3);
             line = "Reportes";
             leftPadding = (consoleWidth - line.length()) / 2;
             gotoxy(leftPadding, 1);
@@ -1543,9 +1360,8 @@ void repXNombre(int total, dato *v, int consoleWith)
     gotoxy(leftPadding, lfinal + 1);
     cout << tabla << endl;
     leftPadding = consoleWith / 2;
-    gotoxy(leftPadding-16, lfinal+2);
+    gotoxy(leftPadding - 16, lfinal + 2);
     system("Pause");
-
 }
 void repXTiempo(int total, dato *v, int consoleWith)
 {
@@ -1596,7 +1412,7 @@ void repXTiempo(int total, dato *v, int consoleWith)
     gotoxy(leftPadding, lfinal + 1);
     cout << tabla << endl;
     leftPadding = consoleWith / 2;
-    gotoxy(leftPadding-16, lfinal+2);
+    gotoxy(leftPadding - 16, lfinal + 2);
     system("Pause");
 }
 void imprimirRep(dato registro, int consoleWith)
@@ -1915,4 +1731,23 @@ void registrobin(dato info)
     }
     regs.write((char *)(&info), sizeof(dato));
     regs.close();
+}
+int *pedirMemVector(int tam)
+{
+    return new int[tam];
+}
+int generarNumeroAleatorio(int min, int max)
+{
+    return min + rand() % (max - min + 1);
+}
+bool numeroSeleccionadoAnteriormente(int *numerosSeleccionados, int size, int numero)
+{
+    for (int i = 0; i < size; i++)
+    {
+        if (numerosSeleccionados[i] == numero)
+        {
+            return true;
+        }
+    }
+    return false;
 }
