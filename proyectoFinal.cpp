@@ -1048,7 +1048,7 @@ void juego(dato info, int consoleWidth, int opc)
     cout<<line;
     leftPadding=(consoleWidth-8)/2;
     gotoxy(leftPadding,19);
-    cout<<info.duracDeJueg;
+    cout<<info.duracDeJueg;<<" seg";
     leftPadding=(consoleWidth-20)/2;
     gotoxy(leftPadding,22);
     system("pause");
