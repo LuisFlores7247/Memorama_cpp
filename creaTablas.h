@@ -27,7 +27,7 @@ string esquinas(int n) // n=0 Esquina superior izquierda, n=1 Esquina superior d
 string lRecta(int n)
 { // n=Longitud de la linea recta
 
-    return string(n - 2, char(205));
+    return string(n, char(205));
 }
 string lLateral()
 {
