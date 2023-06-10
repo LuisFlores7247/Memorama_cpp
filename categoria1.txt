@@ -1,5 +1,5 @@
 Telefono
-Computadora
+Reloj
 Laptop
 Mouse
 Teclado
@@ -8,5 +8,5 @@ Radio
 Cautin
 Audifonos
 Bobina
-Protoboard
+Bocina
 Tamagochi
