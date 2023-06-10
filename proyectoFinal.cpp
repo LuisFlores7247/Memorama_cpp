@@ -46,12 +46,12 @@ struct dato
 // Aqui van las librerias .h
 
 #include "creaTablas.h"
+#include "perritos.h"
 
 // Portada
 void portada(int consoleWidth);      /* Caso 2 */
 void portada2(int consoleWidth);     /*Caso 2*/
 void presentacion(int consoleWidth); /* Caso 2 */
-void imprimirMatrizCentrada(int matriz[][22]);
 
 // Menus
 int menu(int consoleWidth);                             /* Caso 4 */
@@ -60,7 +60,6 @@ void mantenimiento();                                   /* Caso 1 */
 void opcionesMantenimiento(int arch, int consoleWidth); /* Caso 2 */
 
 // Fundamentales
-void gotoxy(int x, int y);                                             /* Caso 2 */
 casilla **crearTablero(int pal, char categoria[], int *ren, int *col); /* Caso 4 */
 void juego(dato info, int consoleWith, int opc);
 void menuReportes(int consoleWidth);
@@ -177,7 +176,7 @@ void portada(int consoleWidth)
     system("cls");
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     color(hConsole, 1);
-    // PlaySound("Time.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
+    // PlaySound("assets/Time.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
     Sleep(500);
     string line = "UNIVERSIDAD AUTONOMA DE AGUASCALIENTES";
     int leftPadding = (consoleWidth - line.length()) / 2;
@@ -343,25 +342,7 @@ void presentacion(int consoleWidth)
 
     system("cls");
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    int matriz[19][22] = {{0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                          {0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                          {0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                          {0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                          {1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                          {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0},
-                          {1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0},
-                          {1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-                          {1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0},
-                          {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0},
-                          {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0},
-                          {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0},
-                          {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0},
-                          {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0},
-                          {0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0},
-                          {0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0},
-                          {0, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0},
-                          {0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0},
-                          {0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0}};
+
     int k = 15;
     color(hConsole, 15);
     string line = "Las Memorables Aventuras De Memorin";
@@ -374,7 +355,7 @@ void presentacion(int consoleWidth)
     color(hConsole, 13);
     cout << "Programando Sue" << char(164) << "os, Maquinando Ideas";
     Sleep(200);
-    imprimirMatrizCentrada(matriz);
+    imprimirMatrizCentrada();
 
     leftPadding = (consoleWidth - 32) / 2;
     gotoxy(leftPadding, 9);
@@ -382,38 +363,7 @@ void presentacion(int consoleWidth)
     system("Pause");
 }
 
-void imprimirMatrizCentrada(int matriz[][22])
-{
-    // Obtener las dimensiones de la consola
-    CONSOLE_SCREEN_BUFFER_INFO csbi;
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
-    int consolaAncho = csbi.srWindow.Right - csbi.srWindow.Left + 1;
-    int consolaAlto = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
 
-    // Calcular las coordenadas de inicio para centrar la matriz
-    int inicioX = (consolaAncho - 22) / 2;
-    int inicioY = (consolaAlto - 19) / 2;
-
-    // Imprimir la matriz centrada
-    color(hConsole, 15);
-    for (int i = 0; i < 19; i++)
-    {
-        gotoxy(inicioX, (inicioY + i) + 4);
-        for (int j = 0; j < 22; j++)
-        {
-            if (matriz[i][j] == 1)
-            {
-                cout << char(219);
-            }
-            else
-            {
-                cout << " ";
-            }
-        }
-        Sleep(200);
-    }
-}
 
 // Menus
 
@@ -421,29 +371,11 @@ int menu(int consoleWidth)
 {
 
     int opc;
-    CONSOLE_SCREEN_BUFFER_INFO csbi;
-    int matriz[15][28] = {{0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                          {0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                          {0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                          {0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                          {0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                          {0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                          {0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0},
-                          {0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0},
-                          {0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1},
-                          {0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0},
-                          {0, 0, 0, 0, 1, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0},
-                          {0, 0, 1, 1, 1, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0},
-                          {0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0},
-                          {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-                          {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0}};
-    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    int consolaAncho = csbi.srWindow.Right - csbi.srWindow.Left + 1;
-    int consolaAlto = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
     system("cls");
-    //PlaySound(NULL,0,0);
-    // PlaySound("Time.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
+    // PlaySound(NULL,0,0);
+    // PlaySound("assets/Time.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
     Sleep(500);
     color(hConsole, 5);
     string line = "MENU";
@@ -481,35 +413,7 @@ int menu(int consoleWidth)
     gotoxy(leftPadding, 11);
     cout << line;
     Sleep(500);
-    int inicioX = (consolaAncho - 28) / 2;
-    int inicioY = (consolaAlto - 15) / 2;
-
-    for (int i = 0; i < 15; i++)
-    {
-        gotoxy(inicioX + 30, (inicioY + i) + 5);
-        for (int j = 0; j < 28; j++)
-        {
-            if (matriz[i][j] == 1)
-            {
-                color(hConsole, 15);
-                cout << char(219);
-            }
-            else
-            {
-                if (matriz[i][j] == 2)
-                {
-                    color(hConsole, 12);
-                    cout << char(219);
-                }
-                else
-                {
-                    cout << " ";
-                }
-            }
-        }
-        Sleep(200);
-    }
-
+    perrito1();
     color(hConsole, 11);
     line = "Opcion: ";
     leftPadding = (consoleWidth - line.length()) / 2;
@@ -530,7 +434,7 @@ void mantenimiento()
     system("cls");
     color(hConsole, 8);
     // PlaySound(NULL,0,0);
-    // PlaySound("sans.wav",NULL,SND_ASYNC | SND_NOSTOP | SND_LOOP| SND_FILENAME);
+    // PlaySound("assets/sans.wav",NULL,SND_ASYNC | SND_NOSTOP | SND_LOOP| SND_FILENAME);
     string line = "Categoria a modificar";
     int leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 1);
@@ -721,15 +625,6 @@ void menuJuego(int consoleWidth)
 
 // Fundamentales
 
-void gotoxy(int x, int y)
-{
-    HANDLE hcon;
-    hcon = GetStdHandle(STD_OUTPUT_HANDLE);
-    COORD dwPos;
-    dwPos.X = x;
-    dwPos.Y = y;
-    SetConsoleCursorPosition(hcon, dwPos);
-}
 
 casilla **crearTablero(int pal, char categoria[], int *ren, int *col)
 {
@@ -792,7 +687,7 @@ void juego(dato info, int consoleWidth, int opc)
                 if (seleccion == selecAnterior)
                 {
                     // PlaySound(NULL,0,0);
-                    // PlaySound("Error.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
+                    // PlaySound("assets/Error.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
                     line = "La casilla ya ha sido destapada, por favor elija otra";
                     leftPadding = (consoleWidth - line.length()) / 2;
                     gotoxy(leftPadding, 25);
@@ -822,7 +717,7 @@ void juego(dato info, int consoleWidth, int opc)
                     }
                 }
                 // PlaySound(NULL,0,0);
-                // PlaySound("Correct.wav",NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP);
+                // PlaySound("assets/Correct.wav",NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP);
                 info.par = info.par + 1;
                 palabrasRestantes--;
                 seleccion = 0; // Reset de variables
@@ -850,7 +745,7 @@ void juego(dato info, int consoleWidth, int opc)
             {
                 win = true;
                 // PlaySound(NULL, 0, 0 );
-                // PlaySound("Yay.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
+                // PlaySound("assets/Yay.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
             }
 
             selecAnterior = seleccion;
@@ -950,7 +845,7 @@ void juego(dato info, int consoleWidth, int opc)
     // regreso al menu
     color(hConsole, 6);
     // PlaySound(NULL,0,0);
-    // PlaySound("maxwell.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP | SND_LOOP );
+    // PlaySound("assets/maxwell.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP | SND_LOOP );
     for (int i = 0; i < 8; i++)
     {
         Sleep(800);
@@ -1250,31 +1145,14 @@ void imprimirTab(dato info, int seleccion, int seleccionAnterior, int consoleWid
 {
     system("cls");
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_SCREEN_BUFFER_INFO csbi;
-    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
-    int consolaAncho = csbi.srWindow.Right - csbi.srWindow.Left + 1;
-    int consolaAlto = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
-    int matriz[14][32] = {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                          {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                          {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                          {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                          {0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0},
-                          {0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0},
-                          {0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0},
-                          {1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0},
-                          {1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0},
-                          {0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1},
-                          {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1},
-                          {1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0},
-                          {0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0},
-                          {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0}};
+
     char diaA[12], horaA[10];
     int leftPadding, k = 3;
     time_t now = time(0);
     struct tm *time = localtime(&now);
     strftime(diaA, 12, "%d/%m/%Y", time);
     strftime(horaA, 10, "%H:%M:%S", time);
-    // PlaySound("Shop.wav", NULL, SND_ASYNC | SND_NOSTOP | SND_LOOP| SND_FILENAME);
+    // PlaySound("assets/Shop.wav", NULL, SND_ASYNC | SND_NOSTOP | SND_LOOP| SND_FILENAME);
     if (info.palAUsar == 8)
     {
         leftPadding = (consoleWidth - (info.ren * 16)) / 2;
@@ -1356,10 +1234,10 @@ void imprimirTab(dato info, int seleccion, int seleccionAnterior, int consoleWid
                     else
                     {
                         // PlaySound(NULL,0,0);
-                        // PlaySound("Error.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
+                        // PlaySound("assets/Error.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
                         color(hConsole, 12);
                         cout << setw(10) << info.tableroDinamico[i][j].palabra << setw(7);
-                        color(hConsole, 7);
+                        // color(hConsole, 7);
                         cout << lLateral();
                     }
                 }
@@ -1399,24 +1277,7 @@ void imprimirTab(dato info, int seleccion, int seleccionAnterior, int consoleWid
         k += 3;
     }
     color(hConsole, 15);
-    int inicioX = (consolaAncho - 32) / 2;
-    int inicioY = (consolaAlto - 14) / 2;
-    for (int i = 0; i < 14; i++)
-    {
-        gotoxy(inicioX - 42, (inicioY + i) + 8);
-        for (int j = 0; j < 32; j++)
-        {
-            if (matriz[i][j] == 1)
-            {
-                cout << char(219);
-            }
-            else
-            {
-
-                cout << " ";
-            }
-        }
-    }
+    perrito2();
 }
 
 bool validarRepetidos(int *v, int num, int k)
@@ -1527,7 +1388,7 @@ void menuReportes(int consoleWidth)
             system("cls");
             color(hConsole, 3);
             // PlaySound(NULL,0,0);
-            // PlaySound("sans.wav",NULL,SND_ASYNC | SND_NOSTOP | SND_LOOP| SND_FILENAME);
+            // PlaySound("assets/sans.wav",NULL,SND_ASYNC | SND_NOSTOP | SND_LOOP| SND_FILENAME);
             line = "Reportes";
             leftPadding = (consoleWidth - line.length()) / 2;
             gotoxy(leftPadding, 1);
