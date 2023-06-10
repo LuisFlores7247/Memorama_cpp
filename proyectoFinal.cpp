@@ -177,7 +177,7 @@ void portada(int consoleWidth)
     system("cls");
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     color(hConsole, 1);
-    PlaySound("Time.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
+    PlaySound("assets/Time.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
     Sleep(500);
     string line = "UNIVERSIDAD AUTONOMA DE AGUASCALIENTES";
     int leftPadding = (consoleWidth - line.length()) / 2;
@@ -218,6 +218,16 @@ void portada(int consoleWidth)
     line = "Luis David Flores Martinez";
     leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 17);
+    cout << line;
+    Sleep(1000);
+    line = "Maestra Georgina Salazar Partida";
+    leftPadding = (consoleWidth - line.length()) / 2;
+    gotoxy(leftPadding, 19);
+    cout << line;
+    Sleep(1000);
+    line = "09/06/2023";
+    leftPadding = (consoleWidth - line.length()) / 2;
+    gotoxy(leftPadding, 21);
     cout << line;
     Sleep(1000);
 
@@ -293,6 +303,14 @@ void portada(int consoleWidth)
     leftPadding = (consoleWidth - 32) / 2;
     gotoxy(leftPadding, 19);
     portada2(consoleWidth);
+    line = "Maestra Georgina Salazar Partida";
+    leftPadding = (consoleWidth - line.length()) / 2;
+    gotoxy(leftPadding, 19);
+    cout << line;
+    line = "09/06/2023";
+    leftPadding = (consoleWidth - line.length()) / 2;
+    gotoxy(leftPadding, 21);
+    cout << line;
 }
 
 void portada2(int consoleWidth)
@@ -333,8 +351,16 @@ void portada2(int consoleWidth)
     leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 17);
     cout << line;
-    leftPadding = (consoleWidth - 32) / 2;
+    line = "Maestra Georgina Salazar Partida";
+    leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 19);
+    cout << line;
+    line = "09/06/2023";
+    leftPadding = (consoleWidth - line.length()) / 2;
+    gotoxy(leftPadding, 21);
+    cout << line;
+    leftPadding = (consoleWidth - 32) / 2;
+    gotoxy(leftPadding, 23);
     system("Pause");
 }
 
@@ -363,13 +389,13 @@ void presentacion(int consoleWidth)
                           {0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0},
                           {0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0}};
     int k = 15;
-    color(hConsole, 15);
+    color(hConsole, 5);
     string line = "Las Memorables Aventuras De Memorin";
     int leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 3);
     cout << line;
     Sleep(200);
-    leftPadding = (consoleWidth - 40) / 2;
+    leftPadding = (consoleWidth - 35) / 2;
     gotoxy(leftPadding, 6);
     color(hConsole, 13);
     cout << "Programando Sue" << char(164) << "os, Maquinando Ideas";
@@ -400,7 +426,7 @@ void imprimirMatrizCentrada(int matriz[][22])
     color(hConsole, 15);
     for (int i = 0; i < 19; i++)
     {
-        gotoxy(inicioX, (inicioY + i) + 4);
+        gotoxy(inicioX, (inicioY + i) + 6);
         for (int j = 0; j < 22; j++)
         {
             if (matriz[i][j] == 1)
@@ -443,8 +469,7 @@ int menu(int consoleWidth)
     int consolaAncho = csbi.srWindow.Right - csbi.srWindow.Left + 1;
     int consolaAlto = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
     system("cls");
-    //PlaySound(NULL,0,0);
-    // PlaySound("Time.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
+    PlaySound("assets/Time.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
     Sleep(500);
     color(hConsole, 5);
     string line = "MENU";
@@ -530,8 +555,8 @@ void mantenimiento()
     int opc;
     system("cls");
     color(hConsole, 8);
-    // PlaySound(NULL,0,0);
-    // PlaySound("sans.wav",NULL,SND_ASYNC | SND_NOSTOP | SND_LOOP| SND_FILENAME);
+    PlaySound(NULL,0,0);
+    PlaySound("assets/sans.wav",NULL,SND_ASYNC | SND_NOSTOP | SND_LOOP| SND_FILENAME);
     string line = "Categoria a modificar";
     int leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 1);
@@ -634,12 +659,13 @@ void opcionesMantenimiento(int arch, int consoleWidth)
 void menuJuego(int consoleWidth)
 {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    color(hConsole, 10);
     int palAUsar, leftPadding;
     bool band1, band2, band3;
     string line;
     dato datos;
     PlaySound(NULL,0,0);
-    PlaySound("snail.wav", NULL, SND_ASYNC | SND_NOSTOP | SND_LOOP| SND_FILENAME);
+    PlaySound("assets/snail.wav", NULL, SND_ASYNC | SND_NOSTOP | SND_LOOP| SND_FILENAME);
 
     do // captura alias
     {
@@ -720,7 +746,7 @@ void menuJuego(int consoleWidth)
     registrarjugador(datos, consoleWidth);
     // tablero dinamico es casilla**
     juego(datos, consoleWidth, 1);
-    system("pause");
+    
 }
 
 // Fundamentales
@@ -796,7 +822,7 @@ void juego(dato info, int consoleWidth, int opc)
                 if (seleccion == selecAnterior)
                 {
                     PlaySound(NULL,0,0);
-                    PlaySound("Error.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
+                    PlaySound("assets/Error.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
                     line = "La casilla ya ha sido destapada, por favor elija otra";
                     leftPadding = (consoleWidth - line.length()) / 2;
                     gotoxy(leftPadding, 25);
@@ -826,7 +852,7 @@ void juego(dato info, int consoleWidth, int opc)
                     }
                 }
                 PlaySound(NULL,0,0);
-                PlaySound("Correct.wav",NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP);
+                PlaySound("assets/Correct.wav",NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP);
                 info.par = info.par + 1;
                 palabrasRestantes--;
                 seleccion = 0; // Reset de variables
@@ -854,7 +880,7 @@ void juego(dato info, int consoleWidth, int opc)
             {
                 win = true;
                 PlaySound(NULL, 0, 0 );
-                PlaySound("Yay.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
+                PlaySound("assets/Yay.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
             }
 
             selecAnterior = seleccion;
@@ -953,8 +979,8 @@ void juego(dato info, int consoleWidth, int opc)
     BorrarEspMemDina(info.tableroDinamico, info.ren);
     // regreso al menu
     color(hConsole, 6);
-    // PlaySound(NULL,0,0);
-    // PlaySound("maxwell.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP | SND_LOOP );
+    PlaySound(NULL,0,0);
+    PlaySound("assets/maxwell.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP | SND_LOOP );
     for (int i = 0; i < 8; i++)
     {
         Sleep(800);
@@ -1011,11 +1037,21 @@ void juego(dato info, int consoleWidth, int opc)
         gotoxy(leftPadding, 16);
         cout << line;
         Sleep(800);
-        if (i < 10)
+        if (i < 6)
         {
             system("cls");
         }
     }
+    string line="Tiempo De Juego:";
+    int leftPadding=(consoleWidth-line.length())/2;
+    gotoxy(leftPadding, 18);
+    cout<<line;
+    leftPadding=(consoleWidth-8)/2;
+    gotoxy(leftPadding,19);
+    cout<<info.duracDeJueg;
+    leftPadding=(consoleWidth-20)/2;
+    gotoxy(leftPadding,22);
+    system("pause");
     PlaySound(NULL, 0, 0 );
 }
 
@@ -1276,9 +1312,10 @@ void imprimirTab(dato info, int seleccion, int seleccionAnterior, int consoleWid
     int leftPadding, k = 3;
     time_t now = time(0);
     struct tm *time = localtime(&now);
+    color(hConsole, 15);
     strftime(diaA, 12, "%d/%m/%Y", time);
     strftime(horaA, 10, "%H:%M:%S", time);
-    PlaySound("Shop.wav", NULL, SND_ASYNC | SND_NOSTOP | SND_LOOP| SND_FILENAME);
+    PlaySound("assets/Shop.wav", NULL, SND_ASYNC | SND_NOSTOP | SND_LOOP| SND_FILENAME);
     if (info.palAUsar == 8)
     {
         leftPadding = (consoleWidth - (info.ren * 16)) / 2;
@@ -1359,8 +1396,8 @@ void imprimirTab(dato info, int seleccion, int seleccionAnterior, int consoleWid
                     }
                     else
                     {
-                        // PlaySound(NULL,0,0);
-                        // PlaySound("Error.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
+                        PlaySound(NULL,0,0);
+                        PlaySound("assets/Error.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
                         color(hConsole, 12);
                         cout << setw(10) << info.tableroDinamico[i][j].palabra << setw(7);
                         color(hConsole, 7);
@@ -1530,8 +1567,8 @@ void menuReportes(int consoleWidth)
         {
             system("cls");
             color(hConsole, 3);
-            // PlaySound(NULL,0,0);
-            // PlaySound("sans.wav",NULL,SND_ASYNC | SND_NOSTOP | SND_LOOP| SND_FILENAME);
+            PlaySound(NULL,0,0);
+            PlaySound("assets/sans.wav",NULL,SND_ASYNC | SND_NOSTOP | SND_LOOP| SND_FILENAME);
             line = "Reportes";
             leftPadding = (consoleWidth - line.length()) / 2;
             gotoxy(leftPadding, 1);
@@ -1615,6 +1652,7 @@ void menuReportes(int consoleWidth)
             break;
         }
     } while (opc != 4);
+    PlaySound(NULL,0,0);
 }
 
 void repXCategoria(int total, dato *v, int consoleWith)
