@@ -3,7 +3,7 @@
 
 #include <string>
 using namespace std;
-//Funciones creadoras de tablas
+// Funciones creadoras de tablas
 
 string esquinas(int n) // n=0 Esquina superior izquierda, n=1 Esquina superior derecha, n=2 Esquina inferior izquierda, n=3 Esquina inferior derecha
 {
@@ -44,8 +44,5 @@ string lLatDivisoria(int n)
         return string(1, char(185));
     }
 }
-
-
-
 
 #endif

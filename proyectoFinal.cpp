@@ -118,15 +118,62 @@ int main(int argc, char const *argv[])
             break;
         case 2:
         {
+            int palAUsar, leftPadding;
+            bool band1, band2, band3;
+            string line;
             dato datos;
-            char palabras[3][30] = {"Paises", "Lenguajes de programacion", "Dispositivos electronicos"};
-            strcpy(datos.alias, "computadora");
-            do
             {
-                datos.palAUsar = 1 + rand() % 8;
-            } while (datos.palAUsar != 3 && datos.palAUsar != 6 && datos.palAUsar != 8);
+                system("cls");
+                line = "Dime cual de las 3 categorias quieres jugar: ";
+                leftPadding = (consoleWidth - line.length()) / 2;
+                gotoxy(leftPadding, 6);
+                cout << line;
+                line = "1.- Dispositivos";
+                leftPadding = (consoleWidth - line.length()) / 2;
+                gotoxy(leftPadding, 8);
+                cout << line;
+                line = "2.- Programacion";
+                leftPadding = (consoleWidth - line.length()) / 2;
+                gotoxy(leftPadding, 9);
+                cout << line;
+                line = "3.- Paises";
+                leftPadding = (consoleWidth - line.length()) / 2;
+                gotoxy(leftPadding, 10);
+                cout << line;
+                line = "Opcion: ";
+                leftPadding = (consoleWidth - line.length()) / 2;
+                gotoxy(leftPadding, 12);
+                cout << line;
+                fflush(stdin);
+                cin.getline(datos.catAJugar, 40);
+                band2 = validarCategoria(datos.catAJugar, consoleWidth);
+                if (!band2) // Borra de pantalla cosas basura
+                {
+                    clearLines(12, 2);
+                    clearLines(19, 3);
+                }
+            }
+            while (!band2)
+                ;
+            do // Capurar palabras
+            {
+                line = "Con cuantas Palabras deseas Jugar (3,6 u 8 palabras): ";
+                leftPadding = (consoleWidth - line.length()) / 2;
+                gotoxy(leftPadding, 15);
+                cout << line;
+                line = "Opcion: ";
+                leftPadding = (consoleWidth - line.length()) / 2;
+                gotoxy(leftPadding, 16);
+                cout << line;
+                cin >> datos.palAUsar;
+                band3 = validarPalabras(datos.palAUsar, consoleWidth);
+                if (!band3) // Borra de pantalla cosas basura
+                {
+                    clearLines(16, 2);
+                    clearLines(20, 3);
+                }
 
-            strcpy(datos.catAJugar, palabras[1 + rand() % 3]);
+            } while (!band3);
             switch (datos.palAUsar)
             {
             case 3:
@@ -433,8 +480,8 @@ void mantenimiento()
     int opc;
     system("cls");
     color(hConsole, 8);
-    // PlaySound(NULL,0,0);
-    // PlaySound("assets/sans.wav",NULL,SND_ASYNC | SND_NOSTOP | SND_LOOP| SND_FILENAME);
+    // PlaySound(NULL, 0, 0);
+    // PlaySound("assets/sans.wav", NULL, SND_ASYNC | SND_NOSTOP | SND_LOOP | SND_FILENAME);
     string line = "Categoria a modificar";
     int leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 1);
@@ -566,11 +613,11 @@ void menuJuego(int consoleWidth)
         leftPadding = (consoleWidth - line.length()) / 2;
         gotoxy(leftPadding, 6);
         cout << line;
-        line = "1.- Dispositivos electronicos";
+        line = "1.- Dispositivos";
         leftPadding = (consoleWidth - line.length()) / 2;
         gotoxy(leftPadding, 8);
         cout << line;
-        line = "2.- Lenguajes de programacion";
+        line = "2.- Programacion";
         leftPadding = (consoleWidth - line.length()) / 2;
         gotoxy(leftPadding, 9);
         cout << line;
@@ -648,7 +695,7 @@ void juego(dato info, int consoleWidth, int opc)
     bool win = false;
     string symbl = "#";
     clock_t start, end;
-    // PlaySound(NULL,0,0);
+    // PlaySound(NULL, 0, 0);
     start = medirT();
     switch (opc)
     {
@@ -675,11 +722,13 @@ void juego(dato info, int consoleWidth, int opc)
                     {
                         if (info.tableroDinamico[i][j].posicion == seleccion && info.tableroDinamico[i][j].estado == true)
                         {
+                            // PlaySound(NULL, 0, 0);
+                            // PlaySound("assets/Error.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP);
                             line = "La casilla ya ha sido destapada, por favor elija otra";
                             leftPadding = (consoleWidth - line.length()) / 2;
                             gotoxy(leftPadding, 25);
                             cout << line;
-                            Sleep(1000);
+                            Sleep(500);
                         }
                     }
                 }
@@ -692,7 +741,17 @@ void juego(dato info, int consoleWidth, int opc)
                     leftPadding = (consoleWidth - line.length()) / 2;
                     gotoxy(leftPadding, 25);
                     cout << line;
-                    Sleep(3000);
+                    Sleep(500);
+                }
+                if (seleccion > (info.palAUsar * 2) || seleccion < 1)
+                {
+                    // PlaySound(NULL, 0, 0);
+                    // PlaySound("assets/Error.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP);
+                    line = "Valor fuera de rango";
+                    leftPadding = (consoleWidth - line.length()) / 2;
+                    gotoxy(leftPadding, 25);
+                    cout << line;
+                    Sleep(500);
                 }
 
             } while (seleccion < 1 || seleccion > (info.palAUsar * 2) || seleccion == selecAnterior);
@@ -724,7 +783,7 @@ void juego(dato info, int consoleWidth, int opc)
                 selecAnterior = 0;
                 intentos = 0;
             }
-            Sleep(1000);
+            Sleep(500);
             system("cls");
             imprimirTab(info, seleccion, selecAnterior, consoleWidth);
             if (intentos == 2)
@@ -732,7 +791,7 @@ void juego(dato info, int consoleWidth, int opc)
                 seleccion = 0; // Reset de variables
                 selecAnterior = 0;
                 intentos = 0;
-                Sleep(3000);
+                Sleep(1500);
                 system("cls");
                 imprimirTab(info, seleccion, selecAnterior, consoleWidth);
             }
@@ -804,19 +863,25 @@ void juego(dato info, int consoleWidth, int opc)
                         }
                     }
                 }
+                // PlaySound(NULL, 0, 0);
+                // PlaySound("assets/Correct.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP);
                 numerosSeleccionados[size] = val1;
                 size++;
                 numerosSeleccionados[size] = val2;
                 size++;
-
                 info.par = info.par + 1;
                 palabrasRestantes--;
+                seleccion = 0; // Reset de variables
+                selecAnterior = 0;
+                intentos = 0;
             }
             Sleep(500);
             imprimirTab(info, val1, val2, consoleWidth);
             intentos = 2;
             if (intentos == 2)
             {
+                // PlaySound(NULL, 0, 0);
+                // PlaySound("assets/Error.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP);
                 val1 = 0; // Reset de variables
                 val2 = 0;
                 intentos = 0;
@@ -907,7 +972,7 @@ void juego(dato info, int consoleWidth, int opc)
             system("cls");
         }
     }
-    // PlaySound(NULL, 0, 0 );
+    // PlaySound(NULL, 0, 0);
 }
 
 // Assets
@@ -966,11 +1031,11 @@ bool validarCategoria(char cat[], int consoleWidth)
     int leftPadding;
     bool aux = false;
     // condiciones de validacion
-    if (strcmp(cat, "Dispositivos electronicos") == 0)
+    if (strcmp(cat, "Dispositivos") == 0)
     {
         aux = true;
     }
-    if (strcmp(cat, "Lenguajes de programacion") == 0)
+    if (strcmp(cat, "Programacion") == 0)
     {
         aux = true;
     }
@@ -1063,11 +1128,11 @@ void llenarTab(casilla **mat, int ren, int col, string *v, char cat[], int pal)
     fstream categoria;
     string aux;
     // Saber cual es la categoria que se ocupa
-    if (strcmp(cat, "Dispositivos electronicos") == 0)
+    if (strcmp(cat, "Dispositivos") == 0)
     {
         categoria.open(CAT1, ios::in);
     }
-    if (strcmp(cat, "Lenguajes de programacion") == 0)
+    if (strcmp(cat, "Programacion") == 0)
     {
         categoria.open(CAT2, ios::in);
     }
@@ -1177,18 +1242,18 @@ void imprimirTab(dato info, int seleccion, int seleccionAnterior, int consoleWid
         {
             gotoxy((leftPadding - 1), k);
             cout << esquinas(0);
-            if (info.palAUsar==8)
+            if (info.palAUsar == 8)
             {
-                cout<<lRecta(3);
+                cout << lRecta(3);
             }
-            if (info.palAUsar==6)
+            if (info.palAUsar == 6)
             {
-                cout<<lRecta(2);
+                cout << lRecta(2);
             }
-            if (info.palAUsar==3)
+            if (info.palAUsar == 3)
             {
-                cout<<lRecta(1);
-            }           
+                cout << lRecta(1);
+            }
             for (int j = 0; j < info.col; j++)
             {
                 cout << lRecta(16);
@@ -1237,7 +1302,7 @@ void imprimirTab(dato info, int seleccion, int seleccionAnterior, int consoleWid
                         // PlaySound("assets/Error.wav", NULL, SND_ASYNC | SND_FILENAME | SND_NOSTOP );
                         color(hConsole, 12);
                         cout << setw(10) << info.tableroDinamico[i][j].palabra << setw(7);
-                        // color(hConsole, 7);
+                        color(hConsole, 7);
                         cout << lLateral();
                     }
                 }
@@ -1252,18 +1317,18 @@ void imprimirTab(dato info, int seleccion, int seleccionAnterior, int consoleWid
         if (i == info.ren - 1)
         {
             cout << esquinas(2);
-            if (info.palAUsar==8)
+            if (info.palAUsar == 8)
             {
-                cout<<lRecta(3);
+                cout << lRecta(3);
             }
-            if (info.palAUsar==6)
+            if (info.palAUsar == 6)
             {
-                cout<<lRecta(2);
+                cout << lRecta(2);
             }
-            if (info.palAUsar==3)
+            if (info.palAUsar == 3)
             {
-                cout<<lRecta(1);
-            }           
+                cout << lRecta(1);
+            }
             for (int j = 0; j < info.col; j++)
             {
                 cout << lRecta(16);
