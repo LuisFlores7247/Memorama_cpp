@@ -124,6 +124,7 @@ int main(int argc, char const *argv[])
             dato datos;
             {
                 system("cls");
+                strcpy(datos.alias,"Makina");
                 line = "Dime cual de las 3 categorias quieres jugar: ";
                 leftPadding = (consoleWidth - line.length()) / 2;
                 gotoxy(leftPadding, 6);
@@ -153,8 +154,7 @@ int main(int argc, char const *argv[])
                     clearLines(19, 3);
                 }
             }
-            while (!band2)
-                ;
+            while (!band2);
             do // Capurar palabras
             {
                 line = "Con cuantas Palabras deseas Jugar (3,6 u 8 palabras): ";
@@ -266,6 +266,16 @@ void portada(int consoleWidth)
     gotoxy(leftPadding, 17);
     cout << line;
     Sleep(1000);
+    line = "Maestra Georgina Salazar Partida";
+    leftPadding = (consoleWidth - line.length()) / 2;
+    gotoxy(leftPadding, 19);
+    cout << line;
+    Sleep(1000);
+    line = "09/06/2023";
+    leftPadding = (consoleWidth - line.length()) / 2;
+    gotoxy(leftPadding, 21);
+    cout << line;
+    Sleep(1000);
 
     system("cls");
     color(hConsole, 240);
@@ -339,6 +349,14 @@ void portada(int consoleWidth)
     leftPadding = (consoleWidth - 32) / 2;
     gotoxy(leftPadding, 19);
     portada2(consoleWidth);
+    line = "Maestra Georgina Salazar Partida";
+    leftPadding = (consoleWidth - line.length()) / 2;
+    gotoxy(leftPadding, 19);
+    cout << line;
+    line = "09/06/2023";
+    leftPadding = (consoleWidth - line.length()) / 2;
+    gotoxy(leftPadding, 21);
+    cout << line;
 }
 
 void portada2(int consoleWidth)
@@ -379,8 +397,16 @@ void portada2(int consoleWidth)
     leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 17);
     cout << line;
-    leftPadding = (consoleWidth - 32) / 2;
+    line = "Maestra Georgina Salazar Partida";
+    leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 19);
+    cout << line;
+    line = "09/06/2023";
+    leftPadding = (consoleWidth - line.length()) / 2;
+    gotoxy(leftPadding, 21);
+    cout << line;
+    leftPadding = (consoleWidth - 32) / 2;
+    gotoxy(leftPadding, 23);
     system("Pause");
 }
 
@@ -391,13 +417,13 @@ void presentacion(int consoleWidth)
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
     int k = 15;
-    color(hConsole, 15);
+    color(hConsole, 5);
     string line = "Las Memorables Aventuras De Memorin";
     int leftPadding = (consoleWidth - line.length()) / 2;
     gotoxy(leftPadding, 3);
     cout << line;
     Sleep(200);
-    leftPadding = (consoleWidth - 40) / 2;
+    leftPadding = (consoleWidth - 35) / 2;
     gotoxy(leftPadding, 6);
     color(hConsole, 13);
     cout << "Programando Sue" << char(164) << "os, Maquinando Ideas";
@@ -406,6 +432,7 @@ void presentacion(int consoleWidth)
 
     leftPadding = (consoleWidth - 32) / 2;
     gotoxy(leftPadding, 9);
+
 
     system("Pause");
 }
@@ -578,15 +605,19 @@ void opcionesMantenimiento(int arch, int consoleWidth)
         }
 
     } while (opc != 4 || (opc < 1 || opc > 5));
+    // PlaySound(NULL,0,0);
 }
 
 void menuJuego(int consoleWidth)
 {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    color(hConsole, 10);
     int palAUsar, leftPadding;
     bool band1, band2, band3;
     string line;
     dato datos;
+    // PlaySound(NULL,0,0);
+    // PlaySound("assets/snail.wav", NULL, SND_ASYNC | SND_NOSTOP | SND_LOOP| SND_FILENAME);
 
     do // captura alias
     {
@@ -667,7 +698,7 @@ void menuJuego(int consoleWidth)
     registrarjugador(datos, consoleWidth);
     // tablero dinamico es casilla**
     juego(datos, consoleWidth, 1);
-    system("pause");
+    
 }
 
 // Fundamentales
@@ -871,8 +902,8 @@ void juego(dato info, int consoleWidth, int opc)
                 size++;
                 info.par = info.par + 1;
                 palabrasRestantes--;
-                seleccion = 0; // Reset de variables
-                selecAnterior = 0;
+                val1 = 0; // Reset de variables
+                val2 = 0;
                 intentos = 0;
             }
             Sleep(500);
@@ -967,12 +998,22 @@ void juego(dato info, int consoleWidth, int opc)
         gotoxy(leftPadding, 16);
         cout << line;
         Sleep(800);
-        if (i < 10)
+        if (i < 6)
         {
             system("cls");
         }
     }
-    // PlaySound(NULL, 0, 0);
+    string line="Tiempo De Juego:";
+    int leftPadding=(consoleWidth-line.length())/2;
+    gotoxy(leftPadding, 18);
+    cout<<line;
+    leftPadding=(consoleWidth-8)/2;
+    gotoxy(leftPadding,19);
+    cout<<info.duracDeJueg<<" seg";
+    leftPadding=(consoleWidth-20)/2;
+    gotoxy(leftPadding,22);
+    system("pause");
+    // PlaySound(NULL, 0, 0 );
 }
 
 // Assets
@@ -1215,6 +1256,7 @@ void imprimirTab(dato info, int seleccion, int seleccionAnterior, int consoleWid
     int leftPadding, k = 3;
     time_t now = time(0);
     struct tm *time = localtime(&now);
+    color(hConsole, 15);
     strftime(diaA, 12, "%d/%m/%Y", time);
     strftime(horaA, 10, "%H:%M:%S", time);
     // PlaySound("assets/Shop.wav", NULL, SND_ASYNC | SND_NOSTOP | SND_LOOP| SND_FILENAME);
@@ -1537,6 +1579,7 @@ void menuReportes(int consoleWidth)
             break;
         }
     } while (opc != 4);
+    // PlaySound(NULL,0,0);
 }
 
 void repXCategoria(int total, dato *v, int consoleWith)
@@ -1556,7 +1599,7 @@ void repXCategoria(int total, dato *v, int consoleWith)
         gotoxy(leftpadding, 3);
         cin.getline(catSeleccionada, 40);
 
-        line = lLateral() + "     Alias     " + lLateral() + "  Tiempo(segs) " + lLateral() + "     Dia     " + lLateral() + "     hora     " + lLateral() + "     Categoria     " + lLateral() + "  Dimensiones " + lLateral();
+        line = lLateral() + "     Alias     " + lLateral() + "  Tiempo(segs) " + lLateral() + "     Dia     " + lLateral() + "     hora     " + lLateral() + "      Categoria      " + lLateral() + "  Dimensiones   " + lLateral();
         leftpadding = (consoleWith - line.length()) / 2;
         gotoxy(leftpadding, 4);
         tabla = esquinas(0) + lRecta(line.length()) + esquinas(1);
@@ -1630,7 +1673,7 @@ void repXNombre(int total, dato *v, int consoleWith)
     gotoxy(leftPadding, 1);
     cout << line << endl;
 
-    line = lLateral() + "     Alias     " + lLateral() + "  Tiempo(segs) " + lLateral() + "     Dia     " + lLateral() + "     hora     " + lLateral() + "     Categoria     " + lLateral() + "  Dimensiones " + lLateral();
+    line = lLateral() + "     Alias     " + lLateral() + "  Tiempo(segs) " + lLateral() + "     Dia     " + lLateral() + "     hora     " + lLateral() + "      Categoria      " + lLateral() + "  Dimensiones    " + lLateral();
     leftPadding = (consoleWith - line.length()) / 2;
     gotoxy(leftPadding, 4);
     tabla = esquinas(0) + lRecta(line.length()) + esquinas(1);
@@ -1682,7 +1725,7 @@ void repXTiempo(int total, dato *v, int consoleWith)
     gotoxy(leftPadding, 1);
     cout << line << endl;
 
-    line = lLateral() + "     Alias     " + lLateral() + "  Tiempo(segs) " + lLateral() + "     Dia     " + lLateral() + "     hora     " + lLateral() + "     Categoria     " + lLateral() + "  Dimensiones " + lLateral();
+    line = lLateral() + "     Alias     " + lLateral() + "  Tiempo(segs) " + lLateral() + "     Dia     " + lLateral() + "     hora     " + lLateral() + "      Categoria      " + lLateral() + "    Dimensiones     " + lLateral();
     leftPadding = (consoleWith - line.length()) / 2;
     gotoxy(leftPadding, 4);
     tabla = esquinas(0) + lRecta(line.length()) + esquinas(1);
@@ -1710,7 +1753,7 @@ void imprimirRep(dato registro, int consoleWith)
 {
     string line;
     char *aux = strtok(registro.catAJugar, " ");
-    cout << lLateral() << setw(9) << registro.alias << setw(17) << registro.duracDeJueg << setw(18) << registro.dia << setw(13) << registro.hora << setw(20) << aux << setw(11) << registro.ren << "x" << registro.col << setw(6) << lLateral();
+    cout << lLateral() << setw(9) << registro.alias << setw(17) << registro.duracDeJueg << setw(18) << registro.dia << setw(13) << registro.hora << setw(20) << aux << setw(11) << registro.ren << "x" << registro.col << setw(9) << lLateral();
 }
 // Archivos
 
